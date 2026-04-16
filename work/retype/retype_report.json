@@ -1,0 +1,314 @@
+{
+  "n_processed": 9872,
+  "valid": 9557,
+  "invalid": 315,
+  "errors": 0,
+  "unchanged": 3269,
+  "changed": 6288,
+  "new_distribution": {
+    "personnage": 2781,
+    "lieu": 1627,
+    "etre_spirituel": 149,
+    "institution": 43,
+    "doctrine": 957,
+    "corps_et_sante": 150,
+    "peuple": 702,
+    "plante": 158,
+    "fonction": 267,
+    "alimentation_et_agriculture": 161,
+    "objet_sacre": 402,
+    "nature": 211,
+    "lieu_sacre": 71,
+    "animal": 210,
+    "rite": 174,
+    "livre_biblique": 176,
+    "objets_et_vetements": 981,
+    "mesures_et_temps": 155,
+    "matiere": 81,
+    "evenement": 101
+  },
+  "top_directions": {
+    "non_classifie -> personnage": 762,
+    "non_classifie -> objets_et_vetements": 665,
+    "non_classifie -> doctrine": 647,
+    "non_classifie -> lieu": 450,
+    "non_classifie -> peuple": 307,
+    "non_classifie -> objet_sacre": 217,
+    "personnage -> peuple": 167,
+    "lieu -> personnage": 160,
+    "personnage -> lieu": 153,
+    "non_classifie -> fonction": 127,
+    "peuple -> personnage": 122,
+    "non_classifie -> nature": 121,
+    "peuple -> lieu": 101,
+    "non_classifie -> corps_et_sante": 96,
+    "non_classifie -> animal": 79,
+    "non_classifie -> mesures_et_temps": 78,
+    "non_classifie -> rite": 71,
+    "non_classifie -> livre_biblique": 68,
+    "lieu -> peuple": 66,
+    "non_classifie -> evenement": 65,
+    "non_classifie -> alimentation_et_agriculture": 62,
+    "non_classifie -> etre_spirituel": 58,
+    "non_classifie -> plante": 55,
+    "lieu -> nature": 54,
+    "objet_sacre -> objets_et_vetements": 52,
+    "doctrine -> objets_et_vetements": 50,
+    "personnage -> fonction": 44,
+    "matiere -> objets_et_vetements": 42,
+    "personnage -> objets_et_vetements": 36,
+    "lieu -> objets_et_vetements": 34
+  },
+  "invalid_samples": [
+    {
+      "cid": "affection",
+      "raw": "concepts",
+      "chunk": "chunk_0006"
+    },
+    {
+      "cid": "affinite",
+      "raw": "concepts",
+      "chunk": "chunk_0006"
+    },
+    {
+      "cid": "afflictions",
+      "raw": "concepts",
+      "chunk": "chunk_0006"
+    },
+    {
+      "cid": "agonie",
+      "raw": "concepts",
+      "chunk": "chunk_0006"
+    },
+    {
+      "cid": "colere",
+      "raw": "concept",
+      "chunk": "chunk_0009"
+    },
+    {
+      "cid": "antechrist",
+      "raw": "concept",
+      "chunk": "chunk_0009"
+    },
+    {
+      "cid": "apocryphes",
+      "raw": "concept",
+      "chunk": "chunk_0009"
+    },
+    {
+      "cid": "appel",
+      "raw": "concept",
+      "chunk": "chunk_0009"
+    },
+    {
+      "cid": "fardeau",
+      "raw": "concepts",
+      "chunk": "chunk_0016"
+    },
+    {
+      "cid": "castaway",
+      "raw": "concepts",
+      "chunk": "chunk_0018"
+    },
+    {
+      "cid": "castor-et-pollux",
+      "raw": "concepts",
+      "chunk": "chunk_0018"
+    },
+    {
+      "cid": "langue-chaldaique",
+      "raw": "concepts",
+      "chunk": "chunk_0018"
+    },
+    {
+      "cid": "chance",
+      "raw": "concepts",
+      "chunk": "chunk_0018"
+    },
+    {
+      "cid": "chapitre",
+      "raw": "concepts",
+      "chunk": "chunk_0018"
+    },
+    {
+      "cid": "couleur",
+      "raw": "concepts",
+      "chunk": "chunk_0020"
+    },
+    {
+      "cid": "concubine",
+      "raw": "concepts",
+      "chunk": "chunk_0020"
+    },
+    {
+      "cid": "fin",
+      "raw": "concepts",
+      "chunk": "chunk_0026"
+    },
+    {
+      "cid": "enfer",
+      "raw": "concepts",
+      "chunk": "chunk_0036"
+    },
+    {
+      "cid": "aides",
+      "raw": "concepts",
+      "chunk": "chunk_0036"
+    },
+    {
+      "cid": "hypocrite",
+      "raw": "concepts",
+      "chunk": "chunk_0038"
+    },
+    {
+      "cid": "murmuring",
+      "raw": "concepts",
+      "chunk": "chunk_0052"
+    },
+    {
+      "cid": "musique",
+      "raw": "concepts",
+      "chunk": "chunk_0052"
+    },
+    {
+      "cid": "musique-instrumentale",
+      "raw": "concepts",
+      "chunk": "chunk_0052"
+    },
+    {
+      "cid": "shechinah",
+      "raw": "concept",
+      "chunk": "chunk_0065"
+    },
+    {
+      "cid": "sheminith",
+      "raw": "concept",
+      "chunk": "chunk_0065"
+    },
+    {
+      "cid": "sheol",
+      "raw": "concept",
+      "chunk": "chunk_0065"
+    },
+    {
+      "cid": "nicolaites",
+      "raw": "secte",
+      "chunk": "chunk_0079"
+    },
+    {
+      "cid": "pharisien",
+      "raw": "secte",
+      "chunk": "chunk_0079"
+    },
+    {
+      "cid": "sadduceens",
+      "raw": "secte",
+      "chunk": "chunk_0079"
+    },
+    {
+      "cid": "secte",
+      "raw": "secte",
+      "chunk": "chunk_0079"
+    },
+    {
+      "cid": "names",
+      "raw": "concepts",
+      "chunk": "chunk_0101"
+    },
+    {
+      "cid": "pestilence",
+      "raw": "concepts",
+      "chunk": "chunk_0103"
+    },
+    {
+      "cid": "sibboleth",
+      "raw": "concept",
+      "chunk": "chunk_0107"
+    },
+    {
+      "cid": "son",
+      "raw": "concept",
+      "chunk": "chunk_0107"
+    },
+    {
+      "cid": "abase",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "abate",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "abhor",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "abide",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "ability",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "abject",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "able",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "abode",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "abolish",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "abomination-of-desolation",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "abound-abundance-abundant-abundantly",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "about",
+      "raw": "concepts",
+      "chunk": "chunk_0111"
+    },
+    {
+      "cid": "antiquity",
+      "raw": "concepts",
+      "chunk": "chunk_0116"
+    },
+    {
+      "cid": "apace",
+      "raw": "concepts",
+      "chunk": "chunk_0116"
+    },
+    {
+      "cid": "apart",
+      "raw": "concepts",
+      "chunk": "chunk_0116"
+    },
+    {
+      "cid": "aphaerema",
+      "raw": "concepts",
+      "chunk": "chunk_0116"
+    }
+  ]
+}

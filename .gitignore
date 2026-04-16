@@ -1,0 +1,43 @@
+# Backups locaux
+.backup-*/
+*.bak*
+hebrew-lexicon-fr-compact.json.bak-*
+
+# Claude session / work temp
+.claude/_tmp*
+.claude/_audit*
+.claude/_bundle*
+.claude/_mockup/
+.claude/_minimal_fix.py
+.claude/_suspects*
+.claude/_removed*
+work/retype/batch_input*.jsonl
+work/retype/batch_output*.jsonl
+work/retype/batch_meta*.json
+
+# Fichiers temp / prompts legacy
+PROMPT-*
+PROMPT_*
+BILAN-SESSION-COWORK.md
+HOSTINGER_DEPLOYMENT_RULES.md
+INSTRUCTIONS_UPLOAD.md
+CHANTIER-*
+BLOC_PHP_A_INSERER.php
+homepage-v3-mockup.html
+ux-proposal-*.jsx
+arbre-racines-hebraiques.jsx
+audit_cat1.py
+deploy-chantier-b.ps1
+dictionnaire-style-unifiee.css
+mode-operatoire-publication.docx
+eastons_fr_titles_*
+prompt-seo-claude-code.md
+cleanup-orphan-worktree.sh
+SYNTHESE_PROJET.md
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Node
+node_modules/

@@ -1,0 +1,3007 @@
+/* ================================================================
+   BIBLE V3 INTERFACE â Mobile-First Redesign
+   alombredufiguier.org/dictionnaire-biblique/
+   ================================================================
+   Approche : mobile-first pur (styles de base = mobile)
+   Breakpoints : 600px (tablet), 900px (desktop), 1200px (large)
+   ================================================================ */
+
+/* ââ Variables V3 ââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app {
+  --fb-surface: rgba(255, 255, 255, 0.92);
+  --fb-surface-strong: rgba(255, 255, 255, 0.97);
+  --fb-border: rgba(95, 92, 87, 0.10);
+  --fb-border-accent: rgba(178, 140, 100, 0.18);
+  --fb-text: #5f5c57;
+  --fb-text-strong: #3c2f2f;
+  --fb-muted: #736960;
+  --fb-accent: #B28C64;
+  --fb-accent-hover: #8c6849;
+  --fb-accent-light: rgba(178, 140, 100, 0.10);
+  --fb-accent-medium: rgba(178, 140, 100, 0.16);
+  --fb-bg-warm: #fbf9f3;
+  --fb-bg-cream: #fffbef;
+
+  --fb-role-gloss: #B28C64;
+  --fb-role-main: #7e5d43;
+  --fb-role-detailed: #5a7a55;
+  --fb-role-deep: #6b5b8a;
+
+  --fb-gap-xs: 4px;
+  --fb-gap-sm: 8px;
+  --fb-gap-md: 12px;
+  --fb-gap-lg: 16px;
+  --fb-gap-xl: 24px;
+
+  --fb-radius-sm: 8px;
+  --fb-radius-md: 14px;
+  --fb-radius-lg: 18px;
+  --fb-radius-pill: 999px;
+
+  --fb-transition: 160ms ease;
+  --fb-transition-slow: 250ms ease;
+
+  --fb-font-heading: "EB Garamond", Georgia, serif;
+  --fb-font-body: "Inter", -apple-system, system-ui, sans-serif;
+
+  --fb-z-topbar: 30;
+  --fb-z-dropdown: 40;
+  --fb-z-overlay: 50;
+  --fb-z-modal: 60;
+
+  --fb-topbar-height: 70px;
+}
+
+/* ââ Reset & Base (mobile) âââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app {
+  width: 100%;
+  max-width: 1200px;
+  min-width: 0;
+  margin: 0 auto;
+  padding: 0 8px 8px;
+  padding-left: max(8px, env(safe-area-inset-left));
+  padding-right: max(8px, env(safe-area-inset-right));
+  padding-bottom: max(8px, env(safe-area-inset-bottom));
+  color: var(--fb-text);
+  font-family: var(--fb-font-body);
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+
+.figuier-bible-app *,
+.figuier-bible-app *::before,
+.figuier-bible-app *::after {
+  box-sizing: border-box;
+}
+
+.figuier-bible-app [hidden] { display: none !important; }
+
+.figuier-bible-app .screen-reader-text {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip: rect(0 0 0 0); border: 0;
+}
+
+/* ââ Topbar â STICKY (mobile) ââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--fb-z-topbar);
+  padding: 10px 8px;
+  margin: 0 -8px;
+  background: linear-gradient(180deg, rgba(251,249,243,0.98), rgba(249,245,240,0.95));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--fb-border);
+  border-radius: 0;
+  box-shadow: none;
+  transition: box-shadow 200ms ease;
+}
+
+.figuier-bible-app .fb-topbar.is-scrolled {
+  box-shadow: 0 4px 20px rgba(53, 38, 22, 0.08);
+}
+
+.figuier-bible-app .fb-topbar-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.figuier-bible-app .fb-search-trigger-row {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ââ Search input ââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-search-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 40px 0 42px;
+  border: 1px solid rgba(137, 111, 84, 0.22);
+  border-radius: var(--fb-radius-md);
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--fb-text-strong);
+  font: inherit;
+  font-size: 16px; /* prevents iOS zoom */
+  font-weight: 500;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: border-color var(--fb-transition), box-shadow var(--fb-transition), background var(--fb-transition);
+}
+
+.figuier-bible-app .fb-search-input::placeholder {
+  color: var(--fb-muted);
+  opacity: 1;
+}
+
+.figuier-bible-app .fb-search-input:hover {
+  border-color: rgba(137, 111, 84, 0.35);
+  background: rgba(255, 255, 255, 1);
+}
+
+.figuier-bible-app .fb-search-input:focus {
+  outline: none;
+  border-color: rgba(178, 140, 100, 0.55);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(178, 140, 100, 0.1), 0 2px 8px rgba(53, 38, 22, 0.06);
+}
+
+.figuier-bible-app .fb-search-status {
+  margin-top: 6px;
+  padding: 0 4px;
+  font-size: 0.88rem;
+  color: var(--fb-muted);
+  line-height: 1.4;
+}
+
+/* ââ Buttons V3 ââââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-nav-back,
+.figuier-bible-app .fb-search-clear,
+.figuier-bible-app .fb-source-action,
+.figuier-bible-app .fb-reading-close,
+.figuier-bible-app .fb-result-button {
+  font: inherit;
+}
+
+/* Back button â now a ghost button, not solid brown */
+.figuier-bible-app .fb-nav-back {
+  border: none;
+  border-radius: var(--fb-radius-pill);
+  min-height: 40px;
+  padding: 0 12px;
+  background: transparent;
+  color: var(--fb-accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--fb-transition);
+}
+
+.figuier-bible-app .fb-nav-back:hover {
+  background: var(--fb-accent-light);
+}
+
+/* Clear button â subtle circle */
+.figuier-bible-app .fb-search-clear {
+  border: none;
+  border-radius: var(--fb-radius-pill);
+  min-height: 36px;
+  min-width: 36px;
+  padding: 0 10px;
+  background: rgba(178, 140, 100, 0.12);
+  color: var(--fb-accent-hover);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--fb-transition);
+}
+
+.figuier-bible-app .fb-search-clear:hover {
+  background: rgba(178, 140, 100, 0.2);
+}
+
+/* Action buttons (Lire la suite, Parcourir, etc.) */
+.figuier-bible-app .fb-source-action {
+  border: none;
+  border-radius: var(--fb-radius-pill);
+  min-height: 44px;
+  padding: 0 20px;
+  background: var(--fb-accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background var(--fb-transition), transform 80ms ease;
+}
+
+.figuier-bible-app .fb-source-action:hover {
+  background: var(--fb-accent-hover);
+}
+
+.figuier-bible-app .fb-source-action:active {
+  transform: scale(0.97);
+}
+
+.figuier-bible-app .fb-reading-close {
+  border: none;
+  border-radius: var(--fb-radius-pill);
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0 14px;
+  background: rgba(178, 140, 100, 0.12);
+  color: var(--fb-accent-hover);
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ââ Shared card surface âââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-topbar,
+.figuier-bible-app .fb-search-panel-card,
+.figuier-bible-app .fb-concept-page,
+.figuier-bible-app .fb-home-hero,
+.figuier-bible-app .fb-browse-shell,
+.figuier-bible-app .fb-source-card,
+.figuier-bible-app .fb-reading-shell,
+.figuier-bible-app .fb-empty-state,
+.figuier-bible-app .fb-error-state,
+.figuier-bible-app .fb-related-box,
+.figuier-bible-app .fb-sources-box,
+.figuier-bible-app .fb-category-card {
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-md);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Override topbar border-radius in V3 (full-width sticky) */
+.figuier-bible-app .fb-topbar {
+  border: none;
+  border-radius: 0;
+}
+
+/* ââ Search Panel ââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-search-panel {
+  margin-top: var(--fb-gap-sm);
+  min-width: 0;
+}
+
+.figuier-bible-app .fb-search-panel-card {
+  padding: var(--fb-gap-md);
+  background: var(--fb-surface-strong);
+  box-shadow: 0 8px 24px rgba(53, 38, 22, 0.06);
+}
+
+.figuier-bible-app .fb-panel-title,
+.figuier-bible-app .fb-concept-title,
+.figuier-bible-app .fb-source-title,
+.figuier-bible-app .fb-section-title,
+.figuier-bible-app .fb-reading-title,
+.figuier-bible-app .fb-empty-state h2,
+.figuier-bible-app .fb-error-state h2 {
+  margin: 0;
+  font-family: var(--fb-font-heading);
+  color: var(--fb-text-strong);
+}
+
+.figuier-bible-app .fb-panel-title {
+  font-size: 1.2rem;
+}
+
+.figuier-bible-app .fb-panel-copy {
+  margin: 4px 0 0;
+  color: var(--fb-muted);
+  font-size: 0.9rem;
+}
+
+.figuier-bible-app .fb-panel-head {
+  margin-bottom: var(--fb-gap-md);
+}
+
+.figuier-bible-app .fb-panel-head--tight {
+  margin-bottom: 8px;
+}
+
+/* ââ Result List âââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-result-list {
+  display: grid;
+  gap: var(--fb-gap-sm);
+  grid-template-columns: 1fr;
+}
+
+.figuier-bible-app .fb-result-button {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: var(--fb-radius-md);
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  min-height: 56px;
+  transition: background var(--fb-transition), border-color var(--fb-transition), box-shadow var(--fb-transition), transform 80ms ease;
+}
+
+.figuier-bible-app .fb-result-button:hover {
+  background: var(--fb-accent-light);
+  border-color: var(--fb-border-accent);
+  box-shadow: 0 2px 8px rgba(53, 38, 22, 0.05);
+}
+
+.figuier-bible-app .fb-result-button.is-active {
+  background: var(--fb-accent-light);
+  border-left: 3px solid var(--fb-accent);
+}
+
+.figuier-bible-app .fb-result-button:active {
+  transform: scale(0.98);
+}
+
+.figuier-bible-app .fb-result-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-family: var(--fb-font-heading);
+  font-size: 1.12rem;
+  color: var(--fb-text-strong);
+}
+
+.figuier-bible-app .fb-result-secondary {
+  font-family: var(--fb-font-body);
+  font-size: 0.9rem;
+  color: var(--fb-muted);
+}
+
+.figuier-bible-app .fb-result-meta,
+.figuier-bible-app .fb-concept-meta,
+.figuier-bible-app .fb-source-meta,
+.figuier-bible-app .fb-sources-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* ââ Pills / Badges ââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-pill,
+.figuier-bible-app .fb-source-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 0 9px;
+  border-radius: var(--fb-radius-pill);
+  background: var(--fb-accent-medium);
+  color: #5b4432;
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.figuier-bible-app .fb-pill--muted {
+  background: rgba(95, 92, 87, 0.07);
+  color: var(--fb-muted);
+}
+
+/* ââ Main Content Area âââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-content {
+  margin-top: var(--fb-gap-sm);
+  min-height: 260px;
+  min-width: 0;
+}
+
+.figuier-bible-app[data-view="search"] .fb-content {
+  display: none;
+}
+
+/* ââ Home View âââââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-home {
+  display: grid;
+  gap: var(--fb-gap-sm);
+}
+
+.figuier-bible-app .fb-home-hero {
+  padding: 16px 14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(249,245,240,0.92));
+  box-shadow: 0 8px 24px rgba(53, 38, 22, 0.06);
+  overflow: hidden;
+  position: relative;
+}
+
+.figuier-bible-app .fb-home-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at top right, rgba(178,140,100,0.08), transparent 40%);
+  pointer-events: none;
+}
+
+.figuier-bible-app .fb-home-hero > * {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+
+.figuier-bible-app .fb-home-kicker {
+  margin: 0 0 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--fb-accent-hover);
+}
+
+.figuier-bible-app .fb-home-heading {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.figuier-bible-app .fb-home-title {
+  margin: 0;
+  font-family: var(--fb-font-heading);
+  font-size: 1.4rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--fb-text-strong);
+}
+
+.figuier-bible-app .fb-home-title-note {
+  margin: 0;
+  font-family: var(--fb-font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #766352;
+  line-height: 1.4;
+}
+
+.figuier-bible-app .fb-home-subtitle {
+  margin: 4px 0 0;
+  max-width: 42rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: #5b4d43;
+}
+
+.figuier-bible-app .fb-home-copy,
+.figuier-bible-app .fb-home-positioning {
+  margin: 0;
+  max-width: 42rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--fb-muted);
+}
+
+/* Home grid â mobile: stack */
+.figuier-bible-app .fb-home-hero__grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+  min-width: 0;
+}
+
+.figuier-bible-app .fb-home-hero__intro,
+.figuier-bible-app .fb-home-hero__aside {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* Action buttons â mobile: stacked full-width */
+.figuier-bible-app .fb-home-hero__actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--fb-gap-sm);
+  width: 100%;
+}
+
+.figuier-bible-app .fb-home-action,
+.figuier-bible-app .fb-browse-link,
+.figuier-bible-app .fb-pagination__button {
+  font: inherit;
+  border: 1px solid var(--fb-border-accent);
+  border-radius: var(--fb-radius-pill);
+  min-height: 44px;
+  padding: 0 16px;
+  background: var(--fb-accent-medium);
+  color: #5b4432;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background var(--fb-transition), border-color var(--fb-transition), transform 80ms ease;
+}
+
+.figuier-bible-app .fb-home-action--secondary,
+.figuier-bible-app .fb-browse-link,
+.figuier-bible-app .fb-pagination__button {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.figuier-bible-app .fb-home-action:hover,
+.figuier-bible-app .fb-browse-link:hover,
+.figuier-bible-app .fb-pagination__button:hover {
+  background: rgba(178, 140, 100, 0.22);
+  border-color: rgba(178, 140, 100, 0.35);
+}
+
+.figuier-bible-app .fb-home-action:active,
+.figuier-bible-app .fb-browse-link:active {
+  transform: scale(0.97);
+}
+
+/* Home media */
+.figuier-bible-app .fb-home-media {
+  width: 100%;
+  max-height: 140px;
+  overflow: hidden;
+  border: 1px solid var(--fb-border-accent);
+  border-radius: var(--fb-radius-md);
+  box-shadow: 0 6px 16px rgba(53, 38, 22, 0.06);
+}
+
+.figuier-bible-app .fb-home-media img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+}
+
+/* Home about box */
+.figuier-bible-app .fb-home-about {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 12px;
+  border: 1px solid var(--fb-border-accent);
+  border-radius: var(--fb-radius-md);
+  background: linear-gradient(180deg, rgba(255,251,246,0.9), rgba(248,242,235,0.7));
+}
+
+.figuier-bible-app .fb-home-about__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.figuier-bible-app .fb-home-about__title {
+  margin: 0;
+  font-family: var(--fb-font-heading);
+  font-size: 1.1rem;
+  color: var(--fb-text-strong);
+}
+
+.figuier-bible-app .fb-home-about__lead,
+.figuier-bible-app .fb-home-about__body {
+  margin: 0;
+  max-width: 52rem;
+  line-height: 1.55;
+}
+
+.figuier-bible-app .fb-home-about__lead {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #5b4d43;
+}
+
+.figuier-bible-app .fb-home-about__body {
+  font-size: 0.88rem;
+  color: var(--fb-muted);
+}
+
+/* ââ Letter Navigation âââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-letter-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  max-width: 100%;
+  padding: 4px 0 8px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  /* Fade indicator for scrollable area */
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}
+
+.figuier-bible-app .fb-letter-nav::-webkit-scrollbar { display: none; }
+
+.figuier-bible-app .fb-letter-button,
+.figuier-bible-app .fb-browse-button,
+.figuier-bible-app .fb-related-button {
+  font: inherit;
+  border: 1px solid var(--fb-border);
+  background: rgba(255, 255, 255, 0.75);
+  color: inherit;
+  cursor: pointer;
+  transition: background var(--fb-transition), border-color var(--fb-transition), transform 80ms ease;
+}
+
+.figuier-bible-app .fb-letter-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 0 10px;
+  border-radius: var(--fb-radius-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.figuier-bible-app .fb-letter-button.is-active {
+  background: var(--fb-accent-medium);
+  border-color: rgba(178, 140, 100, 0.35);
+}
+
+.figuier-bible-app .fb-letter-button__label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--fb-text-strong);
+}
+
+/* Hide counts on mobile */
+.figuier-bible-app .fb-letter-button__count {
+  display: none;
+  color: var(--fb-muted);
+  font-size: 0.78rem;
+}
+
+.figuier-bible-app .fb-letter-button:hover,
+.figuier-bible-app .fb-letter-button:focus-visible {
+  background: var(--fb-accent-light);
+  border-color: var(--fb-border-accent);
+}
+
+.figuier-bible-app .fb-letter-button:active {
+  transform: scale(0.96);
+}
+
+/* ââ Browse Grid âââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-browse-shell {
+  padding: 14px 12px;
+  background: var(--fb-surface-strong);
+  box-shadow: 0 8px 24px rgba(53, 38, 22, 0.06);
+}
+
+.figuier-bible-app .fb-browse-grid,
+.figuier-bible-app .fb-category-grid,
+.figuier-bible-app .fb-related-list,
+.figuier-bible-app .fb-browse-grid--preview {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr;
+  min-width: 0;
+}
+
+.figuier-bible-app .fb-browse-button,
+.figuier-bible-app .fb-related-button {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--fb-radius-md);
+  text-align: left;
+  min-height: 48px;
+}
+
+.figuier-bible-app .fb-browse-button.is-compact {
+  padding: 10px 12px;
+}
+
+.figuier-bible-app .fb-browse-button:hover,
+.figuier-bible-app .fb-related-button:hover,
+.figuier-bible-app .fb-browse-button:focus-visible,
+.figuier-bible-app .fb-related-button:focus-visible {
+  background: var(--fb-accent-light);
+  border-color: var(--fb-border-accent);
+  outline: none;
+}
+
+.figuier-bible-app .fb-browse-button:active,
+.figuier-bible-app .fb-related-button:active {
+  transform: scale(0.98);
+}
+
+.figuier-bible-app .fb-browse-button__title {
+  display: block;
+  font-family: var(--fb-font-heading);
+  font-size: 1.1rem;
+  color: var(--fb-text-strong);
+  overflow-wrap: anywhere;
+}
+
+.figuier-bible-app .fb-browse-button__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.figuier-bible-app .fb-browse-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.figuier-bible-app .fb-browse-actions .fb-browse-link {
+  width: 100%;
+}
+
+/* ââ Category Cards ââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-category-card {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 12px rgba(53, 38, 22, 0.04);
+}
+
+.figuier-bible-app .fb-category-card--summary {
+  padding: 12px;
+}
+
+.figuier-bible-app .fb-category-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.figuier-bible-app .fb-category-card__title {
+  margin: 0;
+  font-family: var(--fb-font-heading);
+  font-size: 1.15rem;
+  color: var(--fb-text-strong);
+}
+
+.figuier-bible-app .fb-category-card__items {
+  display: grid;
+  gap: 6px;
+}
+
+.figuier-bible-app .fb-category-card__copy {
+  margin: 0;
+  color: var(--fb-muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+/* ââ Concept Page ââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-concept-page {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: linear-gradient(180deg, var(--fb-bg-warm), var(--fb-bg-cream));
+  box-shadow: 0 8px 28px rgba(53, 38, 22, 0.06);
+}
+
+/* Mobile: hero first, body second, related last, copyright very last */
+.figuier-bible-app .fb-concept-page > .fb-concept-hero { order: 0; }
+.figuier-bible-app .fb-concept-page > .fb-concept-body { order: 1; }
+.figuier-bible-app .fb-concept-page > .fb-related-standalone { order: 3; }
+.figuier-bible-app .fb-concept-page > .fb-copyright-block { order: 4; }
+
+.figuier-bible-app .fb-concept-hero {
+  display: grid;
+  gap: 6px;
+  padding: 14px 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(249,245,240,0.92));
+  border-bottom: 1px solid var(--fb-border);
+}
+
+/* V3 Breadcrumb */
+.figuier-bible-app .fb-breadcrumb {
+  font-size: 0.82rem;
+  color: var(--fb-muted);
+  margin-bottom: 4px;
+}
+
+.figuier-bible-app .fb-breadcrumb a {
+  color: var(--fb-accent);
+  text-decoration: none;
+}
+
+.figuier-bible-app .fb-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.figuier-bible-app .fb-concept-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+}
+
+.figuier-bible-app .fb-concept-title {
+  font-size: 1.55rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.figuier-bible-app .fb-concept-title-secondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgba(120, 105, 90, 0.15);
+  border-radius: var(--fb-radius-pill);
+  background: rgba(95, 92, 87, 0.06);
+  font-family: var(--fb-font-body);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #8a7c70;
+}
+
+/* Hero — inline Hebrew & transliteration (single Strong) */
+.figuier-bible-app .fb-hero-hebrew {
+  font-family: "SBL Hebrew", "Frank Ruehl CLM", "Ezra SIL", "EB Garamond", "Noto Serif Hebrew", serif;
+  font-size: 1.3rem;
+  color: var(--fb-accent, #B28C64);
+}
+
+.figuier-bible-app .fb-hero-translit {
+  font-family: var(--fb-font-serif, "EB Garamond", "Lora", "Georgia", serif);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--fb-muted, #83776c);
+}
+
+/* Hero — Strong badge (single) */
+.figuier-bible-app .fb-pill--strong {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: #faf5f0;
+  color: #7a4a1a;
+}
+
+/* Hero — multi-Strong badge */
+.figuier-bible-app .fb-pill--strong-multi {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: #faf5f0;
+  color: #7a4a1a;
+}
+
+.figuier-bible-app .fb-concept-forms {
+  display: grid;
+  gap: 3px;
+}
+
+.figuier-bible-app .fb-form-group {
+  display: grid;
+  gap: 2px;
+}
+
+.figuier-bible-app .fb-inline-label {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--fb-text-strong);
+}
+
+/* ââ Concept Layout V3 â Mobile: stack âââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-concept-body {
+  display: grid;
+  gap: var(--fb-gap-md);
+  padding: 10px 10px 16px;
+  min-width: 0;
+}
+
+.figuier-bible-app .fb-main-stack {
+  display: grid;
+  gap: var(--fb-gap-md);
+  min-width: 0;
+}
+
+/* V3 concept layout wrapper (added by patch.js) */
+.figuier-bible-app .fb-concept-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--fb-gap-md);
+}
+
+/* Mobile: sidebar (langues originales) appears AFTER the main sources stack */
+.figuier-bible-app .fb-concept-sidebar {
+  order: 1;
+}
+.figuier-bible-app .fb-main-stack {
+  order: 0;
+}
+
+/* ── Source Journey Indicator — ux-proposal-concept-page.jsx ────────
+   Parcours des sources avec dots colorés + labels + lignes.
+   Adapté mobile : les steps wrap proprement sur 2 lignes si besoin.
+   ─────────────────────────────────────────────────────────────────── */
+.figuier-bible-app .fb-mobile-toc {
+  position: sticky;
+  top: var(--fb-topbar-height, 56px);
+  z-index: 20;
+  margin: 0 0 4px;
+  padding: 8px 12px;
+  background: var(--fb-surface-strong, rgba(255, 255, 255, 0.95));
+  border: 1px solid var(--fb-border, rgba(95, 92, 87, 0.10));
+  border-radius: var(--fb-radius-sm, 10px);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Container : flex row with wrapping — items distribute evenly */
+.figuier-bible-app .fb-mobile-toc__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Each step = pill + connector line */
+.figuier-bible-app .fb-mobile-toc__step {
+  display: flex;
+  align-items: center;
+}
+
+/* The clickable pill: dot + label */
+.figuier-bible-app .fb-mobile-toc__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border-radius: 16px;
+  border: none;
+  background: transparent;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+/* The colored dot */
+.figuier-bible-app .fb-mobile-toc__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  opacity: 0.35;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* The label text */
+.figuier-bible-app .fb-mobile-toc__text {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 10.5px;
+  font-weight: 400;
+  color: var(--fb-muted, #83776c);
+  transition: all 0.3s ease;
+}
+
+/* Connector line between steps */
+.figuier-bible-app .fb-mobile-toc__line {
+  width: 16px;
+  height: 1px;
+  flex-shrink: 0;
+  margin: 0 1px;
+}
+
+/* ── Active state ── */
+.figuier-bible-app .fb-mobile-toc__link.is-active .fb-mobile-toc__dot {
+  opacity: 1;
+  transform: scale(1.3);
+}
+.figuier-bible-app .fb-mobile-toc__link.is-active .fb-mobile-toc__text {
+  font-weight: 700;
+}
+
+/* ── Per-source dot colors ── */
+.fb-mobile-toc__link[data-role="quick_gloss"] .fb-mobile-toc__dot { background: #d4a95a; }
+.fb-mobile-toc__link[data-role="main_definition"] .fb-mobile-toc__dot { background: #7e5d43; }
+.fb-mobile-toc__link[data-role="detailed_reference"] .fb-mobile-toc__dot { background: #5a7a55; }
+.fb-mobile-toc__link[data-role="deep_read"] .fb-mobile-toc__dot { background: #6b5b8a; }
+.fb-mobile-toc__link[data-role="hebrew_lexicon"] .fb-mobile-toc__dot { background: #c17a3a; }
+.fb-mobile-toc__link[data-role="related"] .fb-mobile-toc__dot { background: #83776c; }
+
+/* ── Active pill tinted backgrounds ── */
+.fb-mobile-toc__link.is-active[data-role="quick_gloss"] { background: #fdf6ec; }
+.fb-mobile-toc__link.is-active[data-role="quick_gloss"] .fb-mobile-toc__text { color: #8b6914; }
+.fb-mobile-toc__link.is-active[data-role="main_definition"] { background: #f5f0ea; }
+.fb-mobile-toc__link.is-active[data-role="main_definition"] .fb-mobile-toc__text { color: #5e3f22; }
+.fb-mobile-toc__link.is-active[data-role="detailed_reference"] { background: #f0f4ef; }
+.fb-mobile-toc__link.is-active[data-role="detailed_reference"] .fb-mobile-toc__text { color: #3d5a38; }
+.fb-mobile-toc__link.is-active[data-role="deep_read"] { background: #f2f0f6; }
+.fb-mobile-toc__link.is-active[data-role="deep_read"] .fb-mobile-toc__text { color: #4a3d66; }
+.fb-mobile-toc__link.is-active[data-role="hebrew_lexicon"] { background: #faf5f0; }
+.fb-mobile-toc__link.is-active[data-role="hebrew_lexicon"] .fb-mobile-toc__text { color: #7a4a1a; }
+.fb-mobile-toc__link.is-active[data-role="related"] { background: rgba(131, 119, 108, 0.08); }
+.fb-mobile-toc__link.is-active[data-role="related"] .fb-mobile-toc__text { color: #5f5c57; }
+
+@media (min-width: 900px) {
+  .figuier-bible-app .fb-mobile-toc {
+    display: none !important;
+  }
+}
+
+/* ââ Source Cards âââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-source-card {
+  overflow: hidden;
+  background: var(--fb-surface);
+  box-shadow: 0 4px 14px rgba(53, 38, 22, 0.05);
+  transition: box-shadow var(--fb-transition);
+}
+
+.figuier-bible-app .fb-source-card:hover {
+  box-shadow: 0 6px 20px rgba(53, 38, 22, 0.08);
+}
+
+.figuier-bible-app .fb-source-card--redirect {
+  background: rgba(255, 250, 245, 0.98);
+}
+
+.figuier-bible-app .fb-source-card[data-role="quick_gloss"] {
+  border-left: 4px solid var(--fb-role-gloss);
+}
+
+.figuier-bible-app .fb-source-card[data-role="main_definition"] {
+  border-left: 4px solid var(--fb-role-main);
+}
+
+.figuier-bible-app .fb-source-card[data-role="detailed_reference"] {
+  border-left: 4px solid var(--fb-role-detailed);
+}
+
+.figuier-bible-app .fb-source-card[data-role="deep_read"] {
+  border-left: 4px solid var(--fb-role-deep);
+}
+
+/* ── Source Sections (vertical flow) ────────────────────────────── */
+.figuier-bible-app .fb-source-section {
+  border-radius: var(--fb-radius);
+  overflow: hidden;
+  background: var(--fb-surface);
+  box-shadow: 0 4px 14px rgba(53, 38, 22, 0.05);
+  transition: box-shadow var(--fb-transition);
+  border-left: 4px solid var(--fb-border);
+  margin-bottom: var(--fb-gap-md);
+}
+.figuier-bible-app .fb-source-section:hover {
+  box-shadow: 0 6px 20px rgba(53, 38, 22, 0.08);
+}
+
+/* Per-source border colors */
+.figuier-bible-app .fb-source-section--bym {
+  border-left-color: #B28C64;
+}
+.figuier-bible-app .fb-source-section--easton {
+  border-left-color: #8B6914;
+}
+.figuier-bible-app .fb-source-section--smith {
+  border-left-color: #4A7C59;
+}
+.figuier-bible-app .fb-source-section--isbe {
+  border-left-color: #6B5B8A;
+  background: rgba(255, 250, 245, 0.98);
+}
+
+.figuier-bible-app .fb-source-section__header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--fb-border);
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.figuier-bible-app .fb-source-section__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fb-heading);
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+.figuier-bible-app .fb-source-section--bym .fb-source-section__title { color: #B28C64; }
+.figuier-bible-app .fb-source-section--easton .fb-source-section__title { color: #8B6914; }
+.figuier-bible-app .fb-source-section--smith .fb-source-section__title { color: #4A7C59; }
+.figuier-bible-app .fb-source-section--isbe .fb-source-section__title { color: #6B5B8A; }
+
+.figuier-bible-app .fb-source-section__toggle {
+  font-size: 0.88rem;
+  color: #6B5B8A;
+  background: none;
+  border: 1.5px solid #6B5B8A;
+  border-radius: var(--fb-radius);
+  padding: 5px 14px;
+  cursor: pointer;
+  transition: all var(--fb-transition);
+  font-weight: 500;
+}
+.figuier-bible-app .fb-source-section__toggle:hover {
+  background: #6B5B8A;
+  color: #fff;
+}
+
+.figuier-bible-app .fb-source-section__body {
+  padding: 16px;
+}
+
+.figuier-bible-app .fb-source-entry {
+  margin-bottom: 12px;
+}
+.figuier-bible-app .fb-source-entry:last-child {
+  margin-bottom: 0;
+}
+.figuier-bible-app .fb-source-entry--redirect {
+  background: rgba(255, 250, 245, 0.98);
+  padding: 12px;
+  border-radius: var(--fb-radius);
+}
+
+.figuier-bible-app .fb-source-header {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--fb-border);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.figuier-bible-app .fb-source-body {
+  padding: 12px;
+}
+
+.figuier-bible-app .fb-source-preview,
+.figuier-bible-app .fb-source-content {
+  line-height: 1.7;
+}
+
+.figuier-bible-app .fb-source-preview {
+  font-size: 0.92rem;
+  color: var(--fb-text);
+  /* Mobile: limit preview to 3 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.figuier-bible-app .fb-source-title {
+  display: grid;
+  gap: 3px;
+}
+
+.figuier-bible-app .fb-source-title__primary {
+  font-family: var(--fb-font-heading);
+  font-size: 1.05rem;
+  color: var(--fb-text-strong);
+}
+
+.figuier-bible-app .fb-source-title__secondary {
+  font-family: var(--fb-font-body);
+  font-size: 0.88rem;
+  color: var(--fb-muted);
+}
+
+.figuier-bible-app .fb-source-actions {
+  padding: 0 12px 12px;
+}
+
+.figuier-bible-app .fb-source-content {
+  font-size: 0.93rem;
+  line-height: 1.72;
+  color: var(--fb-text);
+}
+
+.figuier-bible-app .fb-source-content p:first-child { margin-top: 0; }
+.figuier-bible-app .fb-source-content p:last-child { margin-bottom: 0; }
+
+.figuier-bible-app .fb-source-content h1,
+.figuier-bible-app .fb-source-content h2,
+.figuier-bible-app .fb-source-content h3 {
+  font-family: var(--fb-font-heading);
+  color: var(--fb-text-strong);
+  margin-top: 1.2em;
+  margin-bottom: 0.4em;
+}
+
+.figuier-bible-app .fb-source-content blockquote {
+  margin: 1em 0;
+  padding: 0.6em 1em;
+  border-left: 3px solid var(--fb-accent);
+  background: rgba(178, 140, 100, 0.05);
+  border-radius: 0 var(--fb-radius-sm) var(--fb-radius-sm) 0;
+  font-style: italic;
+  color: #5b4d43;
+}
+
+.figuier-bible-app .fb-source-redirect p {
+  margin: 0 0 12px;
+  line-height: 1.7;
+}
+
+.figuier-bible-app .fb-source-redirect .fb-source-actions {
+  padding: 0;
+}
+
+/* ââ Related & Sources boxes âââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-section-title {
+  font-size: 1.18rem;
+  margin-bottom: 10px;
+}
+
+.figuier-bible-app .fb-related-box,
+.figuier-bible-app .fb-sources-box {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 12px rgba(53, 38, 22, 0.04);
+}
+
+.figuier-bible-app .fb-related-button {
+  background: rgba(255, 255, 255, 0.85);
+  min-width: 0;
+}
+
+/* ââ Reading Panel â MOBILE: Bottom sheet ââââââââââââââââââââââââ */
+.figuier-bible-app .fb-reading-panel {
+  position: fixed;
+  inset: 0;
+  z-index: var(--fb-z-modal);
+  display: flex;
+  align-items: flex-end;
+  background: rgba(40, 31, 24, 0.4);
+  animation: fb-fade-in 200ms ease;
+}
+
+.figuier-bible-app .fb-reading-shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-height: 92vh;
+  max-height: 92dvh;
+  background: var(--fb-surface-strong);
+  border-radius: var(--fb-radius-lg) var(--fb-radius-lg) 0 0;
+  animation: fb-sheet-up 250ms ease;
+  box-shadow: 0 -8px 32px rgba(53, 38, 22, 0.12);
+}
+
+/* V3 Drag handle for bottom sheet */
+.figuier-bible-app .fb-reading-shell::before {
+  content: "";
+  display: block;
+  width: 36px;
+  height: 4px;
+  margin: 8px auto 0;
+  border-radius: 2px;
+  background: rgba(95, 92, 87, 0.2);
+  flex-shrink: 0;
+}
+
+.figuier-bible-app .fb-reading-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--fb-border);
+  position: sticky;
+  top: 0;
+  background: var(--fb-surface-strong);
+  z-index: 2;
+}
+
+.figuier-bible-app .fb-reading-head-copy {
+  min-width: 0;
+}
+
+.figuier-bible-app .fb-reading-title {
+  font-size: 1.15rem;
+}
+
+.figuier-bible-app .fb-reading-body {
+  overflow-y: auto;
+  padding: 14px;
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ââ Pagination ââââââââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-pagination {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.figuier-bible-app .fb-pagination__status {
+  text-align: center;
+  order: -1;
+  font-size: 0.88rem;
+  color: var(--fb-muted);
+}
+
+.figuier-bible-app .fb-pagination__button {
+  min-height: 44px;
+  font-weight: 600;
+}
+
+.figuier-bible-app .fb-pagination__button[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ââ Empty / Error States ââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-empty-state,
+.figuier-bible-app .fb-error-state {
+  padding: 24px 16px;
+  background: rgba(255, 255, 255, 0.75);
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(53, 38, 22, 0.04);
+}
+
+/* ââ Loading Skeleton ââââââââââââââââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-loading {
+  position: relative;
+  min-height: 120px;
+}
+
+.figuier-bible-app .fb-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(178,140,100,0.1), transparent);
+  background-size: 200% 100%;
+  animation: fb-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes fb-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+@keyframes fb-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fb-sheet-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes fb-slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ââ Focus Visible (Accessibility) âââââââââââââââââââââââââââââââ */
+.figuier-bible-app .fb-nav-back:focus-visible,
+.figuier-bible-app .fb-search-clear:focus-visible,
+.figuier-bible-app .fb-source-action:focus-visible,
+.figuier-bible-app .fb-reading-close:focus-visible,
+.figuier-bible-app .fb-home-action:focus-visible,
+.figuier-bible-app .fb-browse-link:focus-visible,
+.figuier-bible-app .fb-pagination__button:focus-visible,
+.figuier-bible-app .fb-letter-button:focus-visible,
+.figuier-bible-app .fb-result-button:focus-visible,
+.figuier-bible-app .fb-browse-button:focus-visible,
+.figuier-bible-app .fb-related-button:focus-visible {
+  outline: 2px solid var(--fb-accent);
+  outline-offset: 2px;
+}
+
+/* ââ Reduced Motion ââââââââââââââââââââââââââââââââââââââââââââââ */
+@media (prefers-reduced-motion: reduce) {
+  .figuier-bible-app *,
+  .figuier-bible-app *::before,
+  .figuier-bible-app *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ================================================================
+   TABLET â¥ 600px
+   ================================================================ */
+@media (min-width: 600px) {
+  .figuier-bible-app {
+    padding: 0 12px 12px;
+  }
+
+  .figuier-bible-app .fb-topbar {
+    padding: 12px;
+    margin: 0 -12px;
+  }
+
+  .figuier-bible-app .fb-result-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .figuier-bible-app .fb-browse-grid,
+  .figuier-bible-app .fb-related-list,
+  .figuier-bible-app .fb-browse-grid--preview {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .figuier-bible-app .fb-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .figuier-bible-app .fb-letter-nav {
+    flex-wrap: wrap;
+    overflow: visible;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .figuier-bible-app .fb-letter-button__count {
+    display: inline;
+  }
+
+  .figuier-bible-app .fb-home-title {
+    font-size: 1.6rem;
+  }
+
+  .figuier-bible-app .fb-concept-title {
+    font-size: 1.8rem;
+  }
+
+  .figuier-bible-app .fb-reading-panel {
+    padding: 16px;
+  }
+
+  .figuier-bible-app .fb-reading-shell {
+    max-height: calc(100vh - 32px);
+    border-radius: var(--fb-radius-lg);
+  }
+
+  .figuier-bible-app .fb-reading-shell::before {
+    display: none; /* No drag handle on tablet+ */
+  }
+
+  .figuier-bible-app .fb-source-preview {
+    -webkit-line-clamp: 4;
+  }
+
+  .figuier-bible-app .fb-pagination {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .figuier-bible-app .fb-pagination__status {
+    order: 0;
+  }
+
+  .figuier-bible-app .fb-browse-actions {
+    flex-direction: row;
+  }
+
+  .figuier-bible-app .fb-browse-actions .fb-browse-link {
+    width: auto;
+  }
+
+  .figuier-bible-app .fb-home-hero__actions {
+    flex-direction: row;
+  }
+}
+
+/* ================================================================
+   DESKTOP â¥ 900px
+   ================================================================ */
+@media (min-width: 900px) {
+  .figuier-bible-app {
+    padding: 0 20px 20px;
+  }
+
+  .figuier-bible-app .fb-topbar {
+    padding: 14px 20px;
+    margin: 0 -20px;
+  }
+
+  .figuier-bible-app .fb-search-input {
+    max-width: 620px;
+  }
+
+  .figuier-bible-app .fb-search-status {
+    font-size: 0.9rem;
+  }
+
+  .figuier-bible-app .fb-content {
+    margin-top: var(--fb-gap-lg);
+  }
+
+  .figuier-bible-app .fb-search-panel {
+    margin-top: var(--fb-gap-lg);
+  }
+
+  /* Results: 3 columns on desktop */
+  .figuier-bible-app .fb-result-list {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--fb-gap-md);
+  }
+
+  /* Home hero: 2-column grid */
+  .figuier-bible-app .fb-home-hero {
+    padding: 20px;
+  }
+
+  .figuier-bible-app .fb-home-hero__grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(240px, 0.5fr);
+    align-items: start;
+    gap: 20px;
+  }
+
+  .figuier-bible-app .fb-home-title {
+    font-size: clamp(1.7rem, 2.5vw, 2.1rem);
+  }
+
+  .figuier-bible-app .fb-home-title-note {
+    font-size: 1rem;
+  }
+
+  .figuier-bible-app .fb-home-media {
+    max-height: none;
+  }
+
+  .figuier-bible-app .fb-home-media img {
+    aspect-ratio: 16 / 6;
+    max-height: none;
+  }
+
+  .figuier-bible-app .fb-home-about__title {
+    font-size: 1.25rem;
+  }
+
+  .figuier-bible-app .fb-home-about {
+    padding: 16px;
+  }
+
+  .figuier-bible-app .fb-home-about__lead,
+  .figuier-bible-app .fb-home-about__body {
+    font-size: 0.95rem;
+  }
+
+  .figuier-bible-app .fb-home-copy,
+  .figuier-bible-app .fb-home-positioning {
+    font-size: 0.95rem;
+  }
+
+  /* Browse: 3 columns for concept grids */
+  .figuier-bible-app .fb-browse-grid,
+  .figuier-bible-app .fb-browse-grid--preview {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .figuier-bible-app .fb-browse-shell {
+    padding: 18px;
+  }
+
+  /* ââ V3 CONCEPT PAGE: 2-PANEL LAYOUT ââââââââââââââââââââââââââ */
+  .figuier-bible-app .fb-concept-hero {
+    padding: 18px 20px;
+  }
+
+  .figuier-bible-app .fb-concept-title {
+    font-size: clamp(1.9rem, 4vw, 2.3rem);
+  }
+
+  .figuier-bible-app .fb-concept-body {
+    padding: 18px 20px 20px;
+  }
+
+  /* V3 Layout: 2 panels */
+  .figuier-bible-app .fb-concept-layout {
+    grid-template-columns: 1fr 300px;
+    gap: var(--fb-gap-xl);
+    align-items: start;
+  }
+
+  /* Desktop: reset order — main left, sidebar right */
+  .figuier-bible-app .fb-concept-sidebar {
+    order: 1;
+    position: sticky;
+    top: calc(var(--fb-topbar-height) + 16px);
+    max-height: calc(100vh - var(--fb-topbar-height) - 32px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  .figuier-bible-app .fb-main-stack {
+    order: 0;
+  }
+
+  .figuier-bible-app .fb-concept-sidebar .fb-related-box,
+  .figuier-bible-app .fb-concept-sidebar .fb-sources-box {
+    margin-bottom: var(--fb-gap-md);
+  }
+
+  .figuier-bible-app .fb-source-preview {
+    -webkit-line-clamp: 5;
+  }
+
+  .figuier-bible-app .fb-source-header {
+    padding: 12px 16px;
+  }
+
+  .figuier-bible-app .fb-source-body {
+    padding: 16px;
+  }
+
+  .figuier-bible-app .fb-source-actions {
+    padding: 0 16px 16px;
+  }
+
+  .figuier-bible-app .fb-source-content {
+    font-size: 0.98rem;
+    line-height: 1.75;
+  }
+
+  /* Reading panel: centered modal on desktop */
+  .figuier-bible-app .fb-reading-panel {
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .figuier-bible-app .fb-reading-shell {
+    max-width: 740px;
+    max-height: 85vh;
+    border-radius: var(--fb-radius-lg);
+  }
+
+  .figuier-bible-app .fb-reading-body {
+    padding: 20px 24px 24px;
+  }
+
+  .figuier-bible-app .fb-reading-body .fb-source-content {
+    max-width: 680px;
+    margin: 0 auto;
+    font-size: 1rem;
+    line-height: 1.78;
+  }
+
+  .figuier-bible-app .fb-reading-title {
+    font-size: 1.3rem;
+  }
+
+  .figuier-bible-app .fb-reading-head {
+    padding: 16px 20px;
+  }
+
+  .figuier-bible-app .fb-section-title {
+    font-size: 1.3rem;
+  }
+
+  .figuier-bible-app .fb-related-box,
+  .figuier-bible-app .fb-sources-box {
+    padding: 16px;
+  }
+
+  .figuier-bible-app .fb-panel-title {
+    font-size: 1.35rem;
+  }
+
+  .figuier-bible-app .fb-search-panel-card {
+    padding: 18px;
+  }
+
+  .figuier-bible-app .fb-pill,
+  .figuier-bible-app .fb-source-badge {
+    font-size: 0.82rem;
+    min-height: 28px;
+    padding: 0 10px;
+  }
+
+  .figuier-bible-app .fb-empty-state,
+  .figuier-bible-app .fb-error-state {
+    padding: 32px 24px;
+  }
+
+  .figuier-bible-app .fb-category-card {
+    padding: 16px;
+  }
+
+  .figuier-bible-app .fb-result-button {
+    padding: 16px;
+  }
+}
+
+/* ================================================================
+   DESKTOP LARGE â¥ 1200px
+   ================================================================ */
+@media (min-width: 1200px) {
+  .figuier-bible-app .fb-concept-layout {
+    grid-template-columns: 1fr 340px;
+  }
+
+  .figuier-bible-app .fb-browse-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+}
+
+/* ======== Mobile Kadence container padding fix ======== */
+/* Reduce stacked padding from Kadence containers on mobile */
+@media (max-width: 599px) {
+  .content-container:has(.figuier-bible-app) {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .content-wrap:has(.figuier-bible-app) {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .figuier-bible-app {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+}
+@media (min-width: 600px) and (max-width: 899px) {
+  .content-container:has(.figuier-bible-app) {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+  .content-wrap:has(.figuier-bible-app) {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+
+/* ======== Grid overflow fix for mobile (root cause) ======== */
+.figuier-bible-app .fb-home {
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
+}
+.figuier-bible-app .fb-home > * { min-width: 0; }
+.figuier-bible-app .fb-home-hero { overflow: hidden; }
+.figuier-bible-app .fb-home-hero > * { min-width: 0; }
+.figuier-bible-app .fb-home-hero__grid > * { min-width: 0; }
+.figuier-bible-app .fb-concept-layout > * { min-width: 0; }
+.figuier-bible-app .fb-browse-grid { min-width: 0; }
+.figuier-bible-app .fb-browse-shell > * { min-width: 0; }
+
+/* ══════════════════════════════════════════════════════════════
+   Source Sections — flux vertical par source nommée
+   ══════════════════════════════════════════════════════════════ */
+
+.figuier-bible-app .fb-source-section {
+  border: 1px solid var(--fb-border, rgba(95,92,87,0.10));
+  border-radius: var(--fb-radius-md, 14px);
+  overflow: hidden;
+  background: var(--fb-surface, rgba(255,255,255,0.92));
+}
+
+.figuier-bible-app .fb-source-section[data-source="bym_lexicon"] {
+  border-left: 4px solid #B28C64;
+}
+.figuier-bible-app .fb-source-section[data-source="easton"] {
+  border-left: 4px solid #8B6914;
+}
+.figuier-bible-app .fb-source-section[data-source="smith"] {
+  border-left: 4px solid #4A7C59;
+}
+.figuier-bible-app .fb-source-section[data-source="isbe"] {
+  border-left: 4px solid #6B5B8A;
+  background: var(--fond-creme, #fffbef);
+}
+
+.figuier-bible-app .fb-source-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--fb-border, rgba(95,92,87,0.10));
+  background: rgba(255,255,255,0.6);
+}
+
+.figuier-bible-app .fb-source-section__title {
+  margin: 0;
+  font-family: var(--fb-font-heading, "EB Garamond", serif);
+  font-size: 1.1rem;
+  color: var(--fb-text-strong, #3c2f2f);
+}
+
+.figuier-bible-app .fb-source-section__badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #fff;
+}
+.fb-source-section[data-source="bym_lexicon"] .fb-source-section__badge { background: #B28C64; }
+.fb-source-section[data-source="easton"] .fb-source-section__badge { background: #8B6914; }
+.fb-source-section[data-source="smith"] .fb-source-section__badge { background: #4A7C59; }
+.fb-source-section[data-source="isbe"] .fb-source-section__badge { background: #6B5B8A; }
+
+.figuier-bible-app .fb-source-section__body {
+  padding: 16px;
+  line-height: 1.72;
+}
+
+.figuier-bible-app .fb-source-section__body p:first-child { margin-top: 0; }
+.figuier-bible-app .fb-source-section__body p:last-child { margin-bottom: 0; }
+
+.figuier-bible-app .fb-source-section__preview {
+  color: var(--fb-muted, #83776c);
+  line-height: 1.6;
+}
+
+.figuier-bible-app .fb-source-section__toggle {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border: 0;
+  background: transparent;
+  color: var(--fb-accent, #B28C64);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 160ms ease;
+}
+.figuier-bible-app .fb-source-section__toggle:hover {
+  background: rgba(178,140,100,0.08);
+}
+.figuier-bible-app .fb-source-section__toggle::before {
+  content: "\25B6";
+  display: inline-block;
+  margin-right: 8px;
+  font-size: 0.75em;
+  transition: transform 200ms ease;
+}
+.figuier-bible-app .fb-source-section:not(.fb-source-section--collapsed) .fb-source-section__toggle::before {
+  transform: rotate(90deg);
+}
+
+.figuier-bible-app .fb-source-section--collapsed .fb-source-section__body {
+  display: none;
+}
+
+/* Category emojis */
+.figuier-bible-app .fb-category-emoji {
+  margin-right: 6px;
+}
+
+@media (max-width: 599px) {
+  .figuier-bible-app .fb-source-section__header {
+    padding: 10px 12px;
+  }
+  .figuier-bible-app .fb-source-section__body {
+    padding: 12px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Source Section — Title row & meta (role badge + reading time)
+   ══════════════════════════════════════════════════════════════ */
+
+.figuier-bible-app .fb-source-section__title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.figuier-bible-app .fb-source-section__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Role badge — colored pill in source header */
+.figuier-bible-app .fb-role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.6;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+/* Reading time indicator */
+.figuier-bible-app .fb-read-time {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.72rem;
+  color: var(--fb-muted, #83776c);
+  white-space: nowrap;
+  opacity: 0.75;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Concept hero — source count pill & biblical reference pills
+   ══════════════════════════════════════════════════════════════ */
+
+/* Source count pill in hero meta */
+.figuier-bible-app .fb-pill--count {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--fb-muted, #83776c);
+  background: rgba(95, 92, 87, 0.06);
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+
+/* Biblical references container */
+.figuier-bible-app .fb-concept-refs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+/* Individual reference pill — clickable */
+.figuier-bible-app .fb-ref-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(178, 140, 100, 0.18);
+  background: #fdf6ec;
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #8b6914;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+.figuier-bible-app .fb-ref-pill:hover {
+  background: #f8edda;
+  border-color: rgba(178, 140, 100, 0.35);
+}
+.figuier-bible-app .fb-ref-pill:active {
+  background: #f0e2c8;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Hebrew sidebar — container & title
+   ══════════════════════════════════════════════════════════════ */
+
+.fb-hebrew-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fb-hebrew-sidebar__title {
+  margin: 0;
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--fb-muted, #83776c);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Sources attribution — bas de sidebar hébreu */
+.fb-hebrew-sidebar__sources {
+  margin: 8px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid rgba(178, 140, 100, 0.18);
+  font-family: var(--fb-font-serif, "EB Garamond", Georgia, serif);
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--fb-muted, #83776c);
+  font-style: italic;
+}
+
+.fb-hebrew-sidebar__sources strong {
+  font-style: normal;
+  font-weight: 600;
+  color: #B28C64;
+  letter-spacing: 0.02em;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Hebrew sidebar — card
+   ══════════════════════════════════════════════════════════════ */
+
+.fb-hebrew-card {
+  background: #faf5f0;
+  border: 1px solid rgba(193, 122, 58, 0.12);
+  border-radius: var(--fb-radius-sm, 10px);
+  padding: 14px 16px;
+}
+
+.fb-hebrew-card__head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.fb-hebrew-card__pos {
+  margin-right: auto;
+}
+
+.fb-hebrew-card__root-pill {
+  font-size: 0.68rem;
+  color: var(--fb-accent, #B28C64);
+  text-decoration: none;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(178, 140, 100, 0.25);
+  background: rgba(178, 140, 100, 0.06);
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.fb-hebrew-card__root-pill:hover {
+  background: rgba(178, 140, 100, 0.14);
+  border-color: rgba(178, 140, 100, 0.4);
+}
+
+.fb-hebrew-card__root-pill span[dir="rtl"] {
+  font-family: 'SBL Hebrew', 'Ezra SIL', serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.fb-hebrew-card__strong {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #c17a3a;
+  text-transform: uppercase;
+}
+
+.fb-hebrew-card__pos {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.68rem;
+  color: var(--fb-muted, #83776c);
+}
+
+/* Hebrew letters — large, literary */
+.fb-hebrew-card__hebrew {
+  font-family: "SBL Hebrew", "Frank Ruehl CLM", "Ezra SIL", "EB Garamond", "Noto Serif Hebrew", serif;
+  font-size: 2rem;
+  line-height: 1.2;
+  color: var(--fb-text-strong, #3c2f2f);
+  margin-bottom: 4px;
+}
+
+/* Transliteration — italic serif */
+.fb-hebrew-card__translit {
+  font-family: var(--fb-font-serif, "EB Garamond", "Lora", "Georgia", serif);
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--fb-text, #3c2f2f);
+}
+
+/* Pronunciation */
+.fb-hebrew-card__pron {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.72rem;
+  color: var(--fb-muted, #83776c);
+  margin-bottom: 6px;
+}
+
+/* Inline Hebrew (isolation bidi dans texte FR mixte) */
+.fb-inline-he {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Hebrew sidebar — architecture 7 tiers (T5-T7)
+   ══════════════════════════════════════════════════════════════ */
+
+/* T5 : Sens et emplois (groupes par stem) */
+.fb-hebrew-card__senses-block {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed rgba(178, 140, 100, 0.22);
+}
+.fb-hebrew-card__senses-title {
+  font-family: var(--fb-font-sans, "Inter", sans-serif);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #B28C64;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+.fb-hebrew-card__stem-group {
+  margin-bottom: 8px;
+  padding: 5px 8px 5px 10px;
+  border-left: 2px solid #C6A77D;
+  background: rgba(250, 246, 242, 0.55);
+  border-radius: 4px;
+}
+.fb-hebrew-card__stem-group:last-child { margin-bottom: 0; }
+.fb-hebrew-card__stem-label {
+  display: inline-block;
+  font-family: var(--fb-font-sans, "Inter", sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #8C6849;
+  background: rgba(198, 167, 125, 0.15);
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+  cursor: help;
+  letter-spacing: 0.02em;
+}
+.fb-hebrew-card__sense-list,
+.fb-hebrew-card__sense-sublist {
+  list-style: none;
+  padding: 0;
+  margin: 3px 0 0;
+  font-family: var(--fb-font-serif, "EB Garamond", serif);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--fb-text, #3c2f2f);
+}
+.fb-hebrew-card__sense-list > li,
+.fb-hebrew-card__sense-sublist > li {
+  padding: 2px 0 2px 20px;
+  position: relative;
+}
+.fb-hebrew-card__sense-list > li[data-n]::before,
+.fb-hebrew-card__sense-sublist > li[data-n]::before {
+  content: attr(data-n);
+  position: absolute;
+  left: 0;
+  color: #B28C64;
+  font-family: var(--fb-font-sans, "Inter", sans-serif);
+  font-size: 0.68rem;
+  font-weight: 600;
+  font-style: italic;
+  top: 4px;
+}
+.fb-hebrew-card__sense-sublist {
+  margin-top: 3px;
+  margin-left: 6px;
+  font-size: 0.8rem;
+}
+
+/* T6 : Passages bibliques */
+.fb-hebrew-card__refs {
+  margin-top: 10px;
+  padding: 7px 9px;
+  background: rgba(234, 219, 200, 0.15);
+  border: 1px dashed rgba(178, 140, 100, 0.3);
+  border-radius: 5px;
+}
+.fb-hebrew-card__refs-label {
+  font-family: var(--fb-font-sans, "Inter", sans-serif);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #B28C64;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 4px;
+}
+.fb-hebrew-card__refs-list {
+  font-family: var(--fb-font-serif, "EB Garamond", serif);
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+.fb-hebrew-card__ref-link {
+  color: #4E3628;
+  text-decoration: none;
+  border-bottom: 1px dotted #B28C64;
+  padding: 0 1px;
+  transition: all 0.15s;
+}
+.fb-hebrew-card__ref-link:hover {
+  background: #EADBC8;
+  border-bottom-style: solid;
+}
+
+/* T7 : Etymologie + TWOT */
+.fb-hebrew-card__etym {
+  margin-top: 10px;
+  padding-top: 7px;
+  border-top: 1px dashed rgba(178, 140, 100, 0.18);
+  font-family: var(--fb-font-serif, "EB Garamond", serif);
+  font-style: italic;
+  font-size: 0.82rem;
+  color: var(--fb-muted, #83776c);
+  line-height: 1.5;
+}
+.fb-hebrew-card__etym-label {
+  font-style: normal;
+  font-family: var(--fb-font-sans, "Inter", sans-serif);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #B28C64;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.fb-hebrew-card__strong-link {
+  color: #B28C64;
+  text-decoration: none;
+  font-style: normal;
+  font-weight: 500;
+  border-bottom: 1px dotted #B28C64;
+}
+.fb-hebrew-card__strong-link:hover { border-bottom-style: solid; }
+.fb-hebrew-card__twot {
+  display: inline-block;
+  margin-left: 0.4em;
+  font-family: var(--fb-font-sans, "Inter", sans-serif);
+  font-size: 0.68rem;
+  font-weight: 500;
+  font-style: normal;
+  color: var(--fb-muted, #83776c);
+  background: rgba(178, 140, 100, 0.08);
+  padding: 1px 6px;
+  border-radius: 10px;
+  border: 1px solid rgba(178, 140, 100, 0.2);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Hebrew sidebar — BDB expandable definition
+   ══════════════════════════════════════════════════════════════ */
+
+.fb-hebrew-card__def--short {
+  font-family: var(--fb-font-serif, "EB Garamond", serif);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--fb-text, #3c2f2f);
+}
+
+.fb-hebrew-card__def--full {
+  font-family: var(--fb-font-serif, "EB Garamond", serif);
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: var(--fb-text, #3c2f2f);
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(178, 140, 100, 0.12);
+}
+
+.fb-hebrew-card__expand {
+  display: block;
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #c17a3a;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+.fb-hebrew-card__expand:hover {
+  color: #8c6849;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Hebrew sidebar — Mini-concordancier OSHB
+   ══════════════════════════════════════════════════════════════ */
+
+.fb-hebrew-card__conc {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(178, 140, 100, 0.12);
+}
+
+.fb-hebrew-card__conc-head {
+  margin-bottom: 6px;
+}
+
+.fb-hebrew-card__conc-count {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fb-muted, #83776c);
+}
+
+/* Concordance — book summary pills */
+.fb-conc-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.fb-conc-book-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  border: 1px solid rgba(178, 140, 100, 0.18);
+  border-radius: 6px;
+  background: rgba(178, 140, 100, 0.05);
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--fb-text, #3c2f2f);
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+  white-space: nowrap;
+}
+
+.fb-conc-book-pill:hover {
+  background: rgba(178, 140, 100, 0.12);
+  border-color: rgba(178, 140, 100, 0.3);
+}
+
+.fb-conc-book-pill.is-active {
+  background: var(--fb-accent, #B28C64);
+  border-color: var(--fb-accent, #B28C64);
+  color: #fff;
+}
+
+.fb-conc-book-pill.is-active .fb-conc-book-pill__count {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.fb-conc-book-pill__count {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--fb-muted, #83776c);
+}
+
+/* Concordance — accordion panels */
+.fb-conc-panel {
+  margin-top: 6px;
+  padding: 8px;
+  border-radius: 6px;
+  background: rgba(178, 140, 100, 0.04);
+  border: 1px solid rgba(178, 140, 100, 0.1);
+}
+
+.fb-conc-panel__refs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 4px;
+}
+
+.fb-conc-panel__refs .fb-conc-ref {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(178, 140, 100, 0.08);
+  color: var(--fb-accent, #B28C64);
+  cursor: pointer;
+  transition: background 160ms ease, color 160ms ease;
+  white-space: nowrap;
+}
+
+.fb-conc-panel__refs .fb-conc-ref:hover {
+  background: rgba(178, 140, 100, 0.2);
+  color: #8c6849;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Hebrew sidebar — Root family
+   ══════════════════════════════════════════════════════════════ */
+
+.fb-hebrew-card__root {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(178, 140, 100, 0.12);
+}
+
+.fb-hebrew-card__root-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.fb-hebrew-card__root-label {
+  font-family: var(--fb-font-sans, system-ui, sans-serif);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fb-muted, #999);
+}
+
+.fb-hebrew-card__root-hebrew {
+  font-family: var(--fb-font-hebrew, 'SBL Hebrew', 'Ezra SIL', serif);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fb-accent, #B28C64);
+}
+
+.fb-hebrew-card__root-count {
+  font-family: var(--fb-font-sans, system-ui, sans-serif);
+  font-size: 0.62rem;
+  color: var(--fb-muted, #999);
+  margin-left: auto;
+}
+
+.fb-root-family {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.fb-root-sibling {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(178, 140, 100, 0.06);
+  border: 1px solid rgba(178, 140, 100, 0.12);
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.fb-root-sibling:hover {
+  background: rgba(178, 140, 100, 0.14);
+  border-color: rgba(178, 140, 100, 0.3);
+}
+
+.fb-root-sibling__hebrew {
+  font-family: var(--fb-font-hebrew, 'SBL Hebrew', 'Ezra SIL', serif);
+  font-size: 0.85rem;
+  color: var(--fb-text, #3a2e25);
+}
+
+.fb-root-sibling__info {
+  font-family: var(--fb-font-sans, system-ui, sans-serif);
+  font-size: 0.62rem;
+  color: var(--fb-muted, #999);
+  line-height: 1.2;
+}
+
+.fb-root-sibling__strong {
+  font-weight: 600;
+  color: var(--fb-accent, #B28C64);
+}
+
+.fb-root-sibling__gloss {
+  font-style: italic;
+}
+
+/* Highlight animation for scroll-to-card */
+.fb-hebrew-card--highlight {
+  animation: fb-card-glow 1.5s ease;
+}
+
+@keyframes fb-card-glow {
+  0%   { box-shadow: 0 0 0 3px rgba(178, 140, 100, 0.5); }
+  100% { box-shadow: 0 0 0 0 rgba(178, 140, 100, 0); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Hebrew sidebar — Greek lexicon placeholder
+   ══════════════════════════════════════════════════════════════ */
+
+.fb-greek-placeholder {
+  padding: 14px 16px;
+  border-radius: var(--fb-radius-sm, 10px);
+  background: #f0f3f7;
+  border: 1px dashed rgba(74, 111, 165, 0.15);
+  text-align: center;
+  margin-top: 12px;
+}
+
+.fb-greek-placeholder__icon {
+  font-family: "EB Garamond", "Noto Serif", "Georgia", serif;
+  font-size: 1.8rem;
+  color: #4a6fa5;
+  opacity: 0.5;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.fb-greek-placeholder__label {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: #2d4a73;
+  opacity: 0.55;
+}
+
+.fb-greek-placeholder__note {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.68rem;
+  color: var(--fb-muted, #83776c);
+  margin-top: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Responsive — new components
+   ══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 599px) {
+  .figuier-bible-app .fb-source-section__title-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .figuier-bible-app .fb-source-section__meta {
+    gap: 6px;
+  }
+  .figuier-bible-app .fb-role-badge {
+    font-size: 0.68rem;
+    padding: 2px 8px;
+  }
+  .figuier-bible-app .fb-concept-refs {
+    gap: 5px;
+  }
+  .figuier-bible-app .fb-ref-pill {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Concepts liés — bloc standalone pleine largeur
+   ══════════════════════════════════════════════════════════════ */
+
+.figuier-bible-app .fb-related-standalone {
+  margin: 0 10px;
+  padding: 16px 20px;
+  background: var(--fb-surface, rgba(255,255,255,0.92));
+  border: 1px solid var(--fb-border, rgba(95,92,87,0.10));
+  border-radius: var(--fb-radius-md, 14px);
+  box-shadow: 0 4px 12px rgba(53, 38, 22, 0.04);
+}
+
+.figuier-bible-app .fb-related-standalone__title {
+  margin: 0 0 12px;
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--fb-muted, #83776c);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.figuier-bible-app .fb-related-standalone__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.figuier-bible-app .fb-related-standalone__list .fb-related-button {
+  width: auto;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--fb-surface-alt, rgba(255,251,239,0.6));
+  border: 1px solid var(--fb-border, rgba(95,92,87,0.10));
+  font-size: 0.85rem;
+}
+
+.figuier-bible-app .fb-related-standalone__list .fb-related-button:hover {
+  background: var(--fb-accent-light, rgba(178,140,100,0.08));
+  border-color: var(--fb-border-accent, rgba(178,140,100,0.25));
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Footer — Sources & Copyright
+   ══════════════════════════════════════════════════════════════ */
+
+.figuier-bible-app .fb-copyright-block {
+  margin: 0 10px 8px;
+  padding: 14px 18px;
+  background: var(--fb-surface-alt, rgba(255,251,239,0.6));
+  border-radius: var(--fb-radius-sm, 10px);
+}
+
+.figuier-bible-app .fb-copyright-block__heading {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--fb-text, #3c2f2f);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.figuier-bible-app .fb-copyright-block__text {
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  font-size: 0.7rem;
+  line-height: 1.65;
+  color: var(--fb-muted, #83776c);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   Responsive — standalone blocks
+   ══════════════════════════════════════════════════════════════ */
+
+@media (min-width: 900px) {
+  .figuier-bible-app .fb-related-standalone {
+    margin: 0 20px;
+    padding: 18px 22px;
+  }
+  .figuier-bible-app .fb-copyright-block {
+    margin: 0 20px 10px;
+  }
+}
+
+@media (max-width: 599px) {
+  .figuier-bible-app .fb-related-standalone {
+    margin: 0 6px;
+    padding: 12px 14px;
+  }
+  .figuier-bible-app .fb-related-standalone__list {
+    gap: 6px;
+  }
+  .figuier-bible-app .fb-related-standalone__list .fb-related-button {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+  .figuier-bible-app .fb-copyright-block {
+    margin: 0 6px 6px;
+    padding: 10px 12px;
+  }
+}
+
+/* ── Verse Bubble ─────────────────────────────────────── */
+
+.fb-verse-bubble {
+  position: fixed;
+  z-index: 999999;
+  max-width: 420px;
+  width: 90vw;
+  background: #fff;
+  border: 1.5px solid rgba(178, 140, 100, 0.35);
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(58, 46, 37, 0.18), 0 2px 8px rgba(0,0,0,0.08);
+  font-family: var(--fb-font-sans, "Inter", -apple-system, sans-serif);
+  overflow: hidden;
+  animation: fbBubbleFadeIn 0.2s ease;
+}
+
+@keyframes fbBubbleFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fb-verse-bubble__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(178, 140, 100, 0.08);
+  border-bottom: 1px solid rgba(178, 140, 100, 0.15);
+}
+
+.fb-verse-bubble__ref {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--fb-accent, #B28C64);
+}
+
+.fb-verse-bubble__close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #8a7a6a;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.fb-verse-bubble__close:hover {
+  color: var(--fb-text, #3a2e25);
+}
+
+.fb-verse-bubble__body {
+  padding: 10px 14px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--fb-text, #3a2e25);
+}
+
+.fb-verse-bubble__loading {
+  text-align: center;
+  color: #8a7a6a;
+  padding: 16px 0;
+  font-size: 0.85rem;
+}
+
+.fb-verse-bubble__verse {
+  padding: 3px 0;
+  color: #6b6058;
+}
+
+.fb-verse-bubble__verse.is-target {
+  color: var(--fb-text, #3a2e25);
+  font-weight: 500;
+  background: rgba(178, 140, 100, 0.08);
+  border-radius: 4px;
+  padding: 3px 6px;
+  margin: 2px -6px;
+}
+
+.fb-verse-bubble__vnum {
+  font-weight: 700;
+  font-size: 0.75rem;
+  color: var(--fb-accent, #B28C64);
+  margin-right: 4px;
+}
+
+.fb-verse-bubble__empty {
+  text-align: center;
+  color: #8a7a6a;
+  padding: 12px 0;
+  font-size: 0.85rem;
+}
+
+.fb-verse-bubble__footer {
+  padding: 8px 12px;
+  border-top: 1px solid rgba(178, 140, 100, 0.12);
+  text-align: right;
+}
+
+.fb-verse-bubble__footer a {
+  font-size: 0.8rem;
+  color: var(--fb-accent, #B28C64);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.fb-verse-bubble__footer a:hover {
+  text-decoration: underline;
+}
+
+/* Overlay for mobile sheet */
+.fb-verse-bubble__overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999998;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+/* Mobile sheet mode */
+.fb-verse-bubble--sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: auto;
+  max-width: 100%;
+  width: 100%;
+  border-radius: 16px 16px 0 0;
+  max-height: 70vh;
+  animation: fbSheetSlideUp 0.25s ease;
+}
+
+.fb-verse-bubble--sheet .fb-verse-bubble__body {
+  max-height: 50vh;
+}
+
+@keyframes fbSheetSlideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+/* ── Root Bubble (extends .fb-verse-bubble) ───────────── */
+
+.fb-root-bubble {
+  max-width: 340px;
+}
+
+.fb-root-bubble .fb-verse-bubble__header {
+  gap: 8px;
+}
+
+.fb-root-bubble__root-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.fb-root-bubble__root {
+  font-family: 'SBL Hebrew', 'Ezra SIL', 'Frank Ruehl CLM', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--fb-accent, #B28C64);
+  line-height: 1;
+}
+
+.fb-root-bubble__root-translit {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: #8a7a6a;
+}
+
+.fb-root-bubble__root-gloss {
+  font-size: 0.78rem;
+  color: #5a4e45;
+}
+
+.fb-root-bubble__stats {
+  font-size: 0.72rem;
+  color: #8a7a6a;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.fb-root-bubble .fb-verse-bubble__body {
+  padding: 8px 12px;
+}
+
+.fb-root-bubble__member {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(178, 140, 100, 0.08);
+}
+
+.fb-root-bubble__member:last-child {
+  border-bottom: none;
+}
+
+.fb-root-bubble__hebrew {
+  font-family: 'SBL Hebrew', 'Ezra SIL', serif;
+  font-size: 1.05rem;
+  color: var(--fb-text, #3a2e25);
+  min-width: 50px;
+  text-align: right;
+}
+
+.fb-root-bubble__translit {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: #8a7a6a;
+  min-width: 0;
+}
+
+.fb-root-bubble__gloss {
+  font-size: 0.82rem;
+  color: #5a4e45;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fb-root-bubble__occ {
+  font-size: 0.7rem;
+  color: #8a7a6a;
+  min-width: 28px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.fb-root-bubble__more {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #8a7a6a;
+  padding: 6px 0 2px;
+}
+
+/* BDB key verses */
+.fb-hebrew-card__bdb-refs {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(178, 140, 100, 0.1);
+}
+
+.fb-hebrew-card__bdb-refs-label {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8a7a6a;
+  margin-bottom: 5px;
+}
+
+.fb-hebrew-card__bdb-refs-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 4px;
+}
+
+.fb-hebrew-card__bdb-refs-list .fb-ref-badge {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(107, 143, 94, 0.08);
+  color: #5a7a55;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.fb-hebrew-card__bdb-refs-list .fb-ref-badge:hover {
+  background: rgba(107, 143, 94, 0.2);
+}
+
+.fb-hebrew-card__bdb-refs-expand {
+  font-size: 0.65rem;
+  color: #8a7a6a;
+  background: none;
+  border: 1px dashed rgba(178, 140, 100, 0.25);
+  border-radius: 4px;
+  padding: 2px 6px;
+  cursor: pointer;
+  font-family: var(--fb-font-sans, 'Inter', system-ui, sans-serif);
+}
+
+.fb-hebrew-card__bdb-refs-expand:hover {
+  border-color: rgba(178, 140, 100, 0.5);
+  color: #5a4e45;
+}
+
+.fb-hebrew-card__bdb-refs-more {
+  display: contents;
+}
+
+/* Pilule racine — now a button */
+.fb-hebrew-card__root-pill {
+  font-family: var(--fb-font-sans, 'Inter', system-ui, sans-serif);
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   V3 — FIX OVERFLOW HORIZONTAL MOBILE (pattern 3 couches)
+   Référence : feedback_kadence_overflow_fix_pattern.md
+   Scopé à la page dictionnaire-biblique (page-id-1978)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Couche 1 — Clip curatif scopé aux wrappers Kadence parents */
+@media (max-width: 960px) {
+  body.page-id-1978 {
+    overflow-x: hidden !important;
+  }
+  body.page-id-1978 #wrapper,
+  body.page-id-1978 #inner-wrap,
+  body.page-id-1978 #primary,
+  body.page-id-1978 .content-container,
+  body.page-id-1978 .site-container,
+  body.page-id-1978 #main,
+  body.page-id-1978 .content-wrap,
+  body.page-id-1978 .entry,
+  body.page-id-1978 .entry-content-wrap,
+  body.page-id-1978 .entry-content {
+    max-width: 100vw;
+    overflow-x: hidden !important;
+  }
+}
+
+/* Couche 2 — min-width:0 + max-width:100% sur les grid/flex children
+   pour empêcher qu'un enfant ne force l'overflow de son container */
+.figuier-bible-app .fb-source-section,
+.figuier-bible-app .fb-concept-hero,
+.figuier-bible-app .fb-concept-layout,
+.figuier-bible-app .fb-concept-body > *,
+.figuier-bible-app .fb-main-stack > *,
+.figuier-bible-app .fb-concept-sidebar > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* Couche 3 — Wrap des textes longs (titres, previews, définitions)
+   pour qu'un mot/URL trop long ne force pas le dépassement */
+.figuier-bible-app .fb-source-preview,
+.figuier-bible-app .fb-source-section__title,
+.figuier-bible-app .fb-source-title__primary,
+.figuier-bible-app .fb-source-title__secondary,
+.figuier-bible-app .fb-concept-title,
+.figuier-bible-app .fb-concept-title-secondary,
+.figuier-bible-app .fb-source-content,
+.figuier-bible-app .fb-source-section__body p,
+.figuier-bible-app .fb-breadcrumb {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}

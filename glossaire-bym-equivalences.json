@@ -1,0 +1,774 @@
+﻿[
+    {
+        "nom_restaure":  "Abihou",
+        "noms_francais":  "Abihu"
+    },
+    {
+        "nom_restaure":  "Abiyam",
+        "noms_francais":  "Abijam"
+    },
+    {
+        "nom_restaure":  "Achazyah",
+        "noms_francais":  "Achazia"
+    },
+    {
+        "nom_restaure":  "Achiyah",
+        "noms_francais":  "Achija"
+    },
+    {
+        "nom_restaure":  "Agour",
+        "noms_francais":  "Agur"
+    },
+    {
+        "nom_restaure":  "Akulas",
+        "noms_francais":  "Aquilas"
+    },
+    {
+        "nom_restaure":  "Alexandros",
+        "noms_francais":  "Alexandre"
+    },
+    {
+        "nom_restaure":  "Amatsyah",
+        "noms_francais":  "Amatsia"
+    },
+    {
+        "nom_restaure":  "Amowc",
+        "noms_francais":  "Amos"
+    },
+    {
+        "nom_restaure":  "Andreas",
+        "noms_francais":  "André"
+    },
+    {
+        "nom_restaure":  "Archippos",
+        "noms_francais":  "Archippe"
+    },
+    {
+        "nom_restaure":  "Aristarchos",
+        "noms_francais":  "Aristarque"
+    },
+    {
+        "nom_restaure":  "Athalyah",
+        "noms_francais":  "Athalie"
+    },
+    {
+        "nom_restaure":  "Azaryah",
+        "noms_francais":  "Azaria"
+    },
+    {
+        "nom_restaure":  "Bar­Talmaï",
+        "noms_francais":  "Barthélemi,\nBarthélemy"
+    },
+    {
+        "nom_restaure":  "Bartimaios",
+        "noms_francais":  "Bartimée"
+    },
+    {
+        "nom_restaure":  "Bashân",
+        "noms_francais":  "Basan"
+    },
+    {
+        "nom_restaure":  "Benyamin",
+        "noms_francais":  "Benjamin"
+    },
+    {
+        "nom_restaure":  "Chaggay",
+        "noms_francais":  "Aggée, Haggaï"
+    },
+    {
+        "nom_restaure":  "Chananyah",
+        "noms_francais":  "Ananias, Anne,\nHanania"
+    },
+    {
+        "nom_restaure":  "Channah",
+        "noms_francais":  "Anne"
+    },
+    {
+        "nom_restaure":  "Chouzas",
+        "noms_francais":  "Chuza"
+    },
+    {
+        "nom_restaure":  "Daniye\u0027l",
+        "noms_francais":  "Daniel"
+    },
+    {
+        "nom_restaure":  "Didymos",
+        "noms_francais":  "Didyme"
+    },
+    {
+        "nom_restaure":  "Diynah",
+        "noms_francais":  "Dina, Dinah"
+    },
+    {
+        "nom_restaure":  "El",
+        "noms_francais":  "Dieu"
+    },
+    {
+        "nom_restaure":  "Èl’azar",
+        "noms_francais":  "Éléazar, Lazare"
+    },
+    {
+        "nom_restaure":  "Élahh",
+        "noms_francais":  "Dieu"
+    },
+    {
+        "nom_restaure":  "Éliyah",
+        "noms_francais":  "Élie"
+    },
+    {
+        "nom_restaure":  "Éliysha",
+        "noms_francais":  "Élisée"
+    },
+    {
+        "nom_restaure":  "Éliysheba",
+        "noms_francais":  "Élisabeth,\nÉlischéba"
+    },
+    {
+        "nom_restaure":  "Éloah",
+        "noms_francais":  "Dieu"
+    },
+    {
+        "nom_restaure":  "Elohîm",
+        "noms_francais":  "Dieu"
+    },
+    {
+        "nom_restaure":  "Enowsh",
+        "noms_francais":  "Énos, Énosch"
+    },
+    {
+        "nom_restaure":  "Epaphroditos",
+        "noms_francais":  "Épaphrodite"
+    },
+    {
+        "nom_restaure":  "Ésav",
+        "noms_francais":  "Ésaü"
+    },
+    {
+        "nom_restaure":  "Ezra",
+        "noms_francais":  "Esdras"
+    },
+    {
+        "nom_restaure":  "Gabriy\u0027el",
+        "noms_francais":  "Gabriel"
+    },
+    {
+        "nom_restaure":  "Gaïos",
+        "noms_francais":  "Gaïus"
+    },
+    {
+        "nom_restaure":  "Guid\u0027ôn",
+        "noms_francais":  "Gédéon"
+    },
+    {
+        "nom_restaure":  "Habaqqouq",
+        "noms_francais":  "Habakuk"
+    },
+    {
+        "nom_restaure":  "Hanowk",
+        "noms_francais":  "Enoch,Hénoc"
+    },
+    {
+        "nom_restaure":  "Havah",
+        "noms_francais":  "Ève"
+    },
+    {
+        "nom_restaure":  "Hizqiyah",
+        "noms_francais":  "Ézéchias"
+    },
+    {
+        "nom_restaure":  "Hoshea",
+        "noms_francais":  "Hosée, Osée"
+    },
+    {
+        "nom_restaure":  "Houldah",
+        "noms_francais":  "Hulda"
+    },
+    {
+        "nom_restaure":  "Hymenaïos",
+        "noms_francais":  "Hyménée"
+    },
+    {
+        "nom_restaure":  "Immanou­El",
+        "noms_francais":  "Emmanuel"
+    },
+    {
+        "nom_restaure":  "Iyov",
+        "noms_francais":  "Job"
+    },
+    {
+        "nom_restaure":  "Kaïaphas",
+        "noms_francais":  "Caïphe"
+    },
+    {
+        "nom_restaure":  "Kena\u0027ân",
+        "noms_francais":  "Canaan"
+    },
+    {
+        "nom_restaure":  "Kephas",
+        "noms_francais":  "Céphas"
+    },
+    {
+        "nom_restaure":  "Kornelios",
+        "noms_francais":  "Corneille"
+    },
+    {
+        "nom_restaure":  "Lemouel",
+        "noms_francais":  "Lemuel, Lémuel"
+    },
+    {
+        "nom_restaure":  "Loukas",
+        "noms_francais":  "Luc"
+    },
+    {
+        "nom_restaure":  "Magdeleine",
+        "noms_francais":  "Madeleine, Magdala, Magdalène,\nMagdeleine"
+    },
+    {
+        "nom_restaure":  "Malakhi",
+        "noms_francais":  "Malachie"
+    },
+    {
+        "nom_restaure":  "Malkiy­Tsédeq",
+        "noms_francais":  "Melchisédek"
+    },
+    {
+        "nom_restaure":  "Markos",
+        "noms_francais":  "Marc"
+    },
+    {
+        "nom_restaure":  "Martha",
+        "noms_francais":  "Marthe"
+    },
+    {
+        "nom_restaure":  "Mashiah",
+        "noms_francais":  "Christ, Messie,\nOint"
+    },
+    {
+        "nom_restaure":  "Matthaios",
+        "noms_francais":  "Matthieu"
+    },
+    {
+        "nom_restaure":  "Mattithyah",
+        "noms_francais":  "Mattathias,\nMatthithia"
+    },
+    {
+        "nom_restaure":  "Matyah",
+        "noms_francais":  "Matthias"
+    },
+    {
+        "nom_restaure":  "Menashè",
+        "noms_francais":  "Manassé"
+    },
+    {
+        "nom_restaure":  "Metoushèlah",
+        "noms_francais":  "Mathusala,\nMetuschélah, Methuselah"
+    },
+    {
+        "nom_restaure":  "Miyka\u0027el",
+        "noms_francais":  "Michaël, Michel"
+    },
+    {
+        "nom_restaure":  "Miykal",
+        "noms_francais":  "Mical, Michol,\nMikal, Mikhal"
+    },
+    {
+        "nom_restaure":  "Miykayah, Miykah",
+        "noms_francais":  "Michée"
+    },
+    {
+        "nom_restaure":  "Mordekay",
+        "noms_francais":  "Mardochée"
+    },
+    {
+        "nom_restaure":  "Moshé",
+        "noms_francais":  "Moïse"
+    },
+    {
+        "nom_restaure":  "Myriam",
+        "noms_francais":  "Marie"
+    },
+    {
+        "nom_restaure":  "Nahoum",
+        "noms_francais":  "Nahum"
+    },
+    {
+        "nom_restaure":  "Nehemyah",
+        "noms_francais":  "Néhémie"
+    },
+    {
+        "nom_restaure":  "Netanél",
+        "noms_francais":  "Nathanaël,\nNethaneel"
+    },
+    {
+        "nom_restaure":  "Nethanyah",
+        "noms_francais":  "Nethania"
+    },
+    {
+        "nom_restaure":  "Nikodemos",
+        "noms_francais":  "Nicodème"
+    },
+    {
+        "nom_restaure":  "Noah",
+        "noms_francais":  "Noé"
+    },
+    {
+        "nom_restaure":  "Obadyah",
+        "noms_francais":  "Abdias"
+    },
+    {
+        "nom_restaure":  "Onesimos",
+        "noms_francais":  "Onésime"
+    },
+    {
+        "nom_restaure":  "Onésiphoros",
+        "noms_francais":  "Onésiphore"
+    },
+    {
+        "nom_restaure":  "Our",
+        "noms_francais":  "Ur"
+    },
+    {
+        "nom_restaure":  "Ouriyah",
+        "noms_francais":  "Urie"
+    },
+    {
+        "nom_restaure":  "Paulos",
+        "noms_francais":  "Paul, Paulus"
+    },
+    {
+        "nom_restaure":  "Petros",
+        "noms_francais":  "Pierre"
+    },
+    {
+        "nom_restaure":  "Philètos",
+        "noms_francais":  "Philète"
+    },
+    {
+        "nom_restaure":  "Philippos",
+        "noms_francais":  "Philippe"
+    },
+    {
+        "nom_restaure":  "Qanah",
+        "noms_francais":  "Cana, Kana"
+    },
+    {
+        "nom_restaure":  "Qayin",
+        "noms_francais":  "Caïn"
+    },
+    {
+        "nom_restaure":  "Rehabam",
+        "noms_francais":  "Roboam"
+    },
+    {
+        "nom_restaure":  "Reouben",
+        "noms_francais":  "Ruben"
+    },
+    {
+        "nom_restaure":  "Rhouphos",
+        "noms_francais":  "Rufus"
+    },
+    {
+        "nom_restaure":  "Ribqah",
+        "noms_francais":  "Rébecca"
+    },
+    {
+        "nom_restaure":  "Routh",
+        "noms_francais":  "Ruth"
+    },
+    {
+        "nom_restaure":  "Shaoul",
+        "noms_francais":  "Saul, Saül"
+    },
+    {
+        "nom_restaure":  "Shekem",
+        "noms_francais":  "Sichem"
+    },
+    {
+        "nom_restaure":  "Shelomit",
+        "noms_francais":  "Salomé"
+    },
+    {
+        "nom_restaure":  "Shelomoh",
+        "noms_francais":  "Salomon"
+    },
+    {
+        "nom_restaure":  "Shema’yah",
+        "noms_francais":  "Schemaeja"
+    },
+    {
+        "nom_restaure":  "Shemouél",
+        "noms_francais":  "Samuel"
+    },
+    {
+        "nom_restaure":  "Shim’ôn",
+        "noms_francais":  "Siméon, Simon"
+    },
+    {
+        "nom_restaure":  "Shimshôn",
+        "noms_francais":  "Samson"
+    },
+    {
+        "nom_restaure":  "Shiyloh",
+        "noms_francais":  "Silo"
+    },
+    {
+        "nom_restaure":  "Shounamite",
+        "noms_francais":  "Sunamite"
+    },
+    {
+        "nom_restaure":  "Shouném",
+        "noms_francais":  "Sunem"
+    },
+    {
+        "nom_restaure":  "Shoushan",
+        "noms_francais":  "Susanne"
+    },
+    {
+        "nom_restaure":  "Stephanos",
+        "noms_francais":  "Étienne"
+    },
+    {
+        "nom_restaure":  "Theophilos",
+        "noms_francais":  "Théophile"
+    },
+    {
+        "nom_restaure":  "Timotheos",
+        "noms_francais":  "Timothée"
+    },
+    {
+        "nom_restaure":  "Titos",
+        "noms_francais":  "Tite"
+    },
+    {
+        "nom_restaure":  "Toubal",
+        "noms_francais":  "Tubal"
+    },
+    {
+        "nom_restaure":  "Tsephanyah",
+        "noms_francais":  "Sophonie"
+    },
+    {
+        "nom_restaure":  "Tsidqiyah",
+        "noms_francais":  "Sédécias"
+    },
+    {
+        "nom_restaure":  "Tuchikos",
+        "noms_francais":  "Tychique"
+    },
+    {
+        "nom_restaure":  "Ya`asiy\u0027el",
+        "noms_francais":  "Jaasciel, Jaasiel,\nJasiël"
+    },
+    {
+        "nom_restaure":  "Ya`azeyr",
+        "noms_francais":  "Jaezer, Jahzer"
+    },
+    {
+        "nom_restaure":  "Yaacov",
+        "noms_francais":  "Jacob, Jacques"
+    },
+    {
+        "nom_restaure":  "Yabal",
+        "noms_francais":  "Jabal"
+    },
+    {
+        "nom_restaure":  "Yabesh",
+        "noms_francais":  "Jabès, Jabesch"
+    },
+    {
+        "nom_restaure":  "Yachaziy\u0027el",
+        "noms_francais":  "Jachaziel,\nJakhaziel"
+    },
+    {
+        "nom_restaure":  "Yaïr",
+        "noms_francais":  "Jaïr, Jaïrus"
+    },
+    {
+        "nom_restaure":  "Yakiyn",
+        "noms_francais":  "Jakin"
+    },
+    {
+        "nom_restaure":  "Yaphlet",
+        "noms_francais":  "Japhlet, Japhleth"
+    },
+    {
+        "nom_restaure":  "Yapho",
+        "noms_francais":  "Jaffa, Japho"
+    },
+    {
+        "nom_restaure":  "Yarden",
+        "noms_francais":  "Jourdain"
+    },
+    {
+        "nom_restaure":  "Yarobam",
+        "noms_francais":  "Jéroboam"
+    },
+    {
+        "nom_restaure":  "Yavan",
+        "noms_francais":  "Javan"
+    },
+    {
+        "nom_restaure":  "Yebous",
+        "noms_francais":  "Jébus"
+    },
+    {
+        "nom_restaure":  "Yechiy\u0027el",
+        "noms_francais":  "Jehiel, Jéhiel, Jéhiël, Jekhiel,\nYehiel"
+    },
+    {
+        "nom_restaure":  "Yedoutoun",
+        "noms_francais":  "Jeduthun"
+    },
+    {
+        "nom_restaure":  "Yehezkel",
+        "noms_francais":  "Ézéchiel"
+    },
+    {
+        "nom_restaure":  "Yehizqiyah",
+        "noms_francais":  "Ézéchias"
+    },
+    {
+        "nom_restaure":  "Yehoachaz",
+        "noms_francais":  "Joachaz"
+    },
+    {
+        "nom_restaure":  "Yehoash",
+        "noms_francais":  "Joas"
+    },
+    {
+        "nom_restaure":  "Yehonadab, Yonadab",
+        "noms_francais":  "Jonadab"
+    },
+    {
+        "nom_restaure":  "Yehonathan, Yonathan",
+        "noms_francais":  "Jonathan"
+    },
+    {
+        "nom_restaure":  "Yehoram, Yoram",
+        "noms_francais":  "Joram"
+    },
+    {
+        "nom_restaure":  "Yehoshaphat",
+        "noms_francais":  "Josaphat"
+    },
+    {
+        "nom_restaure":  "Yéhoshoua",
+        "noms_francais":  "Jésus, Josué"
+    },
+    {
+        "nom_restaure":  "Yéhouda",
+        "noms_francais":  "Juda, Judas, Jude"
+    },
+    {
+        "nom_restaure":  "Yehoudith",
+        "noms_francais":  "Judith"
+    },
+    {
+        "nom_restaure":  "Yehoyada",
+        "noms_francais":  "Jehoïada, Jehojada, Jéhojada,\nJéhojadah"
+    },
+    {
+        "nom_restaure":  "Yehoyaqiym",
+        "noms_francais":  "Jojakim"
+    },
+    {
+        "nom_restaure":  "Yehoyaqiyn",
+        "noms_francais":  "Jojakin"
+    },
+    {
+        "nom_restaure":  "Yehuw",
+        "noms_francais":  "Jéhu"
+    },
+    {
+        "nom_restaure":  "Yekonyah, Konyah",
+        "noms_francais":  "Jéconia, Jéconias"
+    },
+    {
+        "nom_restaure":  "Yéoush",
+        "noms_francais":  "Jehush, Jéisch,\nJéusch, Jéush"
+    },
+    {
+        "nom_restaure":  "Yéoush",
+        "noms_francais":  "Jéhu, Jehush,\nJéusch, Jéush"
+    },
+    {
+        "nom_restaure":  "Yepheth",
+        "noms_francais":  "Japhet"
+    },
+    {
+        "nom_restaure":  "Yephounné",
+        "noms_francais":  "Jephunné"
+    },
+    {
+        "nom_restaure":  "Yeriycho",
+        "noms_francais":  "Jéricho"
+    },
+    {
+        "nom_restaure":  "Yeriymoth",
+        "noms_francais":  "Jerémoth,\nJerimoth, Jérimoth"
+    },
+    {
+        "nom_restaure":  "Yeroham",
+        "noms_francais":  "Jerocham,\nJeroham, Jéroham, Jerokham"
+    },
+    {
+        "nom_restaure":  "Yeroushalaim",
+        "noms_francais":  "Jérusalem"
+    },
+    {
+        "nom_restaure":  "Yesha`yah",
+        "noms_francais":  "Ésaïe"
+    },
+    {
+        "nom_restaure":  "Yéshoua",
+        "noms_francais":  "Josué, Jéschua"
+    },
+    {
+        "nom_restaure":  "Yether",
+        "noms_francais":  "Jéther, Jéthro"
+    },
+    {
+        "nom_restaure":  "Yimna",
+        "noms_francais":  "Jimna, Jimnah"
+    },
+    {
+        "nom_restaure":  "Yimnah",
+        "noms_francais":  "Jimna"
+    },
+    {
+        "nom_restaure":  "Yimrah",
+        "noms_francais":  "Jimra"
+    },
+    {
+        "nom_restaure":  "Yirmeyah",
+        "noms_francais":  "Jérémie"
+    },
+    {
+        "nom_restaure":  "Yishbaq",
+        "noms_francais":  "Jisba, Jischbak,\nJishbak"
+    },
+    {
+        "nom_restaure":  "Yishma`yah",
+        "noms_francais":  "Jischmaeja, Jishmaeja, Jishmahia,\nJismahja"
+    },
+    {
+        "nom_restaure":  "Yishmael",
+        "noms_francais":  "Ismaël"
+    },
+    {
+        "nom_restaure":  "Yishvah",
+        "noms_francais":  "Jischva, Jischvi"
+    },
+    {
+        "nom_restaure":  "Yishviy",
+        "noms_francais":  "Jischva, Jischvi"
+    },
+    {
+        "nom_restaure":  "Yissakar",
+        "noms_francais":  "Issacar"
+    },
+    {
+        "nom_restaure":  "Yithran",
+        "noms_francais":  "Jithran"
+    },
+    {
+        "nom_restaure":  "Yithro",
+        "noms_francais":  "Jéthro"
+    },
+    {
+        "nom_restaure":  "Yitzhak",
+        "noms_francais":  "Isaac"
+    },
+    {
+        "nom_restaure":  "Yizre`e\u0027l",
+        "noms_francais":  "Jizréel"
+    },
+    {
+        "nom_restaure":  "Yoab",
+        "noms_francais":  "Joab"
+    },
+    {
+        "nom_restaure":  "Yoash",
+        "noms_francais":  "Joas"
+    },
+    {
+        "nom_restaure":  "Yobab",
+        "noms_francais":  "Jobab"
+    },
+    {
+        "nom_restaure":  "Yoel",
+        "noms_francais":  "Joël"
+    },
+    {
+        "nom_restaure":  "Yoelah",
+        "noms_francais":  "Joéla"
+    },
+    {
+        "nom_restaure":  "Yohana",
+        "noms_francais":  "Jeanne"
+    },
+    {
+        "nom_restaure":  "Yohanan",
+        "noms_francais":  "Jean"
+    },
+    {
+        "nom_restaure":  "Yokebed",
+        "noms_francais":  "Jokébed"
+    },
+    {
+        "nom_restaure":  "Yonah",
+        "noms_francais":  "Jonas"
+    },
+    {
+        "nom_restaure":  "Yoqshan",
+        "noms_francais":  "Joksan, Jokshan"
+    },
+    {
+        "nom_restaure":  "Yoqtan",
+        "noms_francais":  "Jockthan, Jokthan"
+    },
+    {
+        "nom_restaure":  "Yoshiyah",
+        "noms_francais":  "Josias"
+    },
+    {
+        "nom_restaure":  "Yossef, Yehossef",
+        "noms_francais":  "Joseph"
+    },
+    {
+        "nom_restaure":  "Yosséi",
+        "noms_francais":  "José, Joses, Joseph"
+    },
+    {
+        "nom_restaure":  "Yotham",
+        "noms_francais":  "Joatham, Jotham"
+    },
+    {
+        "nom_restaure":  "Youbal",
+        "noms_francais":  "Jubal"
+    },
+    {
+        "nom_restaure":  "Yozabad",
+        "noms_francais":  "Jozabad"
+    },
+    {
+        "nom_restaure":  "Zabdi",
+        "noms_francais":  "Zabdi, Zébédée"
+    },
+    {
+        "nom_restaure":  "Zakkay",
+        "noms_francais":  "Zabbaï, Zaccaï,\nZachée"
+    },
+    {
+        "nom_restaure":  "Zebouloun",
+        "noms_francais":  "Zabulon"
+    },
+    {
+        "nom_restaure":  "Zekaryah",
+        "noms_francais":  "Zacharie"
+    },
+    {
+        "nom_restaure":  "Zerubbabel",
+        "noms_francais":  "Zorobabel"
+    }
+]

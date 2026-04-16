@@ -1,0 +1,26 @@
+{
+  "taxonomy": [
+    "personnage",
+    "etre_spirituel",
+    "lieu",
+    "lieu_sacre",
+    "peuple",
+    "livre_biblique",
+    "doctrine",
+    "rite",
+    "institution",
+    "fonction",
+    "objet_sacre",
+    "objets_et_vetements",
+    "plante",
+    "animal",
+    "alimentation_et_agriculture",
+    "corps_et_sante",
+    "mesures_et_temps",
+    "matiere",
+    "evenement",
+    "nature"
+  ],
+  "system_prompt": "Classifie chaque concept biblique dans UNE categorie parmi les 20 suivantes :\n\nNOMS PROPRES :\n- personnage : individu humain nomme (David, Paul)\n- etre_spirituel : divinite/ange/demon, nomme OU generique (YHWH, Gabriel, Baal, ange, seraphin)\n- lieu : toponyme profane (Jerusalem, Eden)\n- lieu_sacre : lieu religieux (Temple, Tabernacle, Sanctuaire)\n- peuple : tribu/nation/famille (Israelites, Moabites)\n- livre_biblique : nom d'un livre canonique (Genese, Matthieu)\n\nCONCEPTS :\n- doctrine : theologique abstrait (foi, salut, peche, grace, incarnation)\n- rite : ceremonie/pratique religieuse (bapteme, circoncision, Paque-rite)\n- institution : structure sociale persistante (royaume, mariage, synagogue-institution)\n- fonction : titre/role/metier (roi, pretre, prophete, scribe, juge, berger, apotre)\n- objet_sacre : objet liturgique (arche, autel, ephod, menorah)\n- objets_et_vetements : objets profanes (robe, sandale, balance, lampe)\n- plante : vegetaux (figuier, cedre, ble, absinthe)\n- animal : faune (agneau, lion, aigle, serpent)\n- alimentation_et_agriculture : aliments/agri (pain, vin, miel, vendanges)\n- corps_et_sante : corps/maladie (coeur, main, lepre, hydropisie)\n- mesures_et_temps : unite/periode (coudee, shekel, annee, sabbat)\n- matiere : materiaux (bronze, lin, or, sel)\n- evenement : evenement historique ponctuel (Exode, Deluge)\n- nature : phenomene/geographie generique (desert, pluie, mer)\n\nRegles :\n- \"Roi/pretre/prophete/scribe\" = fonction (titre). David, Paul = personnage (individu).\n- Temple, Tabernacle, Saint-des-Saints = lieu_sacre.\n- Ange/demon generique (pas de nom propre) = etre_spirituel.\n- \"Peche\" doctrine ; \"Sacrifice\" rite ; \"Autel\" objet_sacre.\n- Si hesite : choisir la categorie la PLUS SPECIFIQUE et la plus PROBABLE en contexte biblique.\n\nFORMAT DE REPONSE OBLIGATOIRE :\nJSON array strict, un objet par concept recu dans le MEME ordre.\nChaque objet : {\"cid\":\"<id_recu>\",\"cat\":\"<categorie_de_la_liste>\"}\n\nExemple si on te donne 3 concepts (paulos, temple, figuier), reponds :\n[{\"cid\":\"paulos\",\"cat\":\"personnage\"},{\"cid\":\"temple\",\"cat\":\"lieu_sacre\"},{\"cid\":\"figuier\",\"cat\":\"plante\"}]\n\nRIEN d'autre que ce JSON. Pas de markdown, pas de ```json, pas d'explication.",
+  "batch_size": 50
+}

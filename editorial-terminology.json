@@ -1,0 +1,87 @@
+{
+  "_version": "2026-03-19",
+  "_description": "Terminologie éditoriale pour l'interface publique (UX/UI). Ce fichier gouverne les libellés, menus, filtres, microcopies et textes d'aide. Il ne modifie PAS le contenu des sources documentaires (voir terminology-authority.json pour les traductions).",
+  "_principle": "Les sources conservent leur terminologie historique. L'interface publique applique la ligne éditoriale BYM.",
+
+  "navigation_labels": {
+    "_doc": "Termes de navigation principaux",
+    "tanakh": "Tanakh",
+    "new_testament": "Évangiles et Testament de Yéhoshoua",
+    "bible": "Bible",
+    "biblical": "biblique",
+    "_note_bible": "Les termes 'Bible' et 'biblique' restent utilisables partout où c'est naturel. Pas de remplacement dogmatique."
+  },
+
+  "source_display_labels": {
+    "_doc": "Libellés publics des sources dictionnaires",
+    "bym_lexicon": "Lexique BYM",
+    "easton": "Dictionnaire Easton",
+    "smith": "Dictionnaire Smith",
+    "isbe": "Encyclopédie ISBE",
+    "strong_hebrew": "Concordance Strong (hébreu)",
+    "strong_greek": "Concordance Strong (grec)",
+    "bdb": "Lexique BDB"
+  },
+
+  "reading_role_labels": {
+    "_doc": "Libellés publics des rôles de lecture",
+    "quick_gloss": "Notice lexicale",
+    "main_definition": "Définition principale",
+    "secondary_definition": "Définition complémentaire",
+    "deep_read": "Lecture approfondie",
+    "lexical_entry": "Entrée lexicale"
+  },
+
+  "category_labels": {
+    "_doc": "Libellés publics des catégories de concepts",
+    "personnage": "Personnage",
+    "lieu": "Lieu",
+    "objet": "Objet",
+    "institution": "Institution",
+    "rite": "Rite",
+    "concept_theologique": "Concept théologique",
+    "animal": "Animal",
+    "plante": "Plante",
+    "peuple": "Peuple",
+    "evenement": "Événement",
+    "titre": "Titre",
+    "livre_biblique": "Livre biblique",
+    "mineraux": "Minéraux",
+    "aliment": "Aliment",
+    "mesure": "Mesure",
+    "metier": "Métier",
+    "divers": "Divers"
+  },
+
+  "maturity_labels": {
+    "_doc": "Indicateurs de maturité éditoriale pour l'interface",
+    "ready": "",
+    "review": "Notice en cours de relecture",
+    "draft": "Brouillon — non affiché publiquement",
+    "partial_translation": "Traduction en cours",
+    "flagged": "Notice signalée — non affichée publiquement"
+  },
+
+  "ui_microcopy": {
+    "search_placeholder": "Rechercher un terme biblique…",
+    "no_results": "Aucun résultat trouvé",
+    "browse_by_letter": "Parcourir par lettre",
+    "browse_by_category": "Parcourir par catégorie",
+    "related_concepts": "Concepts liés",
+    "see_also": "Voir aussi",
+    "read_more": "Lire la suite",
+    "deep_read_panel": "Lecture approfondie",
+    "source_label": "Source",
+    "hebrew_card": "Hébreu",
+    "greek_card": "Grec"
+  },
+
+  "forbidden_in_interface": {
+    "_doc": "Termes à éviter dans l'interface publique (pas dans les sources)",
+    "avoid": [
+      { "term": "Ancien Testament", "prefer": "Tanakh", "context": "menus, filtres, titres de sections, microcopies" },
+      { "term": "Nouveau Testament", "prefer": "Évangiles et Testament de Yéhoshoua", "context": "menus, filtres, titres de sections, microcopies" }
+    ],
+    "acceptable_everywhere": ["Bible", "biblique"]
+  }
+}
