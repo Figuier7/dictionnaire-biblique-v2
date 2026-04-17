@@ -2095,6 +2095,42 @@
   margin-bottom: 6px;
 }
 
+/* Audio pronunciation button */
+.fb-hebrew-card__audio {
+  display: inline-block;
+  appearance: none;
+  background: none;
+  border: 1px solid rgba(178, 140, 100, 0.25);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+  line-height: 26px;
+  text-align: center;
+  cursor: pointer;
+  color: #B28C64;
+  vertical-align: middle;
+  margin-left: 6px;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+.fb-hebrew-card__audio:hover {
+  background: rgba(178, 140, 100, 0.12);
+  border-color: #B28C64;
+  transform: scale(1.1);
+}
+.fb-hebrew-card__audio.is-playing {
+  background: #B28C64;
+  color: #fff;
+  border-color: #B28C64;
+  animation: fb-audio-pulse 0.6s ease-in-out;
+}
+@keyframes fb-audio-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
 /* Inline Hebrew (isolation bidi dans texte FR mixte) */
 .fb-inline-he {
   direction: rtl;

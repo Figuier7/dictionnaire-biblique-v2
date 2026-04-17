@@ -1223,7 +1223,9 @@
         rootPill +
       '</div>' +
       // T2
-      '<div class="fb-hebrew-card__hebrew" dir="rtl">' + escapeHtml(entry.h || '') + '</div>' +
+      '<div class="fb-hebrew-card__hebrew" dir="rtl">' + escapeHtml(entry.h || '') +
+        (entry.h ? ' <button class="fb-hebrew-card__audio" type="button" data-text="' + escapeHtml(entry.h) + '" data-lang="he-IL" title="\u00c9couter la prononciation" aria-label="\u00c9couter la prononciation">\ud83d\udd0a</button>' : '') +
+      '</div>' +
       (entry.x ? '<div class="fb-hebrew-card__translit">' + escapeHtml(entry.x) + '</div>' : '') +
       (entry.pr ? '<div class="fb-hebrew-card__pron">' + escapeHtml(entry.pr) + '</div>' : '') +
       // T3

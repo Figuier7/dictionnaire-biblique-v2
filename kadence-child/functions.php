@@ -591,10 +591,18 @@ function figuier_lexique_strong_enqueue() {
 		null
 	);
 
+	// Utilitaires Hebrew partagés : toggle masquer hébreu + translit auto
+	$hu_js_path  = get_stylesheet_directory() . '/js/bible-hebrew-utils.js';
+	$hu_css_path = get_stylesheet_directory() . '/css/bible-hebrew-utils.css';
+	wp_enqueue_script( 'figuier-hebrew-utils', get_stylesheet_directory_uri() . '/js/bible-hebrew-utils.js', array(),
+		file_exists( $hu_js_path ) ? filemtime( $hu_js_path ) : '1.0', true );
+	wp_enqueue_style( 'figuier-hebrew-utils-style', get_stylesheet_directory_uri() . '/css/bible-hebrew-utils.css', array(),
+		file_exists( $hu_css_path ) ? filemtime( $hu_css_path ) : '1.0' );
+
 	// Stack V3 pour que les verse bubbles fonctionnent aussi sur la page lexique
 	wp_enqueue_script( 'marked-js', 'https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js', array(), null, true );
 	$v2_js_path = get_stylesheet_directory() . '/js/bible-v2-app.js';
-	wp_enqueue_script( 'figuier-bible-v2-app', get_stylesheet_directory_uri() . '/js/bible-v2-app.js', array( 'marked-js' ),
+	wp_enqueue_script( 'figuier-bible-v2-app', get_stylesheet_directory_uri() . '/js/bible-v2-app.js', array( 'marked-js', 'figuier-hebrew-utils' ),
 		file_exists( $v2_js_path ) ? filemtime( $v2_js_path ) : '1.0', true );
 	$v3_js_path = get_stylesheet_directory() . '/js/bible-v3-patch.js';
 	wp_enqueue_script( 'figuier-bible-v3-patch', get_stylesheet_directory_uri() . '/js/bible-v3-patch.js', array( 'figuier-bible-v2-app' ),
@@ -679,6 +687,138 @@ function afficher_lexique_strong_bdb() {
 	return ob_get_clean();
 }
 add_shortcode( 'lexique_strong_bdb', 'afficher_lexique_strong_bdb' );
+
+
+/* =========================================================
+   SHORTCODE [bible_interlineaire]
+   Bible interlinéaire AT (hébreu + translit + Strong + morph + gloss FR + BYM)
+   23 213 versets · 306 785 mots · 39 livres du Tanakh
+   ========================================================= */
+function figuier_bible_interlineaire_enqueue() {
+	global $post;
+	if ( ! isset( $post->post_content ) || ! has_shortcode( $post->post_content, 'bible_interlineaire' ) ) {
+		return;
+	}
+
+	// CSS de base V3 (pour les fiches .fb-hebrew-card reutilisées dans la sidebar)
+	$v3_css_path = get_stylesheet_directory() . '/css/bible-v3-interface.css';
+	wp_enqueue_style(
+		'figuier-bible-v3-style',
+		get_stylesheet_directory_uri() . '/css/bible-v3-interface.css',
+		array( 'figuier-style-globals' ),
+		file_exists( $v3_css_path ) ? filemtime( $v3_css_path ) : '1.0'
+	);
+
+	// CSS dédié interlinéaire
+	$bi_css_path = get_stylesheet_directory() . '/css/bible-interlineaire.css';
+	wp_enqueue_style(
+		'figuier-bible-interlineaire-style',
+		get_stylesheet_directory_uri() . '/css/bible-interlineaire.css',
+		array( 'figuier-bible-v3-style' ),
+		file_exists( $bi_css_path ) ? filemtime( $bi_css_path ) : '1.0'
+	);
+
+	// Polices
+	wp_enqueue_style(
+		'figuier-hebrew-font',
+		'https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;700&display=swap',
+		array(),
+		null
+	);
+
+	// Utilitaires Hebrew partages : toggle masquer hebreu + translit auto
+	$hu_js_path_bi  = get_stylesheet_directory() . '/js/bible-hebrew-utils.js';
+	$hu_css_path_bi = get_stylesheet_directory() . '/css/bible-hebrew-utils.css';
+	wp_enqueue_script( 'figuier-hebrew-utils',
+		get_stylesheet_directory_uri() . '/js/bible-hebrew-utils.js',
+		array(),
+		file_exists( $hu_js_path_bi ) ? filemtime( $hu_js_path_bi ) : '1.0',
+		true
+	);
+	wp_enqueue_style( 'figuier-hebrew-utils-style',
+		get_stylesheet_directory_uri() . '/css/bible-hebrew-utils.css',
+		array(),
+		file_exists( $hu_css_path_bi ) ? filemtime( $hu_css_path_bi ) : '1.0'
+	);
+
+	// Stack V3 : charge bible-v2-app + bible-v3-patch + bible-v3-hotfix pour
+	// exposer window.FIGUIER_HEBREW_CARD.render utilisé par le sidebar
+	wp_enqueue_script( 'marked-js', 'https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js', array(), null, true );
+	$v2_js_path = get_stylesheet_directory() . '/js/bible-v2-app.js';
+	wp_enqueue_script( 'figuier-bible-v2-app',
+		get_stylesheet_directory_uri() . '/js/bible-v2-app.js',
+		array( 'marked-js', 'figuier-hebrew-utils' ),
+		file_exists( $v2_js_path ) ? filemtime( $v2_js_path ) : '1.0',
+		true
+	);
+	$v3_patch_path = get_stylesheet_directory() . '/js/bible-v3-patch.js';
+	wp_enqueue_script( 'figuier-bible-v3-patch',
+		get_stylesheet_directory_uri() . '/js/bible-v3-patch.js',
+		array( 'figuier-bible-v2-app' ),
+		file_exists( $v3_patch_path ) ? filemtime( $v3_patch_path ) : '1.0',
+		true
+	);
+	$v3_hotfix_path = get_stylesheet_directory() . '/js/bible-v3-hotfix.js';
+	wp_enqueue_script( 'figuier-bible-v3-hotfix',
+		get_stylesheet_directory_uri() . '/js/bible-v3-hotfix.js',
+		array( 'figuier-bible-v3-patch' ),
+		file_exists( $v3_hotfix_path ) ? filemtime( $v3_hotfix_path ) : '1.0',
+		true
+	);
+
+	// Config minimale pour v2-app (proxy BYM + reader base)
+	wp_localize_script( 'figuier-bible-v2-app', 'FIGUIER_BIBLE_V2_CONFIG', array(
+		'bymSourceBase'    => 'https://gitlab.com/anjc/bjc-source/-/raw/master',
+		'bymProxyUrl'      => admin_url( 'admin-ajax.php' ),
+		'bymReaderBase'    => 'https://www.bibledeyehoshouahamashiah.org/lire.html',
+		'mobileBreakpoint' => 900,
+		'hebrewLexiconUrl' => content_url( 'uploads/dictionnaires/hebrew/hebrew-lexicon-fr-compact.json' ) . '?v=' . ( file_exists( WP_CONTENT_DIR . '/uploads/dictionnaires/hebrew/hebrew-lexicon-fr-compact.json' ) ? filemtime( WP_CONTENT_DIR . '/uploads/dictionnaires/hebrew/hebrew-lexicon-fr-compact.json' ) : '1' ),
+	));
+
+	// App interlinéaire
+	$bi_js_path = get_stylesheet_directory() . '/js/bible-interlineaire-app.js';
+	wp_enqueue_script(
+		'figuier-bible-interlineaire-app',
+		get_stylesheet_directory_uri() . '/js/bible-interlineaire-app.js',
+		array( 'figuier-bible-v3-hotfix' ),
+		file_exists( $bi_js_path ) ? filemtime( $bi_js_path ) : '1.0',
+		true
+	);
+
+	// Config spécifique interlinéaire : chemins data + proxies
+	$lex_path   = WP_CONTENT_DIR . '/uploads/dictionnaires/hebrew/hebrew-lexicon-fr-compact.json';
+	$pos_path   = get_stylesheet_directory() . '/js/data/pos-descriptions-fr.json';
+	$conc_path  = WP_CONTENT_DIR . '/uploads/dictionnaires/strong-concordance-oshb.json';
+	$roots_path = WP_CONTENT_DIR . '/uploads/dictionnaires/strong-root-families.json';
+	wp_localize_script( 'figuier-bible-interlineaire-app', 'figuierInterlineaireConfig', array(
+		'interlinearBaseUrl' => content_url( 'uploads/dictionnaires/interlinear/' ),
+		'lexiconUrl'         => content_url( 'uploads/dictionnaires/hebrew/hebrew-lexicon-fr-compact.json' ) . '?v=' . ( file_exists( $lex_path ) ? filemtime( $lex_path ) : '1' ),
+		'posDescUrl'         => get_stylesheet_directory_uri() . '/js/data/pos-descriptions-fr.json' . '?v=' . ( file_exists( $pos_path ) ? filemtime( $pos_path ) : '1' ),
+		'concordanceUrl'     => content_url( 'uploads/dictionnaires/strong-concordance-oshb.json' ) . '?v=' . ( file_exists( $conc_path ) ? filemtime( $conc_path ) : '1' ),
+		'rootFamiliesUrl'    => content_url( 'uploads/dictionnaires/strong-root-families.json' ) . '?v=' . ( file_exists( $roots_path ) ? filemtime( $roots_path ) : '1' ),
+		'bymProxyUrl'        => admin_url( 'admin-ajax.php' ),
+		'bymReaderBase'      => 'https://www.bibledeyehoshouahamashiah.org/lire.html',
+	));
+}
+add_action( 'wp_enqueue_scripts', 'figuier_bible_interlineaire_enqueue' );
+
+function afficher_bible_interlineaire() {
+	ob_start();
+	?>
+	<div id="bible-interlineaire-app">
+		<noscript>
+			<p>La bible interlinéaire nécessite JavaScript pour fonctionner.</p>
+			<p><a href="<?php echo esc_url( home_url( '/lexique-hebreu-biblique/' ) ); ?>">Accéder au lexique hébreu biblique</a></p>
+		</noscript>
+	</div>
+	<p class="fig-lexique-sources" style="margin-top:28px;font-size:13px;color:#6a5d50;text-align:center;">
+		<strong>Sources&nbsp;:</strong>
+		Westminster Leningrad Codex (WLC) · Open Scriptures Hebrew Bible (OSHB) · Numérotation Strong · Morphologie OSHB · Lexique Brown-Driver-Briggs (BDB) · Traduction&nbsp;: <a href="https://www.bibledeyehoshouahamashiah.org/" target="_blank" rel="noopener">Bible de Yéhoshoua HaMashiah (BYM)</a>
+	</p>
+	<?php
+	return ob_get_clean();
+}
+add_shortcode( 'bible_interlineaire', 'afficher_bible_interlineaire' );
 
 
 /* =========================================================

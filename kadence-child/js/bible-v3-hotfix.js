@@ -351,6 +351,102 @@
     return html;
   }
 
+  // === AUDIO : prononciation via Web Speech API ===
+  // Cache des voix + preference he-IL > translitteration (xlit) avec voix fr-FR / en-US
+  var _voicesReady = false;
+  var _hebrewVoice = null;
+  var _fallbackVoice = null;
+
+  function _loadVoices() {
+    if (!('speechSynthesis' in window)) return;
+    var voices = speechSynthesis.getVoices() || [];
+    if (!voices.length) return;
+    _voicesReady = true;
+    _hebrewVoice = null;
+    for (var i = 0; i < voices.length; i++) {
+      var lv = (voices[i].lang || '').toLowerCase();
+      if (lv.indexOf('he') === 0 || lv === 'iw' || lv.indexOf('iw-') === 0) {
+        _hebrewVoice = voices[i];
+        break;
+      }
+    }
+    // Fallback : fr-FR, sinon en-US, sinon la default
+    _fallbackVoice = null;
+    for (var j = 0; j < voices.length; j++) {
+      var lv2 = (voices[j].lang || '').toLowerCase();
+      if (lv2.indexOf('fr') === 0) { _fallbackVoice = voices[j]; break; }
+    }
+    if (!_fallbackVoice) {
+      for (var k = 0; k < voices.length; k++) {
+        var lv3 = (voices[k].lang || '').toLowerCase();
+        if (lv3.indexOf('en') === 0) { _fallbackVoice = voices[k]; break; }
+      }
+    }
+    if (!_fallbackVoice && voices[0]) _fallbackVoice = voices[0];
+  }
+
+  if ('speechSynthesis' in window) {
+    _loadVoices();
+    // Chrome charge les voix de facon asynchrone : re-essayer sur voiceschanged
+    if (typeof speechSynthesis.addEventListener === 'function') {
+      speechSynthesis.addEventListener('voiceschanged', _loadVoices);
+    } else {
+      speechSynthesis.onvoiceschanged = _loadVoices;
+    }
+  }
+
+  function pronounceWord(hebText, xlitText, btn) {
+    if (!('speechSynthesis' in window)) {
+      if (btn) btn.setAttribute('title', 'Synth\u00e8se vocale non support\u00e9e par ce navigateur');
+      return;
+    }
+    if (!_voicesReady) _loadVoices();
+
+    // Strategie : si voix hebreu dispo -> heb direct
+    // Sinon -> translitteration avec voix fr-FR / en-US (plus fidele qu'hebreu lu en fr)
+    var useHeb = !!_hebrewVoice && hebText;
+    var text = useHeb ? hebText : (xlitText || hebText || '');
+    if (!text) return;
+
+    try {
+      speechSynthesis.cancel();
+      // Petit delai pour eviter bug Chrome cancel + speak race
+      setTimeout(function () {
+        var utt = new SpeechSynthesisUtterance(text);
+        if (useHeb) {
+          utt.voice = _hebrewVoice;
+          utt.lang = _hebrewVoice.lang || 'he-IL';
+          utt.rate = 0.75;
+        } else if (_fallbackVoice) {
+          utt.voice = _fallbackVoice;
+          utt.lang = _fallbackVoice.lang || 'fr-FR';
+          utt.rate = 0.85;
+        } else {
+          utt.lang = 'fr-FR';
+          utt.rate = 0.85;
+        }
+        utt.onend = function () { if (btn) btn.classList.remove('is-playing'); };
+        utt.onerror = function () { if (btn) btn.classList.remove('is-playing'); };
+        speechSynthesis.speak(utt);
+      }, 60);
+    } catch (err) {
+      if (btn) btn.classList.remove('is-playing');
+    }
+  }
+
+  // Handler document-level pour boutons audio
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.fb-hebrew-card__audio');
+    if (!btn) return;
+    e.preventDefault();
+    var heb  = btn.getAttribute('data-text') || '';
+    var xlit = btn.getAttribute('data-xlit') || '';
+    btn.classList.add('is-playing');
+    pronounceWord(heb, xlit, btn);
+    // Retire le feedback visuel apres 2s max (au cas ou onend ne fire pas)
+    setTimeout(function () { btn.classList.remove('is-playing'); }, 2500);
+  });
+
   // === HELPERS LEXIQUE HEBREU BIBLIQUE (tiers T1-T7) ===
 
   // OSIS -> BYM book info {file, code} (code numerique 2 chiffres, ordre BYM)
@@ -590,7 +686,9 @@
         posHtml +
         rootPill +
       '</div>' +
-      '<div class="fb-hebrew-card__hebrew" dir="rtl">' + escapeHtml(entry.h || '') + '</div>' +
+      '<div class="fb-hebrew-card__hebrew" dir="rtl">' + escapeHtml(entry.h || '') +
+        (entry.h ? ' <button class="fb-hebrew-card__audio" type="button" data-text="' + escapeHtml(entry.h) + '" data-xlit="' + escapeHtml(entry.x || '') + '" data-lang="he-IL" title="\u00c9couter la prononciation" aria-label="\u00c9couter la prononciation">\ud83d\udd0a</button>' : '') +
+      '</div>' +
       (entry.x ? '<div class="fb-hebrew-card__translit">' + escapeHtml(entry.x) + '</div>' : '') +
       (entry.pr ? '<div class="fb-hebrew-card__pron">' + escapeHtml(entry.pr) + '</div>' : '') +
       '<div class="fb-hebrew-card__def fb-hebrew-card__def--short">' + escapeHtmlHe(truncate(entry.d || '', 120)) + '</div>' +
@@ -976,5 +1074,19 @@
   } else {
     init();
   }
+
+  // ── Exports for bible-interlineaire-app.js (et autres modules externes) ──
+  // Expose renderHebrewCard + helpers pour reutilisation sans dupliquer le code.
+  window.FIGUIER_HEBREW_CARD = {
+    render: renderHebrewCard,
+    wrapHebrewInline: wrapHebrewInline,
+    escapeHtml: escapeHtml,
+    escapeHtmlHe: escapeHtmlHe,
+    truncate: truncate,
+    buildConcordanceHtml: buildConcordanceHtml,
+    renderSensesT5: renderSensesT5,
+    renderBdbRefsT6: renderBdbRefsT6,
+    renderEtymT7: renderEtymT7,
+  };
 
 })();

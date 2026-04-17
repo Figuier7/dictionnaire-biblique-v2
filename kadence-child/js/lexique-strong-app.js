@@ -337,8 +337,17 @@
         + '</div>';
 
       container.innerHTML = statsHtml + searchHtml
+        + '<div id="lex-hebrew-controls-slot"></div>'
         + '<div id="lex-results"></div>'
         + '<div id="lex-pagination" class="lex-pagination"></div>';
+
+      // Injection de la barre de contr\u00f4le Hebrew (toggle masquer / translit auto)
+      if (window.FIGUIER_HEBREW_UTILS && typeof window.FIGUIER_HEBREW_UTILS.createHebrewControlsBar === 'function') {
+        var slot = container.querySelector('#lex-hebrew-controls-slot');
+        if (slot) {
+          slot.appendChild(window.FIGUIER_HEBREW_UTILS.createHebrewControlsBar());
+        }
+      }
 
       var searchInput = container.querySelector('.lex-search');
       var debounceTimer;
@@ -379,6 +388,14 @@
     });
     html += '</div>';
     container.innerHTML = html;
+
+    // Wire BDB legend toggles
+    _wireBdbLegendToggles(container);
+
+    // Re-applique les pre\u0301fe\u0301rences h\u00e9breu (translit auto + masquage) sur le DOM re-rendu
+    if (window.FIGUIER_HEBREW_UTILS && typeof window.FIGUIER_HEBREW_UTILS.applyHebrewPrefs === 'function') {
+      window.FIGUIER_HEBREW_UTILS.applyHebrewPrefs();
+    }
 
     // Wire root sibling clicks
     container.querySelectorAll('.lex-root-sib').forEach(function (sib) {
@@ -524,6 +541,294 @@
   function escHtmlHe(text) {
     return lexWrapHebrewInline(escHtml(text));
   }
+
+  // Dictionnaire d'abbre\u0301viations BDB (grammaticales + livres bibliques + autres).
+  // Utilise\u0301 pour ajouter des tooltips HTML via formatBdbText.
+  var BDB_ABBREV_GRAM = {
+    'Pf.': 'Parfait (action acheve\u0301e)',
+    'Impf.': 'Imparfait (action inacheve\u0301e / future)',
+    'Imv.': 'Impe\u0301ratif',
+    'Inf.': 'Infinitif',
+    'Inf. abs.': 'Infinitif absolu',
+    'Inf. cstr.': 'Infinitif construit',
+    'Inf. constr.': 'Infinitif construit',
+    'Pt.': 'Participe',
+    'Pt. act.': 'Participe actif',
+    'Pt. pass.': 'Participe passif',
+    'cstr.': 'E\u0301tat construit',
+    'constr.': 'E\u0301tat construit',
+    'abs.': 'E\u0301tat absolu',
+    'fig.': 'Sens figure\u0301',
+    'sq.': 'suivi de',
+    'supr.': 'plus haut dans l\u2019entre\u0301e',
+    'infr.': 'plus bas dans l\u2019entre\u0301e',
+    'v.': 'voir',
+    'cf.': 'comparer avec',
+    'pl.': 'pluriel',
+    'sg.': 'singulier',
+    'm.': 'masculin',
+    'f.': 'fe\u0301minin',
+    'c.': 'commun',
+    'id.': 'me\u0302me signification',
+    'sim.': 'similaire',
+    'esp.': 'spe\u0301cialement',
+    'prob.': 'probablement',
+    'rd.': 'lire',
+    'abb.': 'abre\u0301ge\u0301',
+    'vb.': 'verbe',
+    'adj.': 'adjectif',
+    'adv.': 'adverbe',
+    'subst.': 'substantif',
+    'n. m.': 'nom masculin',
+    'n. f.': 'nom fe\u0301minin',
+    'etc.': 'etcetera (et autres)',
+    'intrans.': 'intransitif',
+    'trans.': 'transitif',
+    'acc.': 'accusatif (objet direct)',
+    'du.': 'duel (deux)',
+    'coll.': 'collectif',
+    'denom.': 'de\u0301nominatif',
+    'part.': 'particule',
+    'prop.': 'proprement',
+    'gen.': 'ge\u0301ne\u0301ralement',
+    'specif.': 'spe\u0301cifiquement',
+    'rel.': 'relatif',
+    'abst.': 'abstrait',
+    'coh.': 'cohortatif',
+    'juss.': 'jussif',
+    // Sources documentaires bibliques
+    'JE': 'Source Je\u0301hoviste-E\u0301lohiste (critique documentaire)',
+    'JED': 'Sources J, E et D combine\u0301es',
+  };
+
+  var BDB_ABBREV_BOOKS = {
+    'Gn':'Gene\u0300se', 'Ex':'Exode', 'Lv':'Le\u0301vitique', 'Nb':'Nombres', 'Dt':'Deute\u0301ronome',
+    'Jos':'Josue\u0301', 'Jg':'Juges', 'Rt':'Ruth',
+    '1 S':'1 Samuel', '2 S':'2 Samuel', '1 R':'1 Rois', '2 R':'2 Rois',
+    '1 Ch':'1 Chroniques', '2 Ch':'2 Chroniques',
+    'Esd':'Esdras', 'Ne\u0301':'Ne\u0301he\u0301mie', 'Est':'Esther',
+    'Jb':'Job', 'Ps':'Psaumes', 'Pr':'Proverbes', 'Ec':'Eccle\u0301siaste', 'Ct':'Cantique',
+    'E\u0301s':'E\u0301sai\u0308e', 'Jr':'Je\u0301re\u0301mie', 'Lm':'Lamentations', 'E\u0301z':'E\u0301ze\u0301chiel', 'Dn':'Daniel',
+    'Os':'Ose\u0301e', 'Jl':'Joe\u0308l', 'Am':'Amos', 'Ab':'Abdias', 'Jon':'Jonas',
+    'Mi':'Miche\u0301e', 'Na':'Nahum', 'Ha':'Habaquq', 'So':'Sophonie',
+    'Ag':'Agge\u0301e', 'Za':'Zacharie', 'Ml':'Malachie',
+    'Je':'Je\u0301re\u0301mie', // BDB utilise parfois "Je" au lieu de "Jr"
+    '\u03C8':'Psaumes (symbole grec psi)',
+  };
+
+  var BDB_ABBREV_LANG = {
+    'As.': 'Assyrien',
+    'Aram.': 'Arame\u0301en',
+    'Syr.': 'Syriaque',
+    'Ar.': 'Arabe',
+    'Eth.': 'E\u0301thiopien',
+    'Sab.': 'Sabe\u0301en',
+    'LXX': 'Septante (traduction grecque AT)',
+    'Vulg.': 'Vulgate (traduction latine)',
+    'Tg.': 'Targoum (paraphrase arame\u0301enne)',
+    'Q':'Qere\u0301 (lecture marginale)',
+    'Kt':'Ketiv (lecture du texte)',
+  };
+
+  function _allAbbrev() {
+    var all = {};
+    for (var k in BDB_ABBREV_GRAM) all[k] = BDB_ABBREV_GRAM[k];
+    for (var k2 in BDB_ABBREV_BOOKS) all[k2] = BDB_ABBREV_BOOKS[k2];
+    for (var k3 in BDB_ABBREV_LANG) all[k3] = BDB_ABBREV_LANG[k3];
+    return all;
+  }
+
+  // Rendu du panneau le\u0301gende (par de\u0301faut cache\u0301, toggle via bouton).
+  function _renderBdbLegend() {
+    function dlItems(dict) {
+      var keys = Object.keys(dict).sort();
+      return keys.map(function (k) {
+        return '<div class="lex-legend-item"><dt>' + escHtml(k) + '</dt><dd>' + escHtml(dict[k]) + '</dd></div>';
+      }).join('');
+    }
+    return '<div class="lex-bdb-legend" id="lex-bdb-legend-panel" hidden>' +
+      '<div class="lex-legend-cols">' +
+        '<section class="lex-legend-col">' +
+          '<h4>Grammaticales</h4>' +
+          '<dl>' + dlItems(BDB_ABBREV_GRAM) + '</dl>' +
+        '</section>' +
+        '<section class="lex-legend-col">' +
+          '<h4>Livres bibliques</h4>' +
+          '<dl>' + dlItems(BDB_ABBREV_BOOKS) + '</dl>' +
+        '</section>' +
+        '<section class="lex-legend-col">' +
+          '<h4>Versions &amp; langues</h4>' +
+          '<dl>' + dlItems(BDB_ABBREV_LANG) + '</dl>' +
+        '</section>' +
+      '</div>' +
+    '</div>';
+  }
+
+  // Attache le comportement toggle sur tous les boutons de legende (une fois a\u0300 l'init du lexique)
+  function _wireBdbLegendToggles(root) {
+    var btns = (root || document).querySelectorAll('.lex-bdb-legend-toggle');
+    btns.forEach(function (btn) {
+      if (btn._wired) return;
+      btn._wired = true;
+      btn.addEventListener('click', function () {
+        var expanded = btn.getAttribute('aria-expanded') === 'true';
+        var panel = btn.closest('.lex-def-full') && btn.closest('.lex-def-full').querySelector('.lex-bdb-legend');
+        if (!panel) return;
+        if (expanded) {
+          panel.setAttribute('hidden', '');
+          btn.setAttribute('aria-expanded', 'false');
+        } else {
+          panel.removeAttribute('hidden');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  }
+
+  // Enveloppe les abbre\u0301viations reconnues dans du HTML avec tooltip.
+  // Matche mot entier, e\u0301vite les substitutions dans du HTML attr.
+  function _linkifyAbbrevs(html) {
+    var all = _allAbbrev();
+    // Sort by longueur decroissante pour matcher les composes d'abord (Inf. abs. avant Inf.)
+    var keys = Object.keys(all).sort(function (a, b) { return b.length - a.length; });
+    // Escape regex special chars in keys
+    var escRe = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); };
+    // Construit un pattern OR des abbre\u0301viations + word boundary
+    // Pour les abbre\u0301viations avec point (Pf., Impf.), le point est inclus dans le match
+    // Pour les mots sans point (Gn, Jg), on require un word boundary apres ET un chiffre suivant optionnel
+    var patterns = keys.map(function (k) { return escRe(k); });
+    // Ajoute un lookahead pour eviter match dans autre mot
+    var bigRe = new RegExp('(^|[^\\w])(' + patterns.join('|') + ')(?=[\\s.,;:)\\]]|$)', 'g');
+    return html.replace(bigRe, function (m, prefix, abbr) {
+      var title = all[abbr];
+      if (!title) return m;
+      return prefix + '<abbr class="lex-abbrev" title="' + escHtml(title) + '">' + abbr + '</abbr>';
+    });
+  }
+
+  // Formatte le texte BDB (definition complete) en paragraphes par stem.
+  // Detecte les debuts de section verbale (Qal, Niph., Pi., Pu., Hiph., Hoph.,
+  // Hithp., Hithpo., Po‛l, Polel, Pilpel) et les met en evidence.
+  // Detecte aussi les sous-sections (Pf., Impf., Pt., Imv., Inf.) comme paragraphes plus petits.
+  function formatBdbText(text) {
+    if (!text) return '';
+    // 1. Escape + wrap hebrew inline + linkify abbreviations (tooltips)
+    var html = _linkifyAbbrevs(escHtmlHe(text));
+    // 2. Detecter les stems en debut de section :
+    //    precede de " — " (tiret cadratin), " ; " ou debut du texte,
+    //    suivi d'un mot grammatical (Pf/Impf/Pt/Imv/Inf) ou ponctuation.
+    //    Pour eviter faux positifs (ex: "cf. Pi. supr."), on exige un contexte de debut de section.
+    var stemPattern = /(^|[\u2014\u2013]\s*|\.\s+|;\s+)(Qal\b|Niph\.|Pi\.|Pu\.|Hiph\.|Hoph\.|Hithp\.|Hithpo\.|Po[\u2018\u2019\u02BB\u02BC']l\.?|Polel\b|Pilpel\b|Polp\.|Pilp\.|Hishtaph\.?)/g;
+    // On separe le texte en tokens : partie avant stem + [stem + body] repetes
+    var tokens = [];
+    var lastEnd = 0;
+    var m;
+    while ((m = stemPattern.exec(html)) !== null) {
+      // Ajout du texte avant
+      if (m.index > lastEnd) {
+        tokens.push({ type: 'text', content: html.slice(lastEnd, m.index) + (m[1] || '') });
+      }
+      tokens.push({ type: 'stem', name: m[2] });
+      lastEnd = m.index + m[0].length;
+    }
+    if (lastEnd < html.length) {
+      tokens.push({ type: 'text', content: html.slice(lastEnd) });
+    }
+
+    // Si pas de stem detecte, retourner le texte simple
+    if (!tokens.some(function (t) { return t.type === 'stem'; })) {
+      return '<div class="lex-bdb-flow">' + html + '</div>';
+    }
+
+    // Construire le HTML : intro (avant premier stem) + sections
+    var out = '';
+    var i = 0;
+    // Intro
+    if (tokens[0] && tokens[0].type === 'text') {
+      var introText = tokens[0].content.trim();
+      if (introText) {
+        out += '<div class="lex-bdb-intro">' + introText + '</div>';
+      }
+      i = 1;
+    }
+    // Sections
+    while (i < tokens.length) {
+      if (tokens[i].type === 'stem') {
+        var stem = tokens[i].name;
+        var body = '';
+        if (i + 1 < tokens.length && tokens[i + 1].type === 'text') {
+          body = tokens[i + 1].content.trim();
+          i += 2;
+        } else {
+          i += 1;
+        }
+        // Sous-decouper le body par marqueurs grammaticaux (Pf., Impf., Pt., Imv., Inf., etc.)
+        var formattedBody = _formatBdbSubsection(body);
+        out += '<div class="lex-bdb-section">' +
+          '<strong class="lex-bdb-stem-label">' + stem + '</strong>' +
+          (formattedBody ? ' ' + formattedBody : '') +
+          '</div>';
+      } else {
+        i += 1;
+      }
+    }
+    return out;
+  }
+
+  // De\u0301coupe le corps d'une section stem par marqueurs grammaticaux.
+  // Resultat : `<span class="lex-bdb-gram-intro">intro</span>`
+  // + `<div class="lex-bdb-subsection"><strong class="lex-bdb-gram">Pf.</strong> body</div>` repetes.
+  function _formatBdbSubsection(body) {
+    if (!body) return '';
+    // Pattern des marqueurs grammaticaux (apres ';' ou debut)
+    // Attention : "Inf. abs." et "Inf. cstr." doivent matcher AVANT "Inf." seul.
+    var gramPattern = /(^|;\s+|\.\s+(?=[A-Z]))(Inf\.\s+abs\.|Inf\.\s+cstr\.|Inf\.\s+constr\.|Pt\.\s+act\.|Pt\.\s+pass\.|Pf\.|Impf\.|Imv\.|Inf\.|Pt\.|cstr\.|abs\.|fig\.)\b/g;
+    var tokens = [];
+    var lastEnd = 0;
+    var m;
+    while ((m = gramPattern.exec(body)) !== null) {
+      if (m.index > lastEnd) {
+        tokens.push({ type: 'text', content: body.slice(lastEnd, m.index) + (m[1] || '') });
+      }
+      tokens.push({ type: 'gram', name: m[2] });
+      lastEnd = m.index + m[0].length;
+    }
+    if (lastEnd < body.length) {
+      tokens.push({ type: 'text', content: body.slice(lastEnd) });
+    }
+    if (!tokens.some(function (t) { return t.type === 'gram'; })) {
+      return body;
+    }
+    var out = '';
+    var i = 0;
+    // Intro avant premier marqueur
+    if (tokens[0] && tokens[0].type === 'text') {
+      var intro = tokens[0].content.trim();
+      if (intro) {
+        out += '<span class="lex-bdb-gram-intro">' + intro + '</span>';
+      }
+      i = 1;
+    }
+    while (i < tokens.length) {
+      if (tokens[i].type === 'gram') {
+        var gram = tokens[i].name;
+        var txt = '';
+        if (i + 1 < tokens.length && tokens[i + 1].type === 'text') {
+          txt = tokens[i + 1].content.trim();
+          i += 2;
+        } else {
+          i += 1;
+        }
+        out += '<div class="lex-bdb-subsection">' +
+          '<strong class="lex-bdb-gram">' + gram + '</strong>' +
+          (txt ? ' ' + txt : '') +
+          '</div>';
+      } else {
+        i += 1;
+      }
+    }
+    return out;
+  }
   function lexStrongLinkify(text) {
     var html = lexWrapHebrewInline(escHtml(text));
     return html.replace(/\b(\d{1,4})\b/g, function (m, num) {
@@ -533,14 +838,25 @@
 
   function lexStemTooltip(stem) {
     var tips = {
-      'Qal':   'Qal : forme verbale simple, active, basique',
-      'Niph':  'Niphal : forme verbale passive ou r\u00e9fl\u00e9chie',
-      'Pi':    'Piel : intensif actif',
-      'Pu':    'Pual : intensif passif',
-      'Hiph':  'Hiphil : causatif actif',
-      'Hoph':  'Hophal : causatif passif',
-      'Hithp': 'Hithpael : r\u00e9fl\u00e9chi',
-      'Hithpo':'Hithpolel : r\u00e9fl\u00e9chi intensif'
+      'Qal':    'Qal : forme verbale simple, active, basique',
+      'Niph':   'Niphal : forme verbale passive ou r\u00e9fl\u00e9chie',
+      'Pi':     'Piel : intensif actif',
+      'Pu':     'Pual : intensif passif',
+      'Hiph':   'Hiphil : causatif actif',
+      'Hoph':   'Hophal : causatif passif',
+      'Hithp':  'Hithpael : r\u00e9fl\u00e9chi intensif',
+      'Hithpo': 'Hithpolel : r\u00e9fl\u00e9chi poly-lel\u00e9 (racines creuses)',
+      'Po\u02bbl': 'Polel : forme intensive des racines creuses (comme Piel)',
+      'Pol':    'Polel : forme intensive des racines creuses',
+      'Polel':  'Polel : forme intensive des racines creuses',
+      'Pol\u02bb': 'Polel : forme intensive des racines creuses',
+      'Pilp':   'Pilpel : redoublement de la racine (intensif)',
+      'Pilpel': 'Pilpel : redoublement de la racine (intensif)',
+      'Polp':   'Polpal : passif du Polel',
+      'Polpal': 'Polpal : passif du Polel',
+      'Hishtaph':'Hishtaphel : forme se prosterner (\u05D7\u05D5\u05D4)',
+      'Tiph':   'Tiphel : forme rare causative',
+      'Palel':  'Palel : forme rare intensive'
     };
     return tips[stem] || '';
   }
@@ -646,6 +962,7 @@
       + '<span class="lex-strong">' + strong + '</span>'
       + posHtml
       + '<span class="lex-hebrew" dir="rtl">' + hebrew + '</span>'
+      + (hebrew ? ' <button class="lex-audio-btn fb-hebrew-card__audio" type="button" data-text="' + escHtml(hebrew) + '" data-lang="he-IL" title="\u00c9couter" aria-label="\u00c9couter la prononciation">\ud83d\udd0a</button>' : '')
       + '</div>';
 
     // T2 : translit + pron
@@ -655,12 +972,16 @@
     // T3 : def courte
     if (def) html += '<div class="lex-def">' + escHtmlHe(def) + '</div>';
 
-    // T4 : def complete BDB (df)
+    // T4 : def complete BDB (df) formate par section de stem
     var defFull = (e.df && e.df !== def) ? e.df : '';
     if (defFull) {
       html += '<div class="lex-def-full">'
-        + '<span class="lex-def-full-label">D\u00e9finition compl\u00e8te (BDB)&nbsp;:</span> '
-        + escHtmlHe(defFull)
+        + '<div class="lex-def-full-header">'
+        +   '<span class="lex-def-full-label">D\u00e9finition compl\u00e8te (BDB)</span>'
+        +   '<button type="button" class="lex-bdb-legend-toggle" aria-expanded="false" aria-controls="lex-bdb-legend-panel" title="Voir la le\u0301gende des abre\u0301viations">\u24D8 L\u00e9gende</button>'
+        + '</div>'
+        + _renderBdbLegend()
+        + formatBdbText(defFull)
         + '</div>';
     }
 
