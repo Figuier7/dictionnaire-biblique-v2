@@ -703,7 +703,7 @@
       '</div>' +
       (entry.x ? '<div class="fb-hebrew-card__translit">' + escapeHtml(entry.x) + '</div>' : '') +
       (entry.pr ? '<div class="fb-hebrew-card__pron">' + escapeHtml(entry.pr) + '</div>' : '') +
-      '<div class="fb-hebrew-card__def fb-hebrew-card__def--short">' + escapeHtmlHe(truncate(entry.d || '', 120)) + '</div>' +
+      '<div class="fb-hebrew-card__def fb-hebrew-card__def--short">' + escapeHtmlHe(entry.d || '') + '</div>' +
       expandHtml +
       renderSensesT5(entry) +
       renderBdbRefsT6(entry.br) +

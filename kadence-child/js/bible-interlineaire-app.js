@@ -1175,11 +1175,25 @@
     return bd;
   }
 
-  // D\u00e9place la sidebar directement sur <body> pour \u00e9viter les stacking
+  // Déplace la sidebar directement sur <body> pour échapper aux stacking
   // contexts d'ancetres (theme Kadence, plugins avec transform/opacity/etc.)
+  // Uniquement pour mobile : sur desktop, la sidebar reste position:sticky dans la
+  // colonne grid (sinon elle se détache et n'est plus visible).
   function promoteSidebarToBody(sidebar) {
-    if (sidebar && sidebar.parentNode !== document.body) {
+    if (!sidebar) return;
+    var isMobile = window.matchMedia && window.matchMedia('(max-width: 1100px)').matches;
+    if (!isMobile) return;
+    if (sidebar.parentNode !== document.body) {
       document.body.appendChild(sidebar);
+    }
+  }
+  // Remet la sidebar dans son wrapper grid sur desktop si elle avait été
+  // promue au body (ex : resize mobile → desktop, ou reset à l'ouverture desktop).
+  function restoreSidebarToGrid(sidebar) {
+    if (!sidebar) return;
+    if (sidebar.parentNode === document.body) {
+      var wrapper = document.querySelector('.bi-reader');
+      if (wrapper) wrapper.appendChild(sidebar);
     }
   }
 
@@ -1187,16 +1201,25 @@
   function openWordSidebar(word) {
     var sidebar = document.getElementById('bi-sidebar');
     if (!sidebar) return;
-    // Promote au body : garantit z-index au-dessus de tout wrapper th\u00e8me
-    promoteSidebarToBody(sidebar);
-    // Reset scroll \u00e0 chaque ouverture
+    // Responsive : sur desktop la sidebar reste dans la grid (sticky), sur mobile
+    // elle est promue au body pour échapper aux stacking contexts du thème.
+    var isMobile = window.matchMedia && window.matchMedia('(max-width: 1100px)').matches;
+    if (isMobile) {
+      promoteSidebarToBody(sidebar);
+    } else {
+      restoreSidebarToGrid(sidebar);
+    }
+    // Reset scroll à chaque ouverture
     sidebar.scrollTop = 0;
     sidebar.innerHTML = '';
     sidebar.classList.add('bi-sidebar--open');
-    document.body.classList.add('bi-sidebar-open');
-    // Active le backdrop (cr\u00e9e-le + attach au body)
-    var bd = ensureSidebarBackdrop();
-    bd.classList.add('bi-sidebar-backdrop--visible');
+    // Backdrop et body lock : mobile uniquement (sur desktop la sidebar cohabite
+    // avec le contenu principal, pas d'overlay obscurcissant).
+    if (isMobile) {
+      document.body.classList.add('bi-sidebar-open');
+      var bd = ensureSidebarBackdrop();
+      bd.classList.add('bi-sidebar-backdrop--visible');
+    }
 
     var closeBtn = el('button', {
       class: 'bi-sidebar__close',

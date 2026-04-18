@@ -1339,8 +1339,8 @@
       '</div>' +
       (entry.x ? '<div class="fb-hebrew-card__translit">' + escapeHtml(entry.x) + '</div>' : '') +
       (entry.pr ? '<div class="fb-hebrew-card__pron">' + escapeHtml(entry.pr) + '</div>' : '') +
-      // T3
-      '<div class="fb-hebrew-card__def fb-hebrew-card__def--short">' + escapeHtmlHe(truncate(entry.d || '', 120)) + '</div>' +
+      // T3 — def courte Strong, rendu complet (CSS peut limiter si besoin)
+      '<div class="fb-hebrew-card__def fb-hebrew-card__def--short">' + escapeHtmlHe(entry.d || '') + '</div>' +
       // T4
       expandHtml +
       // T5-T7
