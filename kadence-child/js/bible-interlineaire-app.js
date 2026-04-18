@@ -26,6 +26,8 @@
   var posDescUrl = CFG.posDescUrl || '';
   var concordanceUrl = CFG.concordanceUrl || '';
   var rootFamiliesUrl = CFG.rootFamiliesUrl || '';
+  var strongConceptsUrl = CFG.strongConceptsUrl || '';
+  var conceptBaseUrl = CFG.conceptBaseUrl || '/dictionnaire-biblique/';
   var bymProxyUrl = CFG.bymProxyUrl || '';
   var bymReaderBase = CFG.bymReaderBase || 'https://www.bibledeyehoshouahamashiah.org/lire.html';
 
@@ -123,6 +125,7 @@
   var _posDesc = {};             // POS code -> FR description
   var _concordance = {};         // Strong -> [refs OSIS]
   var _rootFamilies = {};        // Strong -> { r, f[] }
+  var _strongConcepts = {};      // Strong -> [ {slug,l,c,u}, ... ]
   var _bymCache = {};            // 'NN-File' -> parsed { chap: { verse: 'text' } }
   var _bymLoading = {};          // 'NN-File' -> Promise
 
@@ -541,6 +544,13 @@
       .then(function (d) { _rootFamilies = d || {}; return _rootFamilies; })
       .catch(function () { return {}; });
   }
+  function loadStrongConcepts() {
+    if (Object.keys(_strongConcepts).length) return Promise.resolve(_strongConcepts);
+    if (!strongConceptsUrl) return Promise.resolve({});
+    return fetch(strongConceptsUrl).then(function (r) { return r.json(); })
+      .then(function (d) { _strongConcepts = d || {}; return _strongConcepts; })
+      .catch(function () { return {}; });
+  }
 
   // ── Chargement d'un livre interlineaire (cache une fois charge) ──
   var _bookCache = {};
@@ -804,7 +814,8 @@
       loadPosDesc(),
       loadConcordance(),
       loadRootFamilies(),
-      loadBymBook(b.bymFile)
+      loadBymBook(b.bymFile),
+      loadStrongConcepts()
     ]).then(function (results) {
       var bookData = results[0];
       state.bookData = bookData;
@@ -1173,6 +1184,10 @@
       sidebar.appendChild(renderFallbackCard(entry, word));
     }
 
+    // Concepts li\u00e9s (Strong \u2192 fiches th\u00e9matiques)
+    var conceptBlock = renderConceptsBlock(word.s);
+    if (conceptBlock) sidebar.appendChild(conceptBlock);
+
     // Link to full dictionary fiche
     var slugsFooter = el('div', { class: 'bi-sidebar__footer', html:
       '<a href="/lexique-hebreu-biblique/?strong=' + escapeHtml(word.s) + '" target="_blank" rel="noopener">Ouvrir la fiche compl\u00e8te dans le lexique h\u00e9breu \u2197</a>'
@@ -1206,6 +1221,86 @@
       el('div', { class: 'bi-sidebar__fallback-pos', text: entry.bp || entry.p || '' }),
       el('div', { class: 'bi-sidebar__fallback-def', text: entry.d || '' })
     ]);
+  }
+
+  // ── Bloc Concepts li\u00e9s (Strong \u2192 fiches th\u00e9matiques) ──
+  // Mapping catégorie \u2192 libell\u00e9 court FR (aligne\u0301 avec CATEGORY_MAP front-end)
+  var CONCEPT_CAT_LABELS = {
+    'etre_spirituel':    'Dieu',
+    'personne':          'Personne',
+    'lieu':              'Lieu',
+    'lieu_sacre':        'Lieu sacr\u00e9',
+    'peuple':            'Peuple',
+    'tribu':             'Tribu',
+    'objet':             'Objet',
+    'animal':            'Animal',
+    'plante':            'Plante',
+    'aliment':           'Aliment',
+    'vetement':          'V\u00eatement',
+    'instrument':        'Instrument',
+    'mesure':            'Mesure',
+    'monnaie':           'Monnaie',
+    'doctrine':          'Doctrine',
+    'rite':              'Rite',
+    'pratique':          'Pratique',
+    'fonction':          'Fonction',
+    'nature':            'Nature',
+    'evenement':         '\u00c9v\u00e9nement',
+    'matiere':           'Mati\u00e8re',
+    'non_classifie':    ''
+  };
+
+  function renderConceptsBlock(strong) {
+    if (!strong) return null;
+    var list = _strongConcepts[strong];
+    if (!list || !list.length) return null;
+
+    // Limite d'affichage pour \u00e9viter la surcharge (sidebar scrollable si >8)
+    var MAX_VISIBLE = 12;
+    var visible = list.slice(0, MAX_VISIBLE);
+    var remaining = list.length - visible.length;
+
+    var block = el('section', {
+      class: 'bi-sidebar__concepts',
+      'aria-label': 'Concepts bibliques li\u00e9s'
+    });
+
+    var title = el('h4', { class: 'bi-sidebar__concepts-title', text: list.length > 1 ? 'Concepts li\u00e9s' : 'Concept li\u00e9' });
+    block.appendChild(title);
+
+    var ul = el('ul', { class: 'bi-sidebar__concepts-list' });
+    visible.forEach(function (c) {
+      var li = el('li', { class: 'bi-sidebar__concept-item' });
+      var catLabel = CONCEPT_CAT_LABELS[c.c] || '';
+      var href = conceptBaseUrl + encodeURIComponent(c.u || c.slug) + '/';
+      var a = el('a', {
+        class: 'bi-sidebar__concept-link',
+        href: href,
+        target: '_blank',
+        rel: 'noopener',
+        title: 'Ouvrir la fiche concept : ' + (c.l || c.slug)
+      });
+      a.appendChild(el('span', { class: 'bi-sidebar__concept-label', text: c.l || c.slug }));
+      if (catLabel) {
+        a.appendChild(el('span', {
+          class: 'bi-sidebar__concept-cat',
+          'data-cat': c.c,
+          text: catLabel
+        }));
+      }
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    block.appendChild(ul);
+
+    if (remaining > 0) {
+      block.appendChild(el('p', {
+        class: 'bi-sidebar__concepts-more',
+        text: '+ ' + remaining + ' autre' + (remaining > 1 ? 's' : '') + ' concept' + (remaining > 1 ? 's' : '') + ' li\u00e9' + (remaining > 1 ? 's' : '')
+      }));
+    }
+
+    return block;
   }
 
   function closeSidebar() {

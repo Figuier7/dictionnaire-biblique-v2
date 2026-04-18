@@ -793,6 +793,96 @@
   text-decoration: underline;
 }
 
+/* ── Bloc Concepts liés (Strong → fiches thématiques) ── */
+.bi-sidebar__concepts {
+  margin: 14px 0 12px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid var(--bi-border);
+  border-radius: var(--bi-radius-sm);
+  box-shadow: 0 1px 2px rgba(138, 106, 74, 0.04);
+}
+.bi-sidebar__concepts-title {
+  margin: 0 0 10px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--bi-primary-dk);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--bi-border);
+}
+.bi-sidebar__concepts-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.bi-sidebar__concept-item {
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+}
+.bi-sidebar__concept-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 12px;
+  background: var(--bi-bg-alt);
+  border: 1px solid var(--bi-border);
+  border-radius: 14px;
+  color: var(--bi-primary-dk);
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.2;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.bi-sidebar__concept-link:hover,
+.bi-sidebar__concept-link:focus {
+  background: #fff;
+  border-color: var(--bi-primary);
+  color: var(--bi-primary);
+  text-decoration: none;
+  outline: none;
+}
+.bi-sidebar__concept-label {
+  font-weight: 500;
+}
+.bi-sidebar__concept-cat {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--bi-text-soft);
+  border: 1px solid var(--bi-border);
+  text-transform: uppercase;
+}
+/* Accents subtils par catégorie (cohérent avec CATEGORY_MAP front-end) */
+.bi-sidebar__concept-cat[data-cat="etre_spirituel"] { color: #8a6a4a; border-color: #d4b896; background: #faf3e8; }
+.bi-sidebar__concept-cat[data-cat="personne"]       { color: #6b8f5e; border-color: #c6d9ba; background: #f2f7ec; }
+.bi-sidebar__concept-cat[data-cat="lieu"],
+.bi-sidebar__concept-cat[data-cat="lieu_sacre"]     { color: #7a5e90; border-color: #cfbcdb; background: #f4eff7; }
+.bi-sidebar__concept-cat[data-cat="peuple"],
+.bi-sidebar__concept-cat[data-cat="tribu"]          { color: #8a5050; border-color: #d9b8b8; background: #f7edec; }
+.bi-sidebar__concept-cat[data-cat="doctrine"]       { color: #5c6b8f; border-color: #bac4d9; background: #edf0f7; }
+.bi-sidebar__concept-cat[data-cat="rite"],
+.bi-sidebar__concept-cat[data-cat="pratique"],
+.bi-sidebar__concept-cat[data-cat="fonction"]       { color: #8a7048; border-color: #d9c8a8; background: #f7f1e6; }
+
+.bi-sidebar__concepts-more {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--bi-text-soft);
+  font-style: italic;
+  text-align: right;
+}
+
 /* Fallback card (sans hotfix) */
 .bi-sidebar__card--fallback {
   padding: 12px;
