@@ -121,8 +121,23 @@
     focusVerse: null,    // verse to scroll to
   };
   var _lexicon = null;           // full Strong lexicon array
-  var _lexiconIndex = {};        // Strong (H####) -> entry
+  var _lexiconIndex = {};        // Strong (H####[A-Z]?) -> entry
   var _posDesc = {};             // POS code -> FR description
+
+  // Resolve lexicon entry for a word : prefer augmented (s + sa), fallback to base s.
+  // sa = suffix augment capitalized ('A', 'B', ...) provided by morphhb lemma.
+  function strongKeyForWord(w) {
+    if (!w || !w.s) return '';
+    if (w.sa) {
+      var composite = w.s + w.sa;
+      if (_lexiconIndex[composite]) return composite;
+    }
+    return w.s;
+  }
+  function lexEntryForWord(w) {
+    var key = strongKeyForWord(w);
+    return key ? _lexiconIndex[key] : null;
+  }
   var _concordance = {};         // Strong -> [refs OSIS]
   var _rootFamilies = {};        // Strong -> { r, f[] }
   var _strongConcepts = {};      // Strong -> [ {slug,l,c,u}, ... ]
@@ -989,9 +1004,13 @@
     if (globalXlit) wrapper.appendChild(el('div', { class: 'bi-word__xlit', text: globalXlit }));
     else wrapper.appendChild(el('div', { class: 'bi-word__xlit bi-word__xlit--empty' }));
 
-    // Ligne 3 : Strong
-    if (w.s) wrapper.appendChild(el('div', { class: 'bi-word__strong', text: w.s }));
-    else wrapper.appendChild(el('div', { class: 'bi-word__strong bi-word__strong--empty' }));
+    // Ligne 3 : Strong — affiche clé augmentée (H1254A) si disponible sinon base (H1254)
+    if (w.s) {
+      var strongLabel = w.s + (w.sa || '');
+      wrapper.appendChild(el('div', { class: 'bi-word__strong', text: strongLabel }));
+    } else {
+      wrapper.appendChild(el('div', { class: 'bi-word__strong bi-word__strong--empty' }));
+    }
 
     // Ligne 4 : Morphologie (court)
     var morphShort = decodeMorphShort(w.m);
@@ -1005,9 +1024,11 @@
     // Ligne 5 : Gloss FR
     // Le champ `g` du mot prime (peut etre un override editorial local, ex: elohim minuscule
     // pour contexte faux-dieux). Fallback sur `ig` du lexique si pas de gloss local.
+    // Lookup lexique : prioritaire sur clé augmentée (s+sa) si présente, sinon base s.
     var gloss = w.g || '';
-    if (!gloss && w.s && _lexiconIndex[w.s] && _lexiconIndex[w.s].ig) {
-      gloss = _lexiconIndex[w.s].ig;
+    if (!gloss) {
+      var _lexEntryGloss = lexEntryForWord(w);
+      if (_lexEntryGloss && _lexEntryGloss.ig) gloss = _lexEntryGloss.ig;
     }
     wrapper.appendChild(el('div', { class: 'bi-word__gloss', text: gloss }));
 
@@ -1191,23 +1212,29 @@
       return;
     }
 
-    var entry = _lexiconIndex[word.s];
+    // Résolution clé Strong : augmentée si dispo, sinon base
+    var strongKey = strongKeyForWord(word);
+    var entry = _lexiconIndex[strongKey];
     if (!entry) {
-      sidebar.appendChild(el('div', { class: 'bi-sidebar__placeholder', html: '<strong>Strong ' + escapeHtml(word.s) + '</strong><br><span>Entr\u00e9e lexicale non trouv\u00e9e.</span>' }));
+      sidebar.appendChild(el('div', { class: 'bi-sidebar__placeholder', html: '<strong>Strong ' + escapeHtml(strongKey) + '</strong><br><span>Entr\u00e9e lexicale non trouv\u00e9e.</span>' }));
       return;
     }
 
     // Mini header : mot tel qu'affiche dans le texte
+    // Affichage Strong : clé augmentée si disponible (H1254A) sinon base (H1254)
     var head = el('div', { class: 'bi-sidebar__head' }, [
       el('div', { class: 'bi-sidebar__head-hebrew', dir: 'rtl', text: word.t || entry.h || '' }),
       el('div', { class: 'bi-sidebar__head-refs', html:
         (word.x ? '<span class="bi-sidebar__head-xlit">' + escapeHtml(word.x) + '</span>' : '') +
-        '<span class="bi-sidebar__head-strong">' + escapeHtml(word.s) + '</span>'
+        '<span class="bi-sidebar__head-strong">' + escapeHtml(strongKey) + '</span>'
       })
     ]);
     sidebar.appendChild(head);
 
     // Delegate to renderHebrewCard export (bible-v3-hotfix.js)
+    // Concordance et root families : on utilise TOUJOURS la base word.s (les fichiers
+    // sources strong-concordance-oshb.json et strong-root-families.json sont keyés
+    // par base uniquement — pas par augmentation).
     if (window.FIGUIER_HEBREW_CARD && typeof window.FIGUIER_HEBREW_CARD.render === 'function') {
       var concRefs = _concordance[word.s] || [];
       var rootData = _rootFamilies[word.s] || null;
@@ -1225,9 +1252,10 @@
     var conceptBlock = renderConceptsBlock(word.s);
     if (conceptBlock) sidebar.appendChild(conceptBlock);
 
-    // Link to full dictionary fiche
+    // Link to full dictionary fiche — utilise clé augmentée quand dispo (strongKey défini plus haut)
+    // Format hash '#H1254A' — supporté par lexique-strong-app.js handleHash()
     var slugsFooter = el('div', { class: 'bi-sidebar__footer', html:
-      '<a href="/lexique-hebreu-biblique/?strong=' + escapeHtml(word.s) + '" target="_blank" rel="noopener">Ouvrir la fiche compl\u00e8te dans le lexique h\u00e9breu \u2197</a>'
+      '<a href="/lexique-hebreu-biblique/#' + escapeHtml(strongKey) + '" target="_blank" rel="noopener">Ouvrir la fiche compl\u00e8te dans le lexique h\u00e9breu \u2197</a>'
     });
     sidebar.appendChild(slugsFooter);
 

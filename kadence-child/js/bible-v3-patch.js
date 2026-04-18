@@ -812,15 +812,18 @@
   }
 
   // Rend un verset interlineaire en HTML (hebreu RTL par mot, translit + gloss dessous)
-  // Le mot avec strongMatch est surligne.
+  // Le mot avec strongMatch est surligne. strongMatch est en forme base (ex H1254) car
+  // concept-hebrew-map.json est indexe par base uniquement. data-strong expose la cle
+  // complete (H1254A) pour future exploitation (fiche augmentee).
   function renderInterlinearVerse(words, strongMatch) {
     if (!words || !Array.isArray(words) || words.length === 0) return '';
     var html = '<div class="fb-verse-bubble__interlin" dir="rtl">';
     for (var i = 0; i < words.length; i++) {
       var w = words[i];
       var isMatch = strongMatch && w.s && w.s === strongMatch;
+      var dataStrong = w.s ? (w.s + (w.sa || '')) : '';
       html += '<span class="fb-verse-bubble__iw' + (isMatch ? ' fb-verse-bubble__iw--match' : '') + '"'
-        + (w.s ? ' data-strong="' + escapeHtml(w.s) + '"' : '') + '>'
+        + (dataStrong ? ' data-strong="' + escapeHtml(dataStrong) + '"' : '') + '>'
         + '<span class="fb-verse-bubble__iw-he">' + escapeHtml(w.t || '') + '</span>'
         + (w.x ? '<span class="fb-verse-bubble__iw-xlit">' + escapeHtml(w.x) + '</span>' : '')
         + (w.g ? '<span class="fb-verse-bubble__iw-gloss">' + escapeHtml(w.g) + '</span>' : '')
