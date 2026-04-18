@@ -1132,20 +1132,43 @@
     }
   }
 
+  // ── Backdrop mobile (tap pour fermer la sidebar) ──
+  function ensureSidebarBackdrop() {
+    var bd = document.getElementById('bi-sidebar-backdrop');
+    if (bd) return bd;
+    bd = document.createElement('div');
+    bd.id = 'bi-sidebar-backdrop';
+    bd.className = 'bi-sidebar-backdrop';
+    bd.setAttribute('aria-hidden', 'true');
+    bd.addEventListener('click', function () { closeSidebar(); });
+    // Intercept touch explicitly for iOS to avoid ghost clicks
+    bd.addEventListener('touchend', function (e) {
+      e.preventDefault();
+      closeSidebar();
+    }, { passive: false });
+    document.body.appendChild(bd);
+    return bd;
+  }
+
   // ── Sidebar : fiche lexicale complete du mot clique ──
   function openWordSidebar(word) {
     var sidebar = document.getElementById('bi-sidebar');
     if (!sidebar) return;
+    // Reset scroll \u00e0 chaque ouverture
+    sidebar.scrollTop = 0;
     sidebar.innerHTML = '';
     sidebar.classList.add('bi-sidebar--open');
     document.body.classList.add('bi-sidebar-open');
+    // Active le backdrop (cr\u00e9e-le au besoin)
+    var bd = ensureSidebarBackdrop();
+    bd.classList.add('bi-sidebar-backdrop--visible');
 
     var closeBtn = el('button', {
       class: 'bi-sidebar__close',
       type: 'button',
-      'aria-label': 'Fermer',
-      title: 'Fermer la fiche',
-      on: { click: function () { closeSidebar(); } }
+      'aria-label': 'Fermer la fiche',
+      title: 'Fermer',
+      on: { click: function (e) { e.stopPropagation(); closeSidebar(); } }
     }, [document.createTextNode('\u00d7')]);
     sidebar.appendChild(closeBtn);
 
@@ -1255,18 +1278,30 @@
     var list = _strongConcepts[strong];
     if (!list || !list.length) return null;
 
-    // Limite d'affichage pour \u00e9viter la surcharge (sidebar scrollable si >8)
+    // Limite d'affichage pour \u00e9viter la surcharge (sidebar scrollable si >12)
     var MAX_VISIBLE = 12;
     var visible = list.slice(0, MAX_VISIBLE);
     var remaining = list.length - visible.length;
+    var plural = list.length > 1;
 
     var block = el('section', {
       class: 'bi-sidebar__concepts',
-      'aria-label': 'Concepts bibliques li\u00e9s'
+      'aria-label': 'Fiches du dictionnaire biblique li\u00e9es \u00e0 ce mot'
     });
 
-    var title = el('h4', { class: 'bi-sidebar__concepts-title', text: list.length > 1 ? 'Concepts li\u00e9s' : 'Concept li\u00e9' });
-    block.appendChild(title);
+    // Titre : section du dictionnaire biblique
+    block.appendChild(el('h4', {
+      class: 'bi-sidebar__concepts-title',
+      text: 'Dans le dictionnaire biblique'
+    }));
+
+    // Lead explicatif : ce que sont ces liens
+    block.appendChild(el('p', {
+      class: 'bi-sidebar__concepts-lead',
+      text: plural
+        ? 'Fiches th\u00e9matiques o\u00f9 ce mot h\u00e9breu est \u00e9tudi\u00e9 \u2014 cliquez pour les ouvrir :'
+        : 'Fiche th\u00e9matique o\u00f9 ce mot h\u00e9breu est \u00e9tudi\u00e9 \u2014 cliquez pour l\u2019ouvrir :'
+    }));
 
     var ul = el('ul', { class: 'bi-sidebar__concepts-list' });
     visible.forEach(function (c) {
@@ -1278,7 +1313,7 @@
         href: href,
         target: '_blank',
         rel: 'noopener',
-        title: 'Ouvrir la fiche concept : ' + (c.l || c.slug)
+        title: 'Ouvrir la fiche \u00ab ' + (c.l || c.slug) + ' \u00bb dans le dictionnaire biblique'
       });
       a.appendChild(el('span', { class: 'bi-sidebar__concept-label', text: c.l || c.slug }));
       if (catLabel) {
@@ -1288,6 +1323,11 @@
           text: catLabel
         }));
       }
+      a.appendChild(el('span', {
+        class: 'bi-sidebar__concept-arrow',
+        'aria-hidden': 'true',
+        text: '\u2192'
+      }));
       li.appendChild(a);
       ul.appendChild(li);
     });
@@ -1296,7 +1336,7 @@
     if (remaining > 0) {
       block.appendChild(el('p', {
         class: 'bi-sidebar__concepts-more',
-        text: '+ ' + remaining + ' autre' + (remaining > 1 ? 's' : '') + ' concept' + (remaining > 1 ? 's' : '') + ' li\u00e9' + (remaining > 1 ? 's' : '')
+        text: '+ ' + remaining + ' autre' + (remaining > 1 ? 's' : '') + ' fiche' + (remaining > 1 ? 's' : '')
       }));
     }
 
@@ -1308,6 +1348,8 @@
     if (!sidebar) return;
     sidebar.classList.remove('bi-sidebar--open');
     document.body.classList.remove('bi-sidebar-open');
+    var bd = document.getElementById('bi-sidebar-backdrop');
+    if (bd) bd.classList.remove('bi-sidebar-backdrop--visible');
     sidebar.innerHTML = '<div class="bi-sidebar__placeholder"><strong>Fiche lexicale</strong><br><span>Cliquez sur un mot h\u00e9breu pour afficher sa fiche compl\u00e8te.</span></div>';
   }
 
