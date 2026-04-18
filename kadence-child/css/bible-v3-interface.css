@@ -2305,6 +2305,8 @@
   margin-top: 6px;
   padding-top: 8px;
   border-top: 1px solid rgba(178, 140, 100, 0.12);
+  /* Préserve les sauts de ligne entre sens (1./2./3.) et sous-sens (a./b./c.) */
+  white-space: pre-line;
 }
 
 .fb-hebrew-card__expand {
