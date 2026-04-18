@@ -337,17 +337,8 @@
         + '</div>';
 
       container.innerHTML = statsHtml + searchHtml
-        + '<div id="lex-hebrew-controls-slot"></div>'
         + '<div id="lex-results"></div>'
         + '<div id="lex-pagination" class="lex-pagination"></div>';
-
-      // Injection de la barre de contr\u00f4le Hebrew (toggle masquer / translit auto)
-      if (window.FIGUIER_HEBREW_UTILS && typeof window.FIGUIER_HEBREW_UTILS.createHebrewControlsBar === 'function') {
-        var slot = container.querySelector('#lex-hebrew-controls-slot');
-        if (slot) {
-          slot.appendChild(window.FIGUIER_HEBREW_UTILS.createHebrewControlsBar());
-        }
-      }
 
       var searchInput = container.querySelector('.lex-search');
       var debounceTimer;

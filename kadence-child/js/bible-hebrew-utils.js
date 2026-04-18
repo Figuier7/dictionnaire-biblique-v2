@@ -1,31 +1,32 @@
 /**
- * Bible Hebrew Utils — fonctions partage\u0301es pour la lisibilite\u0301 pedagogique
+ * Bible Hebrew Utils — translitte\u0301ration automatique des mots he\u0301breu inline.
  * Utilise\u0301 par :
  *   - kadence-child/js/lexique-strong-app.js   (page lexique d\u00e9die\u00e9e)
  *   - kadence-child/js/bible-v3-patch.js       (dictionnaire concept — sidebar fb-hebrew-card)
  *   - kadence-child/js/bible-interlineaire-app.js  (bible interline\u00e9aire — sidebar bi-sidebar)
  *
  * Expose : window.FIGUIER_HEBREW_UTILS = {
- *   hebrewToTranslit, initHebrewControls, toggleHideHebrew, toggleTranslitAuto,
- *   applyHebrewPrefs, isHideHebrewOn, isTranslitAutoOn
+ *   hebrewToTranslit, applyHebrewPrefs, injectTranslitsInContainer
  * }
  *
+ * Comportement : translitte\u0301ration [xxx] injecte\u0301e apr\u00e8s chaque .fb-inline-he
+ * automatiquement et de fac\u0327on permanente (pas de toggle, pas de pre\u0301fe\u0301rence).
+ *
  * Performance :
- *   - Translittération calcul\u00e9e lazy (seulement si option active) + cache memoire
- *   - Toggle hide he\u0301breu = CSS class globale sur <body> (0 cost JS)
- *   - localStorage pour persister les pr\u00e9f\u00e9rences utilisateur
+ *   - Cache me\u0301moire _translitCache : chaque mot traduit 1× max
+ *   - MutationObserver debounc\u00e9 a\u0300 200ms pour le contenu injecte\u0301 dynamiquement
  */
 (function (global) {
   'use strict';
 
   // ============================================================
-  // Translitteration he\u0301breu \u2192 latin (scholarly simplifie\u0301e)
+  // Translitte\u0301ration he\u0301breu \u2192 latin (scholarly simplifie\u0301e)
   // ============================================================
 
   // Consonnes : forme avec daguesh, sans daguesh (begad-kephat)
   var CONSONANT_MAP = {
     '\u05D0': '\u02BE',   // alef → ʾ
-    '\u05D1': 'b',        // bet (avec daguesh)
+    '\u05D1': 'b',        // bet
     '\u05D2': 'g',        // gimel
     '\u05D3': 'd',        // dalet
     '\u05D4': 'h',        // he
@@ -76,10 +77,6 @@
     '\u05C5': '',         // lower dot (ignored)
   };
 
-  // Begad-kephat : b/g/d/k/p/t sans daguesh → begadkephat spirants (ḇ/ḡ/ḏ/ḵ/p̄/ṯ)
-  // Pour simplifier on garde les formes dures — un usage scholarly strict demanderait plus de contexte.
-
-  // Cache translit : heb → translit
   var _translitCache = {};
 
   function hebrewToTranslit(heb) {
@@ -88,8 +85,7 @@
 
     // Normaliser NFC pour ordre canonique des combining marks
     var s = (typeof heb.normalize === 'function') ? heb.normalize('NFC') : heb;
-
-    // Retirer ta'amim (cantillation U+0591–U+05AF) mais garder niqqud (U+05B0-U+05BC, U+05C1-U+05C5)
+    // Retirer ta'amim (cantillation U+0591–U+05AF)
     s = s.replace(/[\u0591-\u05AF]/g, '');
 
     var out = [];
@@ -98,13 +94,10 @@
       var c = s[i];
       var next = s[i + 1] || '';
 
-      // Consonne de base
       if (CONSONANT_MAP.hasOwnProperty(c)) {
         var cons = CONSONANT_MAP[c];
-
         // Shin / Sin : distinction par pointage suivant
         if (c === '\u05E9') {
-          // Chercher shin/sin dot dans les chars suivants (peut être après niqqud)
           var hasShinDot = false, hasSinDot = false;
           for (var j = i + 1; j < s.length && j < i + 4; j++) {
             if (s[j] === '\u05C1') { hasShinDot = true; break; }
@@ -115,54 +108,42 @@
           else if (hasSinDot) cons = '\u015B';  // ś
           else cons = '\u0161';  // default à š
         }
-
-        // Begadkephat : bet, gimel, dalet, kaph, pe, tav
-        //   → si suivi de daguesh (U+05BC) = dur, sinon spirant
-        // On simplifie : garder forme dure par défaut (pour lisibilité étudiante)
-        // (une translittération scholarly pleine demanderait bgdkpt différencié)
-
         out.push(cons);
         prevChar = cons;
         continue;
       }
 
-      // Voyelles / niqqud
       if (VOWEL_MAP.hasOwnProperty(c)) {
         var vow = VOWEL_MAP[c];
 
-        // Holam suivi de waw → ō (bugpass : on a déjà ajouté w pour waw)
         // Shureq : waw + daguesh (וּ) → û
         if (c === '\u05BC' && prevChar === 'w') {
-          out.pop();  // retirer le 'w' ajouté
-          out.push('\u00FB');  // û
+          out.pop();
+          out.push('\u00FB');
           prevChar = '\u00FB';
           continue;
         }
-
-        // Holam haser pour waw : les chars sont souvent וֹ → ō
+        // Holam haser pour waw : וֹ → ō
         if (c === '\u05B9' && prevChar === 'w') {
-          out.pop();  // retirer 'w'
-          out.push('\u014D');  // ō
+          out.pop();
+          out.push('\u014D');
           prevChar = '\u014D';
           continue;
         }
-
         // Hiriq + yod = î
         if (c === '\u05B4' && next === '\u05D9') {
-          out.push('\u00EE');  // î
-          i++;  // skip yod
+          out.push('\u00EE');
+          i++;
           prevChar = '\u00EE';
           continue;
         }
-
         // Tsere + yod = ê
         if (c === '\u05B5' && next === '\u05D9') {
-          out.push('\u00EA');  // ê
+          out.push('\u00EA');
           i++;
           prevChar = '\u00EA';
           continue;
         }
-
         if (vow) {
           out.push(vow);
           prevChar = vow;
@@ -170,10 +151,7 @@
         continue;
       }
 
-      // Char non-hebrew (espace, ponctuation)
-      if (c === ' ') {
-        out.push(' ');
-      }
+      if (c === ' ') out.push(' ');
     }
 
     var result = out.join('').replace(/\s+/g, ' ').trim();
@@ -182,58 +160,12 @@
   }
 
   // ============================================================
-  // Pre\u0301fe\u0301rences utilisateur (localStorage)
+  // Injection des translitte\u0301rations dans le DOM
   // ============================================================
-
-  var PREF_KEYS = {
-    HIDE_HEBREW: 'figuier_hide_hebrew',
-    TRANSLIT_AUTO: 'figuier_translit_auto',
-  };
-
-  function _readPref(key) {
-    try {
-      return localStorage.getItem(key) === '1';
-    } catch (e) { return false; }
-  }
-
-  function _writePref(key, val) {
-    try {
-      localStorage.setItem(key, val ? '1' : '0');
-    } catch (e) { /* localStorage indisponible, ignore */ }
-  }
-
-  function isHideHebrewOn() { return _readPref(PREF_KEYS.HIDE_HEBREW); }
-  function isTranslitAutoOn() { return _readPref(PREF_KEYS.TRANSLIT_AUTO); }
-
-  // ============================================================
-  // Application des pre\u0301fe\u0301rences au DOM
-  // ============================================================
-
-  /**
-   * Met a\u0300 jour le body avec les classes correspondant aux pre\u0301fs.
-   * - body.figuier-hide-hebrew : CSS global masque les .fb-inline-he
-   * - body.figuier-translit-auto : CSS global peut affecter affichage translit
-   * Translit est injecte\u0301e dynamiquement dans injectTranslitsInContainer().
-   */
-  function applyHebrewPrefs() {
-    var body = document.body;
-    if (!body) return;
-    body.classList.toggle('figuier-hide-hebrew', isHideHebrewOn());
-    body.classList.toggle('figuier-translit-auto', isTranslitAutoOn());
-    // Si translit auto on, injecter dans tous les containers d\u00e9ja pre\u0301sents
-    if (isTranslitAutoOn()) {
-      injectTranslitsInContainer(document);
-    } else {
-      removeInjectedTranslits(document);
-    }
-    // Synchroniser e\u0301tat des boutons toggles existants
-    _syncToggleButtons();
-  }
 
   /**
    * Injecte [translit] apr\u00e8s chaque <span class="fb-inline-he"> du conteneur.
    * Lazy : ne fait rien si la translit est de\u0301ja\u0300 injecte\u0301e.
-   * Cache via _translitCache pour ne pas recalculer.
    */
   function injectTranslitsInContainer(container) {
     if (!container || !container.querySelectorAll) return;
@@ -241,7 +173,7 @@
     for (var i = 0; i < spans.length; i++) {
       var span = spans[i];
       if (span.nextElementSibling && span.nextElementSibling.classList.contains('fb-inline-translit')) {
-        continue;  // de\u0301ja\u0300 injecte\u0301
+        continue;
       }
       var heb = span.textContent || '';
       if (!heb.trim()) continue;
@@ -255,90 +187,49 @@
     }
   }
 
-  function removeInjectedTranslits(container) {
-    if (!container || !container.querySelectorAll) return;
-    var trs = container.querySelectorAll('.fb-inline-translit');
-    for (var i = 0; i < trs.length; i++) {
-      trs[i].parentNode.removeChild(trs[i]);
+  /**
+   * Applique les translits sur tout le document. A\u0300 appeler apr\u00e8s chaque render.
+   */
+  function applyHebrewPrefs() {
+    if (document.body) {
+      injectTranslitsInContainer(document.body);
     }
   }
 
   // ============================================================
-  // Toggles
+  // MutationObserver : auto-apply quand de nouveaux .fb-inline-he apparaissent
   // ============================================================
-
-  function toggleHideHebrew() {
-    var next = !isHideHebrewOn();
-    _writePref(PREF_KEYS.HIDE_HEBREW, next);
-    applyHebrewPrefs();
-    return next;
-  }
-
-  function toggleTranslitAuto() {
-    var next = !isTranslitAutoOn();
-    _writePref(PREF_KEYS.TRANSLIT_AUTO, next);
-    applyHebrewPrefs();
-    return next;
-  }
-
-  // ============================================================
-  // UI : bouton(s) toggle
-  // ============================================================
-
-  /**
-   * Cre\u0301e un composant barre de pre\u0301fs a\u0300 inse\u0301rer dans un conteneur.
-   * Structure : <div class="figuier-hebrew-controls">[toggle hide] [toggle translit]</div>
-   */
-  function createHebrewControlsBar() {
-    var wrap = document.createElement('div');
-    wrap.className = 'figuier-hebrew-controls';
-    wrap.setAttribute('role', 'group');
-    wrap.setAttribute('aria-label', 'Options d\u2019affichage he\u0301breu');
-
-    var btnHide = document.createElement('button');
-    btnHide.type = 'button';
-    btnHide.className = 'figuier-hebrew-btn figuier-hebrew-btn--hide';
-    btnHide.setAttribute('data-pref', 'hide');
-    btnHide.setAttribute('aria-pressed', isHideHebrewOn() ? 'true' : 'false');
-    btnHide.title = 'Masquer les caracte\u0300res he\u0301breu dans le texte explicatif (pour lecture facile)';
-    btnHide.innerHTML = '<span class="figuier-hebrew-btn__icon">\u05D0</span> <span class="figuier-hebrew-btn__label">Masquer he\u0301breu</span>';
-    btnHide.addEventListener('click', function () { toggleHideHebrew(); });
-    wrap.appendChild(btnHide);
-
-    var btnTranslit = document.createElement('button');
-    btnTranslit.type = 'button';
-    btnTranslit.className = 'figuier-hebrew-btn figuier-hebrew-btn--translit';
-    btnTranslit.setAttribute('data-pref', 'translit');
-    btnTranslit.setAttribute('aria-pressed', isTranslitAutoOn() ? 'true' : 'false');
-    btnTranslit.title = 'Afficher [translitte\u0301ration] apre\u0300s chaque mot he\u0301breu';
-    btnTranslit.innerHTML = '<span class="figuier-hebrew-btn__icon">[\u02BE]</span> <span class="figuier-hebrew-btn__label">Translit. auto</span>';
-    btnTranslit.addEventListener('click', function () { toggleTranslitAuto(); });
-    wrap.appendChild(btnTranslit);
-
-    return wrap;
-  }
-
-  /**
-   * Synchronise visuellement l'e\u0301tat aria-pressed des boutons toggle existants.
-   */
-  function _syncToggleButtons() {
-    document.querySelectorAll('.figuier-hebrew-btn').forEach(function (btn) {
-      var pref = btn.getAttribute('data-pref');
-      var on = pref === 'hide' ? isHideHebrewOn() : isTranslitAutoOn();
-      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+  var _moDebounceTimer = null;
+  function _setupMutationObserver() {
+    if (typeof MutationObserver === 'undefined') return;
+    if (!document.body) return;
+    var observer = new MutationObserver(function (mutations) {
+      var needsApply = false;
+      for (var i = 0; i < mutations.length; i++) {
+        var m = mutations[i];
+        if (m.addedNodes && m.addedNodes.length > 0) {
+          for (var j = 0; j < m.addedNodes.length; j++) {
+            var n = m.addedNodes[j];
+            if (n.nodeType !== 1) continue;
+            if (n.classList && n.classList.contains('fb-inline-he')) { needsApply = true; break; }
+            if (n.querySelector && n.querySelector('.fb-inline-he')) { needsApply = true; break; }
+          }
+        }
+        if (needsApply) break;
+      }
+      if (!needsApply) return;
+      if (_moDebounceTimer) clearTimeout(_moDebounceTimer);
+      _moDebounceTimer = setTimeout(function () {
+        injectTranslitsInContainer(document.body);
+      }, 200);
     });
+    observer.observe(document.body, { childList: true, subtree: true });
   }
 
-  /**
-   * Initialise les contr\u00f4les h\u00e9breu : applique les pre\u0301fs sauvegarde\u0301es au chargement.
-   * Les bouton(s) sont inse\u0301re\u0301s via createHebrewControlsBar() dans chaque app qui l'appelle.
-   *
-   * Met aussi en place un MutationObserver global qui re-applique les pre\u0301fs
-   * quand de nouveaux .fb-inline-he apparaissent (sidebar concept, popups, etc.)
-   * Debounc\u00e9 a\u0300 200ms pour ne pas impacter les perfs.
-   */
-  function initHebrewControls() {
-    // Applique les pre\u0301fs au chargement
+  // ============================================================
+  // Init
+  // ============================================================
+  function init() {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function () {
         applyHebrewPrefs();
@@ -350,62 +241,15 @@
     }
   }
 
-  // MutationObserver debounced : auto-apply quand de nouveaux nodes Hebrew apparaissent
-  var _moDebounceTimer = null;
-  function _setupMutationObserver() {
-    if (typeof MutationObserver === 'undefined') return;
-    if (!document.body) return;
-
-    var observer = new MutationObserver(function (mutations) {
-      // Quick check : au moins une mutation a ajoute\u0301 un node contenant potentiellement du .fb-inline-he
-      var needsApply = false;
-      for (var i = 0; i < mutations.length; i++) {
-        var m = mutations[i];
-        if (m.addedNodes && m.addedNodes.length > 0) {
-          for (var j = 0; j < m.addedNodes.length; j++) {
-            var n = m.addedNodes[j];
-            if (n.nodeType !== 1) continue;  // pas un element
-            if (n.classList && n.classList.contains('fb-inline-he')) { needsApply = true; break; }
-            if (n.querySelector && n.querySelector('.fb-inline-he')) { needsApply = true; break; }
-          }
-        }
-        if (needsApply) break;
-      }
-      if (!needsApply) return;
-
-      // Debounce
-      if (_moDebounceTimer) clearTimeout(_moDebounceTimer);
-      _moDebounceTimer = setTimeout(function () {
-        // Ne re-applique que si l'option translit est ON (hide hebrew = pure CSS, pas besoin)
-        if (isTranslitAutoOn()) {
-          injectTranslitsInContainer(document.body);
-        }
-      }, 200);
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
-  }
-
   // ============================================================
-  // Export global
+  // Export global (API simplifie\u0301e)
   // ============================================================
   global.FIGUIER_HEBREW_UTILS = {
     hebrewToTranslit: hebrewToTranslit,
-    isHideHebrewOn: isHideHebrewOn,
-    isTranslitAutoOn: isTranslitAutoOn,
-    toggleHideHebrew: toggleHideHebrew,
-    toggleTranslitAuto: toggleTranslitAuto,
     applyHebrewPrefs: applyHebrewPrefs,
-    createHebrewControlsBar: createHebrewControlsBar,
     injectTranslitsInContainer: injectTranslitsInContainer,
-    removeInjectedTranslits: removeInjectedTranslits,
-    initHebrewControls: initHebrewControls,
   };
 
-  // Auto-init au chargement
-  initHebrewControls();
+  init();
 
 })(typeof window !== 'undefined' ? window : this);

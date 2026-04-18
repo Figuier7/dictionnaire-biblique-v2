@@ -1,21 +1,10 @@
 /* ================================================================
    Bible Hebrew Utils — styles partage\u0301s
-   Utilise\u0301 par lexique + dictionnaire concept + interline\u0301aire
+   Translitte\u0301ration auto [xxx] injecte\u0301e apr\u00e8s chaque mot he\u0301breu inline.
+   Utilise\u0301 par lexique + dictionnaire concept + interline\u0301aire.
    ================================================================ */
 
-/* ── Toggle global : masquer caracte\u0300res he\u0301breu inline ── */
-body.figuier-hide-hebrew .fb-inline-he {
-  display: none !important;
-}
-/* Quand l'he\u0301breu est masque\u0301, on retire aussi la translit auto pour \u00e9viter un [ ] vide */
-body.figuier-hide-hebrew .fb-inline-translit {
-  display: none !important;
-}
-/* Note : les mots he\u0301breu comme contenu principal (ligne 1 des mots interline\u0301aires,
-   vedette dans une fiche) NE sont PAS affecte\u0301s — seuls les .fb-inline-he (incrusta-
-   tions inline dans du texte explicatif) sont masque\u0301s. */
-
-/* ── Translit auto : pre\u0301sentation du [translit] ── */
+/* Pre\u0301sentation du [translit] inline */
 .fb-inline-translit {
   color: #6b8f5e;
   font-style: italic;
@@ -23,77 +12,4 @@ body.figuier-hide-hebrew .fb-inline-translit {
   font-family: 'EB Garamond', 'Georgia', serif;
   white-space: nowrap;
   letter-spacing: 0.01em;
-}
-
-/* ── Barre de contro\u0302les ── */
-.figuier-hebrew-controls {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 6px 0;
-  margin-bottom: 10px;
-}
-
-.figuier-hebrew-btn {
-  appearance: none;
-  background: #fdfaf4;
-  border: 1px solid rgba(178, 140, 100, 0.4);
-  color: #8a6a4a;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 500;
-  padding: 5px 12px 6px;
-  border-radius: 18px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  line-height: 1.2;
-  letter-spacing: 0.01em;
-}
-.figuier-hebrew-btn:hover {
-  background: #f0e6d4;
-  border-color: #B28C64;
-  color: #6b4c3b;
-}
-.figuier-hebrew-btn[aria-pressed="true"] {
-  background: #B28C64;
-  color: #fdfaf4;
-  border-color: #B28C64;
-}
-.figuier-hebrew-btn[aria-pressed="true"]:hover {
-  background: #8a6a4a;
-  border-color: #8a6a4a;
-}
-.figuier-hebrew-btn__icon {
-  font-family: 'SBL Hebrew', 'Frank Ruehl CLM', 'Ezra SIL', 'Noto Serif Hebrew', 'EB Garamond', serif;
-  font-size: 1.05em;
-  font-weight: 600;
-  display: inline-block;
-  min-width: 1em;
-  text-align: center;
-}
-.figuier-hebrew-btn--translit .figuier-hebrew-btn__icon {
-  font-family: 'EB Garamond', 'Georgia', serif;
-  font-style: italic;
-  color: #6b8f5e;
-}
-.figuier-hebrew-btn[aria-pressed="true"].figuier-hebrew-btn--translit .figuier-hebrew-btn__icon {
-  color: #fdfaf4;
-}
-
-/* Sur mobile : boutons plus compacts */
-@media (max-width: 600px) {
-  .figuier-hebrew-btn {
-    font-size: 0.72rem;
-    padding: 4px 10px 5px;
-  }
-  .figuier-hebrew-btn__label {
-    display: none;  /* Icone seule sur petit e\u0301cran */
-  }
-  .figuier-hebrew-btn__icon {
-    min-width: 1.4em;
-  }
 }

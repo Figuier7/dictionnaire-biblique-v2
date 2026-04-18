@@ -782,12 +782,6 @@
     controls.appendChild(nextBtn);
 
     header.appendChild(controls);
-
-    // ── Barre de contr\u00f4le he\u0301breu (masquer / translit auto) ──
-    if (window.FIGUIER_HEBREW_UTILS && typeof window.FIGUIER_HEBREW_UTILS.createHebrewControlsBar === 'function') {
-      header.appendChild(window.FIGUIER_HEBREW_UTILS.createHebrewControlsBar());
-    }
-
     wrapper.appendChild(header);
 
     // ── Chapter content ──
