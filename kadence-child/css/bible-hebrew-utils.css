@@ -1,0 +1,15 @@
+/* ================================================================
+   Bible Hebrew Utils — styles partage\u0301s
+   Translitte\u0301ration auto [xxx] injecte\u0301e apr\u00e8s chaque mot he\u0301breu inline.
+   Utilise\u0301 par lexique + dictionnaire concept + interline\u0301aire.
+   ================================================================ */
+
+/* Pre\u0301sentation du [translit] inline */
+.fb-inline-translit {
+  color: #6b8f5e;
+  font-style: italic;
+  font-size: 0.88em;
+  font-family: 'EB Garamond', 'Georgia', serif;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}

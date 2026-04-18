@@ -1,0 +1,118 @@
+{
+  "_version": "2026-03-19",
+  "_description": "Glossaire centralisé de traduction pour toutes les sources (Easton, Smith, ISBE, etc.). Ce fichier est la référence unique pour les substitutions terminologiques dans les pipelines de traduction. Il ne gouverne PAS l'interface (voir editorial-terminology.json).",
+
+  "theological_terms": {
+    "_doc": "Termes théologiques : traduction obligatoire dans les définitions traduites",
+    "rules": [
+      { "source": "God",           "target": "Elohîm",        "context": "prose courante", "notes": "Si le champ 'mot' contient 'God' : Elohîm (Dieu) à la 1re occurrence, puis Elohîm. Sinon : Elohîm uniquement. Dieux païens = dieu/dieux (minuscule). Pas quand objet d'une remarque éditoriale citée. Même logique à appliquer lors de la révision Easton." },
+      { "source": "the LORD",      "target": "YHWH",           "context": "tétragramme explicite" },
+      { "source": "LORD",          "target": "YHWH",           "context": "tétragramme explicite" },
+      { "source": "Jehovah",       "target": "YHWH",           "context": "toujours, y compris comme composant de nom propre. Le composant hébreu adopte sa forme hébraïque (J→Y) : Jehovah-Jireh → YHWH-Yireh, Jehovah-Nissi → YHWH-Nissi, Jehovah-Shalom → YHWH-Shalom, etc." },
+      { "source": "the Lord",      "target": "le Seigneur",    "context": "quand ce n'est pas le tétragramme ni une note de version" },
+      { "source": "Jesus",         "target": "Yéhoshoua",      "context": "première occurrence utile : Yéhoshoua (Jésus), puis Yéhoshoua" },
+      { "source": "Christ",        "target": "Mashiah (Christ)","context": "première occurrence utile, puis Mashiah seul si contexte clair" },
+      { "source": "Messiah",       "target": "Mashiah",        "context": "toujours" },
+      { "source": "Holy Spirit",   "target": "Saint-Esprit",   "context": "toujours" },
+      { "source": "Holy Ghost",    "target": "Saint-Esprit",   "context": "toujours" }
+    ]
+  },
+
+  "bible_references": {
+    "_doc": "Abréviations bibliques françaises stables. Forme unique par livre, jamais d'alternance.",
+    "old_testament": {
+      "Genesis": "Gen.", "Exodus": "Ex.", "Leviticus": "Lév.", "Numbers": "Nomb.",
+      "Deuteronomy": "Deut.", "Joshua": "Jos.", "Judges": "Jug.", "Ruth": "Ruth",
+      "1 Samuel": "1 Sam.", "2 Samuel": "2 Sam.", "1 Kings": "1 Rois", "2 Kings": "2 Rois",
+      "1 Chronicles": "1 Chr.", "2 Chronicles": "2 Chr.", "Ezra": "Esdr.", "Nehemiah": "Néh.",
+      "Esther": "Esth.", "Job": "Job", "Psalms": "Ps.", "Proverbs": "Prov.",
+      "Ecclesiastes": "Eccl.", "Song of Solomon": "Cant.", "Isaiah": "Ésa.", "Jeremiah": "Jér.",
+      "Lamentations": "Lam.", "Ezekiel": "Éz.", "Daniel": "Dan.", "Hosea": "Os.",
+      "Joel": "Joël", "Amos": "Amos", "Obadiah": "Abd.", "Jonah": "Jonas",
+      "Micah": "Mich.", "Nahum": "Nah.", "Habakkuk": "Hab.", "Zephaniah": "Soph.",
+      "Haggai": "Ag.", "Zechariah": "Zach.", "Malachi": "Mal."
+    },
+    "new_testament": {
+      "Matthew": "Matt.", "Mark": "Marc", "Luke": "Luc", "John": "Jean",
+      "Acts": "Actes", "Romans": "Rom.", "1 Corinthians": "1 Cor.", "2 Corinthians": "2 Cor.",
+      "Galatians": "Gal.", "Ephesians": "Éph.", "Philippians": "Phil.", "Colossians": "Col.",
+      "1 Thessalonians": "1 Thess.", "2 Thessalonians": "2 Thess.",
+      "1 Timothy": "1 Tim.", "2 Timothy": "2 Tim.", "Titus": "Tite", "Philemon": "Philém.",
+      "Hebrews": "Héb.", "James": "Jacq.", "1 Peter": "1 Pi.", "2 Peter": "2 Pi.",
+      "1 John": "1 Jean", "2 John": "2 Jean", "3 John": "3 Jean", "Jude": "Jude",
+      "Revelation": "Apoc."
+    },
+    "deuterocanonical": {
+      "1 Maccabees": "1 Mac.", "2 Maccabees": "2 Mac.",
+      "Judith": "Jud.", "Tobit": "Tob.", "Wisdom": "Sag.", "Sirach": "Sir.",
+      "Baruch": "Bar."
+    }
+  },
+
+  "proper_names": {
+    "_doc": "Noms propres : forme française classique quand elle est certaine et stable",
+    "rules": [
+      { "source": "Jerusalem",   "target": "Jérusalem" },
+      { "source": "Samaria",     "target": "Samarie" },
+      { "source": "Assyria",     "target": "Assyrie" },
+      { "source": "Sinai",       "target": "Sinaï" },
+      { "source": "Rehoboam",    "target": "Roboam" },
+      { "source": "Ephraim",     "target": "Éphraïm" },
+      { "source": "Nineveh",     "target": "Ninive" },
+      { "source": "Damascus",    "target": "Damas" },
+      { "source": "Philistines", "target": "Philistins" },
+      { "source": "Egypt",       "target": "Égypte" },
+      { "source": "Babylon",     "target": "Babylone" },
+      { "source": "Persia",      "target": "Perse" },
+      { "source": "Greece",      "target": "Grèce" },
+      { "source": "Rome",        "target": "Rome" },
+      { "source": "Canaan",      "target": "Canaan" },
+      { "source": "Jordan",      "target": "Jourdain" },
+      { "source": "Galilee",     "target": "Galilée" },
+      { "source": "Judah",       "target": "Juda" },
+      { "source": "Israel",      "target": "Israël" },
+      { "source": "Bethlehem",   "target": "Bethléem" },
+      { "source": "Nazareth",    "target": "Nazareth" },
+      { "source": "Medes",       "target": "Mèdes" }
+    ],
+    "fallback_rule": "Si forme française incertaine, conserver la forme source et signaler dans proper_nouns_unknown"
+  },
+
+  "editorial_abbreviations": {
+    "_doc": "Abréviations éditoriales : adaptation en français",
+    "adapt": [
+      { "source": "i.e.",  "target": "c.-à-d." },
+      { "source": "e.g.",  "target": "par ex." },
+      { "source": "viz.",  "target": "à savoir" },
+      { "source": "No.",   "target": "nᵒ" },
+      { "source": "B.C.",  "target": "av. J.-C." },
+      { "source": "A.D.",  "target": "apr. J.-C." }
+    ],
+    "preserve_as_is": ["Heb.", "Gr.", "LXX", "cf.", "ibid.", "comp.", "q.v.", "etc."]
+  },
+
+  "bible_versions": {
+    "_doc": "Versions bibliques anglaises : toujours traduire dans la prose",
+    "rules": [
+      { "source": "Authorized Version",  "target": "Version Autorisée King James" },
+      { "source": "A.V.",                 "target": "Version Autorisée King James" },
+      { "source": "Revised Version",      "target": "King James Version Révisée" },
+      { "source": "R.V.",                 "target": "King James Version Révisée" },
+      { "source": "in our version",       "target": "dans notre version" },
+      { "source": "margin",               "target": "marge" },
+      { "source": "in the margin",        "target": "en marge" }
+    ]
+  },
+
+  "scholarly_apparatus": {
+    "_doc": "Éléments à conserver tels quels (ne pas traduire)",
+    "preserve": [
+      "Titres d'ouvrages",
+      "Noms d'auteurs (Josephus, Herodotus, Eusebius, Sayce, etc.)",
+      "Translittérations hébraïques et grecques",
+      "Références bibliographiques",
+      "Sigles savants (Heb., Gr., LXX, cf., ibid., comp.)"
+    ],
+    "rule": "Conserver la forme de citation, traduire le texte autour"
+  }
+}

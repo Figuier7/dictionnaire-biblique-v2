@@ -1,0 +1,945 @@
+/* ================================================================
+   Bible interlineaire AT — styles
+   Composant : bible-interlineaire-app.js
+   Dependances CSS : bible-v3-interface.css (pour .fb-hebrew-card)
+                     lexique-strong-style.css (optionnel)
+   Charte : EB Garamond + Inter / Brun dore / Cream
+   He\u0301breu : Noto Serif Hebrew (Google Fonts, serif litte\u0301raire)
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+Hebrew:wght@400;500;600;700&display=swap');
+
+/* Stack he\u0301breu litte\u0301raire (ordre de pre\u0301fe\u0301rence) :
+   SBL Hebrew (syste\u0300me scholarly), Frank Ruehl CLM (classique israe\u0301lienne),
+   Ezra SIL (biblique avec ta'amim), Noto Serif Hebrew (web standard),
+   EB Garamond + Georgia fallback pour les caracte\u0300res latins. */
+:root {
+  --bi-primary:     #b28c64;
+  --bi-primary-dk:  #8a6a4a;
+  --bi-accent:      #6b8f5e;
+  --bi-text:        #2b2520;
+  --bi-text-soft:   #5c5048;
+  --bi-bg:          #fdf9f3;
+  --bi-bg-alt:      #f7efe4;
+  --bi-border:      #e2d7c4;
+  --bi-shadow:      0 2px 8px rgba(139,104,72,0.08);
+  --bi-shadow-lg:   0 8px 24px rgba(139,104,72,0.16);
+  --bi-radius:      10px;
+  --bi-radius-sm:   6px;
+}
+
+#bible-interlineaire-app {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: var(--bi-text);
+  line-height: 1.6;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ── Loading + Erreurs ── */
+#bible-interlineaire-app .bi-loading,
+#bible-interlineaire-app .bi-error {
+  padding: 32px 24px;
+  text-align: center;
+  color: var(--bi-text-soft);
+  font-size: 16px;
+  background: var(--bi-bg-alt);
+  border-radius: var(--bi-radius);
+  margin: 16px 0;
+}
+#bible-interlineaire-app .bi-error {
+  background: #fdecec;
+  color: #8a3a3a;
+  border: 1px solid #e8c7c7;
+}
+
+/* ================================================================
+   HOME - Selecteur de livre
+   ================================================================ */
+.bi-home {
+  padding: 24px 0 64px;
+}
+.bi-home__header {
+  text-align: center;
+  padding: 24px 0 16px;
+  border-bottom: 2px solid var(--bi-border);
+  margin-bottom: 32px;
+}
+.bi-home__title {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  color: var(--bi-primary-dk);
+  margin: 0 0 8px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.bi-home__subtitle {
+  font-size: 15px;
+  color: var(--bi-text-soft);
+  margin: 0;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.bi-home__intro {
+  max-width: 820px;
+  margin: 0 auto 40px;
+  padding: 20px 24px;
+  background: var(--bi-bg-alt);
+  border-radius: var(--bi-radius);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--bi-text);
+}
+
+.bi-home__group {
+  margin-bottom: 44px;
+}
+.bi-home__group-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 8px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--bi-border);
+}
+.bi-home__group-title {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: 1.7rem;
+  color: var(--bi-primary-dk);
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.bi-home__group-subtitle {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: 1.05rem;
+  color: var(--bi-text-soft);
+  font-style: italic;
+}
+.bi-home__group-desc {
+  font-size: 0.95rem;
+  color: var(--bi-text-soft);
+  margin: 0 0 16px;
+  font-family: 'EB Garamond', 'Georgia', serif;
+}
+/* Sous-groupes (premiers/derniers prophe\u0300tes, 12 petits, megilot) */
+.bi-home__subgroup {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-size: 0.75rem;
+  color: var(--bi-accent);
+  margin: 18px 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+/* Nom BYM (principal) + nom francais (secondaire, parenthe\u0300ses) */
+.bi-home__book-bym {
+  display: block;
+  font-weight: 600;
+}
+.bi-home__book-fr {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--bi-text-soft);
+  font-weight: 400;
+  font-style: italic;
+  margin-top: 1px;
+}
+.bi-home__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+.bi-home__book-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid var(--bi-border);
+  border-radius: var(--bi-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  color: var(--bi-text);
+  text-align: left;
+  box-shadow: var(--bi-shadow);
+}
+.bi-home__book-card:hover {
+  background: var(--bi-bg-alt);
+  border-color: var(--bi-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--bi-shadow-lg);
+}
+.bi-home__book-card:focus-visible {
+  outline: 2px solid var(--bi-primary);
+  outline-offset: 2px;
+}
+.bi-home__book-name {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--bi-primary-dk);
+}
+.bi-home__book-meta {
+  font-size: 12px;
+  color: var(--bi-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ================================================================
+   READER - Layout general (header + body + sidebar)
+   ================================================================ */
+.bi-reader {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 24px;
+  padding: 16px 0 64px;
+  align-items: start;
+}
+@media (max-width: 1100px) {
+  .bi-reader {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bi-reader__header {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--bi-border);
+  margin-bottom: 16px;
+  position: sticky;
+  top: 0;
+  background: var(--bi-bg);
+  z-index: 20;
+}
+
+.bi-reader__breadcrumb {
+  font-size: 14px;
+}
+.bi-breadcrumb-link {
+  color: var(--bi-primary-dk);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--bi-primary);
+}
+.bi-breadcrumb-link:hover {
+  color: var(--bi-primary);
+}
+.bi-breadcrumb-sep {
+  color: var(--bi-text-soft);
+  margin: 0 4px;
+}
+.bi-breadcrumb-current {
+  color: var(--bi-text);
+  font-weight: 500;
+}
+
+.bi-reader__controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.bi-ctrl {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 8px 12px;
+  background: #fff;
+  border: 1px solid var(--bi-border);
+  border-radius: var(--bi-radius-sm);
+  cursor: pointer;
+  color: var(--bi-text);
+  transition: all 0.15s ease;
+}
+.bi-ctrl:hover {
+  background: var(--bi-bg-alt);
+  border-color: var(--bi-primary);
+}
+.bi-ctrl:focus-visible {
+  outline: 2px solid var(--bi-primary);
+  outline-offset: 2px;
+}
+.bi-ctrl--book {
+  font-weight: 500;
+  color: var(--bi-primary-dk);
+  min-width: 160px;
+}
+.bi-ctrl--chap {
+  min-width: 130px;
+}
+.bi-ctrl--verse {
+  min-width: 100px;
+  color: var(--bi-primary-dk);
+}
+.bi-ctrl--nav {
+  font-size: 20px;
+  line-height: 1;
+  padding: 6px 12px;
+  font-weight: bold;
+  color: var(--bi-primary-dk);
+}
+.bi-ctrl--footer {
+  padding: 12px 20px;
+  font-size: 15px;
+  font-family: 'EB Garamond', 'Georgia', serif;
+  color: var(--bi-primary-dk);
+}
+.bi-ctrl--disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.bi-reader__body {
+  min-width: 0;
+}
+
+/* ── Chapter title + footer nav ── */
+.bi-chapter-title {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  color: var(--bi-primary-dk);
+  margin: 0 0 24px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--bi-border);
+  font-weight: 500;
+}
+.bi-chapter-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 0 16px;
+  margin-top: 32px;
+  border-top: 1px solid var(--bi-border);
+}
+.bi-ctrl--next {
+  margin-left: auto;
+}
+
+/* ================================================================
+   VERSET - Card avec grille mot-a-mot
+   ================================================================ */
+.bi-verse {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 10px;
+  padding: 20px 16px 16px;
+  margin-bottom: 16px;
+  background: #fff;
+  border: 1px solid var(--bi-border);
+  border-radius: var(--bi-radius);
+  box-shadow: var(--bi-shadow);
+  transition: border-color 0.15s ease;
+}
+.bi-verse:hover {
+  border-color: #d2c2a8;
+}
+/* Flash subtil apres saut via le selecteur de verset */
+.bi-verse--flash {
+  border-color: var(--bi-primary);
+  box-shadow: 0 0 0 3px rgba(178, 140, 100, 0.25);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.bi-verse__num {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: 18px;
+  color: var(--bi-primary-dk);
+  font-weight: 600;
+  text-align: center;
+  padding-top: 4px;
+  user-select: none;
+}
+
+/* Grille des mots RTL : chaque mot est une colonne de 5 lignes */
+.bi-verse__grid {
+  display: flex;
+  flex-direction: row; /* rtl handled via dir="rtl" attribute -> visually right-to-left */
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  align-items: flex-start;
+  justify-content: flex-end; /* visually starts right in rtl */
+  min-width: 0;
+  unicode-bidi: isolate;
+  direction: rtl;
+  padding: 8px 4px 8px 4px;
+  background: #fdfaf4;
+  border-radius: var(--bi-radius-sm);
+  border: 1px solid #f0e6d4;
+}
+
+/* Chaque mot : colonne flex vertical, align center */
+.bi-word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  min-width: 54px;
+  max-width: 180px;
+  padding: 8px 6px 6px;
+  margin: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--bi-radius-sm);
+  cursor: default;
+  font-family: inherit;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  text-align: center;
+  direction: ltr; /* reset for FR text inside */
+  unicode-bidi: isolate;
+}
+.bi-word--clickable {
+  cursor: pointer;
+}
+.bi-word--clickable:hover {
+  background: #f0e6d4;
+  border-color: var(--bi-primary);
+}
+.bi-word--clickable:focus-visible {
+  outline: 2px solid var(--bi-primary);
+  outline-offset: 1px;
+}
+.bi-word--clickable.is-active {
+  background: #fbe9cf;
+  border-color: var(--bi-primary);
+}
+
+/* Lignes individuelles du mot */
+.bi-word__heb {
+  font-family: 'SBL Hebrew', 'Frank Ruehl CLM', 'Ezra SIL', 'Noto Serif Hebrew', 'EB Garamond', serif;
+  font-size: 24px;
+  line-height: 1.2;
+  color: var(--bi-text);
+  direction: rtl;
+  unicode-bidi: isolate;
+  white-space: nowrap;
+  min-height: 30px;
+}
+.bi-word__xlit {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: 13px;
+  line-height: 1.1;
+  color: var(--bi-primary-dk);
+  font-style: italic;
+  direction: ltr;
+  min-height: 14px;
+}
+.bi-word__xlit--empty,
+.bi-word__strong--empty,
+.bi-word__morph--empty {
+  min-height: 14px;
+}
+.bi-word__strong {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  line-height: 1.1;
+  color: #8a7a6a;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  min-height: 14px;
+}
+.bi-word__morph {
+  font-family: 'Inter', sans-serif;
+  font-size: 10.5px;
+  line-height: 1.1;
+  color: var(--bi-accent);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  min-height: 14px;
+  white-space: nowrap;
+}
+.bi-word__gloss {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: 15px;
+  line-height: 1.2;
+  color: var(--bi-text);
+  font-weight: 500;
+  margin-top: 2px;
+  min-height: 20px;
+  word-break: break-word;
+}
+
+/* ── B2 : morphèmes cliquables dans bi-word__heb ── */
+.bi-morpheme {
+  display: inline;
+  unicode-bidi: isolate;
+  cursor: default;
+  transition: background 0.12s ease, color 0.12s ease;
+  padding: 0 1px;
+  border-radius: 2px;
+}
+.bi-morpheme--clickable {
+  cursor: pointer;
+}
+/* Racine (porte le Strong) : hover doré */
+.bi-morpheme--root.bi-morpheme--clickable:hover,
+.bi-morpheme--root.bi-morpheme--clickable:focus {
+  background: #f0e6d4;
+  color: var(--bi-primary-dk);
+}
+/* Préfixe : souligné discret pour suggérer cliquabilité + hover bleu subtil */
+.bi-morpheme--prefix {
+  border-bottom: 1px dotted transparent;
+}
+.bi-morpheme--prefix.bi-morpheme--clickable {
+  border-bottom-color: #b8a282;
+}
+.bi-morpheme--prefix.bi-morpheme--clickable:hover,
+.bi-morpheme--prefix.bi-morpheme--clickable:focus {
+  background: #ede7da;
+  color: var(--bi-accent);
+}
+/* Suffixe : petit point indicateur */
+.bi-morpheme--suffix {
+  border-bottom: 1px dotted transparent;
+}
+.bi-morpheme--suffix.bi-morpheme--clickable {
+  border-bottom-color: #c2a58a;
+}
+.bi-morpheme--suffix.bi-morpheme--clickable:hover {
+  background: #f0e6d4;
+  color: var(--bi-accent);
+}
+
+/* ── B2 : popup grammatical ── */
+.bi-morpheme-popup {
+  background: #fdfaf4;
+  border: 1px solid var(--bi-primary);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(53, 38, 22, 0.15);
+  padding: 12px 14px;
+  max-width: 340px;
+  min-width: 200px;
+  font-family: 'EB Garamond', 'Georgia', serif;
+  color: var(--bi-text);
+  direction: ltr;
+  text-align: left;
+  animation: biMorphemePopupIn 0.15s ease;
+}
+@keyframes biMorphemePopupIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-4px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+.bi-morpheme-popup__head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--bi-border);
+}
+.bi-morpheme-popup__heb {
+  font-size: 26px;
+  line-height: 1;
+  color: var(--bi-primary-dk);
+  font-weight: 600;
+  font-family: 'SBL Hebrew', 'Frank Ruehl CLM', 'Ezra SIL', 'Noto Serif Hebrew', 'EB Garamond', serif;
+}
+.bi-morpheme-popup__role {
+  font-size: 12px;
+  color: #8a7a6a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  flex: 1;
+}
+.bi-morpheme-popup__close {
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: #8a7a6a;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+.bi-morpheme-popup__close:hover {
+  background: var(--bi-bg-alt);
+  color: var(--bi-primary-dk);
+}
+.bi-morpheme-popup__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--bi-primary-dk);
+  margin-bottom: 4px;
+}
+.bi-morpheme-popup__pronounce {
+  font-size: 13px;
+  color: var(--bi-accent);
+  font-style: italic;
+  margin-bottom: 8px;
+  font-family: 'Inter', sans-serif;
+}
+.bi-morpheme-popup__sense {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--bi-text);
+  margin-bottom: 10px;
+}
+.bi-morpheme-popup__examples {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px 0;
+  border-left: 3px solid var(--bi-primary);
+  padding-left: 10px;
+}
+.bi-morpheme-popup__example {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.bi-morpheme-popup__ex-heb {
+  font-family: 'SBL Hebrew', 'Frank Ruehl CLM', 'Ezra SIL', 'Noto Serif Hebrew', serif;
+  font-size: 16px;
+  color: var(--bi-primary-dk);
+  min-width: 90px;
+}
+.bi-morpheme-popup__ex-fr {
+  color: var(--bi-text);
+  font-style: italic;
+}
+.bi-morpheme-popup__morph {
+  font-size: 11px;
+  color: #a09080;
+  font-family: 'Inter', sans-serif;
+  margin-top: 6px;
+  border-top: 1px dashed var(--bi-border);
+  padding-top: 6px;
+  letter-spacing: 0.02em;
+}
+
+/* ── BYM line under verse ── */
+.bi-verse__bym {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  margin-top: 10px;
+  background: linear-gradient(to right, #fbf5eb, #faf0de);
+  border-left: 3px solid var(--bi-primary);
+  border-radius: var(--bi-radius-sm);
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--bi-text);
+}
+.bi-verse__bym-label {
+  flex: 0 0 auto;
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--bi-primary-dk);
+  background: #fff;
+  padding: 3px 8px;
+  border: 1px solid var(--bi-border);
+  border-radius: 12px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+.bi-verse__bym-text {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.bi-verse__bym-text--placeholder {
+  color: var(--bi-text-soft);
+  font-style: italic;
+  font-size: 14px;
+}
+.bi-verse__bym-source {
+  flex: 0 0 auto;
+  color: var(--bi-primary-dk);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 3px;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+.bi-verse__bym-source:hover {
+  opacity: 1;
+  background: var(--bi-bg-alt);
+}
+
+/* ================================================================
+   SIDEBAR - Fiche lexicale du mot clique
+   ================================================================ */
+.bi-sidebar {
+  position: sticky;
+  top: 80px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  background: var(--bi-bg);
+  border: 1px solid var(--bi-border);
+  border-radius: var(--bi-radius);
+  padding: 16px;
+  box-shadow: var(--bi-shadow);
+}
+.bi-sidebar__placeholder {
+  padding: 24px 12px;
+  text-align: center;
+  color: var(--bi-text-soft);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.bi-sidebar__placeholder strong {
+  color: var(--bi-primary-dk);
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 4px;
+}
+.bi-sidebar__close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--bi-border);
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: var(--bi-text-soft);
+  z-index: 2;
+  display: none; /* Visible only when open */
+}
+.bi-sidebar--open .bi-sidebar__close {
+  display: block;
+}
+.bi-sidebar__close:hover {
+  color: var(--bi-primary);
+  border-color: var(--bi-primary);
+}
+
+.bi-sidebar__head {
+  padding: 10px 12px 12px;
+  border-bottom: 1px solid var(--bi-border);
+  margin-bottom: 12px;
+}
+.bi-sidebar__head-hebrew {
+  font-family: 'SBL Hebrew', 'Frank Ruehl CLM', 'Ezra SIL', 'Noto Serif Hebrew', 'EB Garamond', serif;
+  font-size: 32px;
+  line-height: 1.2;
+  color: var(--bi-primary-dk);
+  text-align: center;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+.bi-sidebar__head-refs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  font-size: 13px;
+}
+.bi-sidebar__head-xlit {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-style: italic;
+  color: var(--bi-accent);
+}
+.bi-sidebar__head-strong {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  color: #8a7a6a;
+  background: var(--bi-bg-alt);
+  padding: 2px 8px;
+  border-radius: 10px;
+  letter-spacing: 0.03em;
+}
+
+.bi-sidebar__card {
+  margin-bottom: 12px;
+}
+/* La fiche .fb-hebrew-card viens de bible-v3-interface.css, on ajuste juste la largeur */
+.bi-sidebar__card .fb-hebrew-card {
+  margin: 0;
+  max-width: 100%;
+}
+
+.bi-sidebar__footer {
+  padding: 10px 12px;
+  background: var(--bi-bg-alt);
+  border-radius: var(--bi-radius-sm);
+  text-align: center;
+  font-size: 13px;
+}
+.bi-sidebar__footer a {
+  color: var(--bi-primary-dk);
+  text-decoration: none;
+  font-weight: 500;
+}
+.bi-sidebar__footer a:hover {
+  color: var(--bi-primary);
+  text-decoration: underline;
+}
+
+/* Fallback card (sans hotfix) */
+.bi-sidebar__card--fallback {
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--bi-border);
+  border-radius: var(--bi-radius-sm);
+}
+.bi-sidebar__fallback-heb {
+  font-size: 28px;
+  text-align: center;
+  direction: rtl;
+  font-family: 'SBL Hebrew', 'Frank Ruehl CLM', 'Ezra SIL', 'Noto Serif Hebrew', 'EB Garamond', serif;
+}
+.bi-sidebar__fallback-xlit {
+  font-style: italic;
+  text-align: center;
+  color: var(--bi-accent);
+  margin-top: 4px;
+}
+.bi-sidebar__fallback-pos {
+  font-size: 12px;
+  text-align: center;
+  color: var(--bi-text-soft);
+  margin-top: 4px;
+}
+.bi-sidebar__fallback-def {
+  font-size: 14px;
+  color: var(--bi-text);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+/* ================================================================
+   MOBILE - Sidebar overlay
+   ================================================================ */
+@media (max-width: 1100px) {
+  .bi-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto;
+    width: min(420px, 100%);
+    max-height: 100vh;
+    max-width: 100%;
+    z-index: 1000;
+    border-radius: 0;
+    box-shadow: -8px 0 24px rgba(0,0,0,0.18);
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(.4,0,.2,1);
+    padding: 48px 16px 24px;
+  }
+  .bi-sidebar--open {
+    transform: translateX(0);
+  }
+  body.bi-sidebar-open::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.32);
+    z-index: 999;
+    pointer-events: auto;
+  }
+  body.bi-sidebar-open {
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 640px) {
+  #bible-interlineaire-app {
+    padding: 0 10px;
+  }
+  .bi-verse {
+    padding: 14px 10px 12px;
+    grid-template-columns: 28px 1fr;
+    gap: 6px;
+  }
+  .bi-verse__num {
+    font-size: 16px;
+  }
+  .bi-word {
+    min-width: 46px;
+    padding: 6px 4px;
+  }
+  .bi-word__heb {
+    font-size: 20px;
+  }
+  .bi-word__xlit { font-size: 11px; }
+  .bi-word__strong { font-size: 10px; }
+  .bi-word__morph { font-size: 9.5px; }
+  .bi-word__gloss { font-size: 13px; }
+
+  .bi-verse__grid {
+    padding: 6px 2px;
+    gap: 3px 4px;
+  }
+  .bi-verse__bym {
+    padding: 10px 12px;
+    font-size: 14px;
+    gap: 8px;
+  }
+  .bi-verse__bym-label {
+    font-size: 9px;
+  }
+  .bi-reader__header {
+    gap: 10px;
+    padding: 10px 0;
+  }
+  .bi-ctrl {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  .bi-home__grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .bi-home__book-card {
+    padding: 10px 12px;
+  }
+  .bi-home__book-name { font-size: 1rem; }
+  .bi-chapter-title {
+    font-size: 1.3rem;
+  }
+}
+
+/* ================================================================
+   PRINT - Version imprimable
+   ================================================================ */
+@media print {
+  .bi-reader__header,
+  .bi-reader__controls,
+  .bi-sidebar,
+  .bi-chapter-footer {
+    display: none !important;
+  }
+  .bi-reader {
+    grid-template-columns: 1fr;
+  }
+  .bi-verse {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .bi-word__heb { font-size: 18px; }
+  .bi-verse__bym {
+    background: #f5f5f5;
+    border-left-color: #888;
+  }
+}

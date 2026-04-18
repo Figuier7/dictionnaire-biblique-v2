@@ -1,0 +1,866 @@
+/* ============================================================
+   À L'OMBRE DU FIGUIER — HOMEPAGE V3
+   Styles du shortcode [homepage_v3] — Chantier B
+   Préfixe .hpv3- pour éviter toute collision avec le thème
+   Palette BYM — figue, beige, ocre clair
+   ============================================================ */
+
+.hpv3 {
+	--hpv3-figue: #6B4C3B;
+	--hpv3-figue-dark: #4E3628;
+	--hpv3-beige: #D7BFA6;
+	--hpv3-beige-light: #EBD9C3;
+	--hpv3-ocre: #C6A77D;
+	--hpv3-ocre-dark: #A88457;
+
+	--hpv3-bg: #FBF7F1;
+	--hpv3-bg-alt: #F4ECDF;
+	--hpv3-bg-card: #FFFFFF;
+	--hpv3-text: #2B1F18;
+	--hpv3-text-muted: #6E5D52;
+	--hpv3-rule: #E6D9C7;
+
+	--hpv3-shadow-sm: 0 1px 3px rgba(107, 76, 59, 0.06), 0 1px 2px rgba(107, 76, 59, 0.04);
+	--hpv3-shadow-md: 0 4px 14px rgba(107, 76, 59, 0.08), 0 2px 6px rgba(107, 76, 59, 0.05);
+	--hpv3-shadow-lg: 0 10px 30px rgba(107, 76, 59, 0.10), 0 4px 12px rgba(107, 76, 59, 0.06);
+
+	--hpv3-radius-sm: 6px;
+	--hpv3-radius-md: 10px;
+	--hpv3-radius-lg: 16px;
+
+	--hpv3-max-width: 1200px;
+	--hpv3-gutter: 24px;
+
+	--hpv3-font-serif: 'Cormorant Garamond', 'EB Garamond', 'Georgia', serif;
+	--hpv3-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+	font-family: var(--hpv3-font-sans);
+	color: var(--hpv3-text);
+	background: var(--hpv3-bg);
+	line-height: 1.6;
+	font-size: 16px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.hpv3 *,
+.hpv3 *::before,
+.hpv3 *::after {
+	box-sizing: border-box;
+}
+
+.hpv3 .hpv3-wrap {
+	max-width: var(--hpv3-max-width);
+	margin: 0 auto;
+	padding: 0 var(--hpv3-gutter);
+}
+
+.hpv3 h1,
+.hpv3 h2,
+.hpv3 h3,
+.hpv3 h4 {
+	font-family: var(--hpv3-font-serif);
+	font-weight: 600;
+	color: var(--hpv3-figue-dark);
+	line-height: 1.2;
+	margin: 0;
+}
+
+.hpv3 p {
+	margin: 0;
+}
+
+.hpv3 a {
+	color: var(--hpv3-figue);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+.hpv3 a:hover {
+	color: var(--hpv3-ocre-dark);
+}
+
+.hpv3 .screen-reader-text {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+/* ============================================================
+   SECTIONS — mise en page générique
+   ============================================================ */
+.hpv3 .hpv3-section {
+	padding: 72px 0;
+	position: relative;
+}
+.hpv3 .hpv3-section + .hpv3-section {
+	border-top: 1px solid var(--hpv3-rule);
+}
+
+.hpv3 .hpv3-section-header {
+	text-align: center;
+	margin-bottom: 48px;
+}
+.hpv3 .hpv3-section-header h2 {
+	font-size: clamp(28px, 3.5vw, 38px);
+	margin-bottom: 12px;
+	font-weight: 500;
+}
+.hpv3 .hpv3-subtitle {
+	font-family: var(--hpv3-font-serif);
+	font-style: italic;
+	font-size: 18px;
+	color: var(--hpv3-text-muted);
+}
+.hpv3 .hpv3-rule {
+	width: 48px;
+	height: 2px;
+	background: var(--hpv3-ocre);
+	margin: 20px auto 0;
+}
+.hpv3 .hpv3-rule-light {
+	background: var(--hpv3-beige);
+}
+
+/* ============================================================
+   BOUTONS
+   ============================================================ */
+.hpv3 .hpv3-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 10px;
+	padding: 12px 24px;
+	border-radius: var(--hpv3-radius-sm);
+	font-family: var(--hpv3-font-sans);
+	font-size: 15px;
+	font-weight: 500;
+	letter-spacing: 0.2px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	border: 1px solid transparent;
+	text-decoration: none;
+}
+.hpv3 .hpv3-btn-primary {
+	background: var(--hpv3-figue);
+	color: #fff;
+}
+.hpv3 .hpv3-btn-primary:hover {
+	background: var(--hpv3-figue-dark);
+	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: var(--hpv3-shadow-md);
+}
+.hpv3 .hpv3-btn-ghost {
+	background: transparent;
+	color: var(--hpv3-figue);
+	border: 1px solid var(--hpv3-ocre);
+}
+.hpv3 .hpv3-btn-ghost:hover {
+	background: var(--hpv3-ocre);
+	color: #fff;
+}
+
+/* ============================================================
+   BLOC 1 — DICTIONNAIRE BIBLIQUE (bande compacte)
+   ============================================================ */
+.hpv3 .hpv3-dict {
+	background: var(--hpv3-bg-alt);
+	padding: 40px 0;
+}
+.hpv3 .hpv3-dict-band {
+	display: flex;
+	align-items: center;
+	gap: 22px;
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 22px 32px;
+	background: var(--hpv3-bg-card);
+	border: 1px solid var(--hpv3-rule);
+	border-radius: var(--hpv3-radius-lg);
+	text-decoration: none;
+	color: inherit;
+	box-shadow: var(--hpv3-shadow-sm);
+	position: relative;
+	overflow: hidden;
+	transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.hpv3 .hpv3-dict-band::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 3px;
+	background: linear-gradient(90deg, var(--hpv3-figue) 0%, var(--hpv3-ocre) 100%);
+}
+.hpv3 .hpv3-dict-band:hover,
+.hpv3 .hpv3-dict-band:focus-visible {
+	transform: translateY(-2px);
+	box-shadow: var(--hpv3-shadow-md);
+	border-color: var(--hpv3-ocre);
+}
+.hpv3 .hpv3-dict-band-icon {
+	flex-shrink: 0;
+	width: 46px;
+	height: 46px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--hpv3-beige-light);
+	color: var(--hpv3-figue);
+	border-radius: 50%;
+	border: 1px solid var(--hpv3-rule);
+}
+.hpv3 .hpv3-dict-band-icon svg {
+	width: 22px;
+	height: 22px;
+}
+.hpv3 .hpv3-dict-band-text {
+	flex: 1;
+	min-width: 0;
+}
+.hpv3 .hpv3-dict-band-title {
+	margin: 0 0 4px;
+	font-size: 19px;
+	font-weight: 500;
+	color: var(--hpv3-text);
+	letter-spacing: 0.2px;
+	line-height: 1.3;
+}
+.hpv3 .hpv3-dict-band-stats {
+	margin: 0;
+	font-size: 14px;
+	color: var(--hpv3-text-muted);
+	line-height: 1.5;
+}
+.hpv3 .hpv3-dict-band-stats strong {
+	color: var(--hpv3-ocre-dark);
+	font-weight: 600;
+}
+.hpv3 .hpv3-dict-band-sources {
+	font-family: var(--hpv3-font-serif);
+	font-style: italic;
+	color: var(--hpv3-figue-dark);
+}
+.hpv3 .hpv3-dict-band-sep {
+	color: var(--hpv3-rule);
+	margin: 0 6px;
+	font-weight: 300;
+}
+.hpv3 .hpv3-dict-band-arrow {
+	flex-shrink: 0;
+	font-size: 24px;
+	color: var(--hpv3-ocre);
+	line-height: 1;
+	transition: transform 0.25s ease, color 0.25s ease;
+}
+.hpv3 .hpv3-dict-band:hover .hpv3-dict-band-arrow,
+.hpv3 .hpv3-dict-band:focus-visible .hpv3-dict-band-arrow {
+	transform: translateX(4px);
+	color: var(--hpv3-figue);
+}
+
+/* ============================================================
+   BLOC 2 — CONCEPT DU JOUR
+   ============================================================ */
+.hpv3 .hpv3-concept {
+	background: var(--hpv3-bg);
+}
+.hpv3 .hpv3-concept-card {
+	background: var(--hpv3-bg-card);
+	border: 1px solid var(--hpv3-rule);
+	border-left: 4px solid var(--hpv3-ocre);
+	border-radius: var(--hpv3-radius-md);
+	padding: 40px;
+	max-width: 900px;
+	margin: 0 auto;
+	box-shadow: var(--hpv3-shadow-sm);
+}
+.hpv3 .hpv3-concept-header {
+	display: flex;
+	align-items: baseline;
+	gap: 20px;
+	flex-wrap: wrap;
+	margin-bottom: 20px;
+	padding-bottom: 16px;
+	border-bottom: 1px dashed var(--hpv3-rule);
+}
+.hpv3 .hpv3-concept-title {
+	font-family: var(--hpv3-font-serif);
+	font-size: 36px;
+	font-weight: 600;
+	color: var(--hpv3-figue-dark);
+	line-height: 1.1;
+}
+.hpv3 .hpv3-concept-hebrew {
+	font-size: 32px;
+	color: var(--hpv3-figue);
+	font-family: 'SBL Hebrew', 'Ezra SIL', 'Times New Roman', serif;
+	direction: rtl;
+	line-height: 1.1;
+}
+.hpv3 .hpv3-concept-translit {
+	font-family: var(--hpv3-font-serif);
+	font-style: italic;
+	color: var(--hpv3-text-muted);
+	font-size: 18px;
+}
+.hpv3 .hpv3-concept-body p {
+	color: var(--hpv3-text);
+	font-size: 15px;
+	line-height: 1.7;
+}
+.hpv3 .hpv3-concept-excerpt {
+	color: var(--hpv3-text) !important;
+	margin: 0;
+}
+.hpv3 .hpv3-concept-footer {
+	margin-top: 24px;
+	text-align: right;
+}
+
+/* ============================================================
+   BLOC 3 — À LA UNE (SÉRIES & DOSSIERS)
+   ============================================================ */
+.hpv3 .hpv3-une {
+	background: var(--hpv3-bg-alt);
+}
+.hpv3 .hpv3-une-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 28px;
+}
+.hpv3 .hpv3-une-card {
+	background: var(--hpv3-bg-card);
+	border-radius: var(--hpv3-radius-lg);
+	overflow: hidden;
+	border: 1px solid var(--hpv3-rule);
+	transition: all 0.25s ease;
+	display: flex;
+	flex-direction: column;
+	min-height: 340px;
+}
+.hpv3 .hpv3-une-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--hpv3-shadow-lg);
+}
+.hpv3 .hpv3-une-link {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	color: inherit;
+}
+.hpv3 .hpv3-une-link:hover {
+	color: inherit;
+}
+.hpv3 .hpv3-une-cover {
+	height: 160px;
+	background: linear-gradient(135deg, var(--hpv3-figue) 0%, var(--hpv3-ocre-dark) 100%);
+	background-size: cover;
+	background-position: center;
+	position: relative;
+	display: flex;
+	align-items: flex-end;
+	padding: 20px;
+}
+.hpv3 .hpv3-une-dossier .hpv3-une-cover {
+	background: linear-gradient(135deg, #3b4c6b 0%, #6b4c3b 100%);
+}
+.hpv3 .hpv3-une-badge {
+	display: inline-block;
+	padding: 5px 12px;
+	background: rgba(255, 255, 255, 0.95);
+	color: var(--hpv3-figue-dark);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 1.2px;
+	text-transform: uppercase;
+	border-radius: var(--hpv3-radius-sm);
+}
+.hpv3 .hpv3-une-body {
+	padding: 24px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+.hpv3 .hpv3-une-body h3 {
+	font-size: 22px;
+	margin-bottom: 12px;
+	font-weight: 600;
+	line-height: 1.25;
+}
+.hpv3 .hpv3-une-body p {
+	color: var(--hpv3-text-muted);
+	font-size: 14px;
+	line-height: 1.6;
+	flex: 1;
+}
+.hpv3 .hpv3-une-meta {
+	margin-top: 16px;
+	padding-top: 14px;
+	border-top: 1px solid var(--hpv3-rule);
+	font-size: 13px;
+	color: var(--hpv3-ocre-dark);
+	font-weight: 500;
+}
+
+/* ============================================================
+   BLOC 4 — DERNIERS ARTICLES (grille filtrante)
+   ============================================================ */
+.hpv3 .hpv3-derniers {
+	background: var(--hpv3-bg);
+}
+.hpv3 .hpv3-chips {
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin-bottom: 40px;
+}
+.hpv3 .hpv3-chip {
+	padding: 9px 18px;
+	background: var(--hpv3-bg-card);
+	border: 1px solid var(--hpv3-rule);
+	border-radius: 999px;
+	font-family: var(--hpv3-font-sans);
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--hpv3-text);
+	cursor: pointer;
+	transition: all 0.2s ease;
+	line-height: 1;
+}
+.hpv3 .hpv3-chip:hover {
+	border-color: var(--hpv3-ocre);
+	color: var(--hpv3-figue-dark);
+}
+.hpv3 .hpv3-chip-active,
+.hpv3 .hpv3-chip.hpv3-chip-active {
+	background: var(--hpv3-figue);
+	color: #fff;
+	border-color: var(--hpv3-figue);
+}
+.hpv3 .hpv3-articles-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 24px;
+}
+.hpv3 .hpv3-article-card {
+	background: var(--hpv3-bg-card);
+	border: 1px solid var(--hpv3-rule);
+	border-radius: var(--hpv3-radius-md);
+	overflow: hidden;
+	transition: all 0.25s ease;
+	display: flex;
+	flex-direction: column;
+}
+.hpv3 .hpv3-article-card:hover {
+	transform: translateY(-3px);
+	box-shadow: var(--hpv3-shadow-md);
+	border-color: var(--hpv3-beige);
+}
+.hpv3 .hpv3-article-card[hidden] {
+	display: none !important;
+}
+.hpv3 .hpv3-article-link {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	color: inherit;
+}
+.hpv3 .hpv3-article-link:hover {
+	color: inherit;
+}
+.hpv3 .hpv3-article-thumb {
+	height: 180px;
+	background: var(--hpv3-beige-light);
+	background-size: cover;
+	background-position: center;
+	position: relative;
+	display: block;
+	padding: 0;
+	overflow: hidden;
+	isolation: isolate;
+}
+.hpv3 .hpv3-article-thumb img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	max-height: none;
+	object-fit: cover;
+	object-position: center;
+	display: block;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	z-index: 1;
+	transition: transform 0.35s ease;
+}
+.hpv3 .hpv3-article-card:hover .hpv3-article-thumb img {
+	transform: scale(1.04);
+}
+.hpv3 .hpv3-article-thumb::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(180deg, rgba(43, 31, 24, 0) 55%, rgba(43, 31, 24, 0.45) 100%);
+	pointer-events: none;
+	z-index: 2;
+}
+.hpv3 .hpv3-article-cat {
+	position: absolute;
+	left: 14px;
+	bottom: 14px;
+	z-index: 3;
+	display: inline-block;
+	padding: 5px 11px;
+	background: rgba(255, 255, 255, 0.96);
+	color: var(--hpv3-figue-dark);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 1.2px;
+	text-transform: uppercase;
+	border-radius: var(--hpv3-radius-sm);
+	box-shadow: 0 1px 3px rgba(43, 31, 24, 0.18);
+}
+.hpv3 .hpv3-article-body {
+	padding: 20px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+.hpv3 .hpv3-article-body h3 {
+	font-size: 19px;
+	margin-bottom: 10px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+.hpv3 .hpv3-article-body p {
+	color: var(--hpv3-text-muted);
+	font-size: 14px;
+	line-height: 1.55;
+	flex: 1;
+	margin-bottom: 14px;
+}
+.hpv3 .hpv3-article-meta {
+	font-size: 12px;
+	color: var(--hpv3-ocre-dark);
+	font-weight: 500;
+	padding-top: 12px;
+	border-top: 1px solid var(--hpv3-rule);
+}
+.hpv3 .hpv3-view-all {
+	text-align: center;
+	margin-top: 40px;
+}
+
+/* ============================================================
+   BLOC 5 — ACTUALITÉS & SIGNES DES TEMPS
+   ============================================================ */
+.hpv3 .hpv3-signes {
+	background: var(--hpv3-bg-alt);
+}
+.hpv3 .hpv3-signes .hpv3-section-header .hpv3-subtitle {
+	font-size: 19px;
+}
+.hpv3 .hpv3-signes-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 22px;
+}
+.hpv3 .hpv3-signe-card {
+	background: var(--hpv3-bg-card);
+	border: 1px solid var(--hpv3-rule);
+	border-radius: var(--hpv3-radius-md);
+	padding: 24px;
+	transition: all 0.25s ease;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+.hpv3 .hpv3-signe-card[hidden] {
+	display: none !important;
+}
+.hpv3 .hpv3-signe-card:hover {
+	transform: translateY(-3px);
+	box-shadow: var(--hpv3-shadow-md);
+}
+.hpv3 .hpv3-signe-link {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	color: inherit;
+}
+.hpv3 .hpv3-signe-link:hover {
+	color: inherit;
+}
+.hpv3 .hpv3-signe-pilier {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 4px 10px;
+	background: var(--hpv3-bg-alt);
+	color: var(--hpv3-figue-dark);
+	font-size: 11px;
+	font-weight: 600;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	border-radius: 999px;
+	margin-bottom: 14px;
+	width: fit-content;
+	border: 1px solid var(--hpv3-rule);
+}
+.hpv3 .hpv3-signe-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--hpv3-ocre);
+	display: inline-block;
+}
+.hpv3 .hpv3-signe-card[data-pilier="israel"] .hpv3-signe-dot { background: #7A4017; }
+.hpv3 .hpv3-signe-card[data-pilier="eglise"] .hpv3-signe-dot { background: #B56A35; }
+.hpv3 .hpv3-signe-card[data-pilier="nations"] .hpv3-signe-dot { background: #4E6B3B; }
+.hpv3 .hpv3-signe-card[data-pilier="science"] .hpv3-signe-dot { background: #3B4C6B; }
+.hpv3 .hpv3-signe-card[data-pilier="archeologie"] .hpv3-signe-dot { background: #6B4C3B; }
+
+.hpv3 .hpv3-signe-card h3 {
+	font-size: 20px;
+	margin-bottom: 10px;
+	font-weight: 600;
+	line-height: 1.3;
+}
+.hpv3 .hpv3-signe-card p {
+	color: var(--hpv3-text-muted);
+	font-size: 14px;
+	line-height: 1.55;
+	flex: 1;
+	margin-bottom: 14px;
+}
+.hpv3 .hpv3-signe-meta {
+	font-size: 12px;
+	color: var(--hpv3-ocre-dark);
+	font-weight: 500;
+	padding-top: 12px;
+	border-top: 1px solid var(--hpv3-rule);
+}
+
+/* ============================================================
+   BLOC 6 — OUTILS D'ÉTUDE
+   ============================================================ */
+.hpv3 .hpv3-outils {
+	background: var(--hpv3-bg);
+}
+.hpv3 .hpv3-outils-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 24px;
+	max-width: 960px;
+	margin: 0 auto;
+}
+.hpv3 .hpv3-outil-card {
+	background: var(--hpv3-bg-card);
+	border: 1px solid var(--hpv3-rule);
+	border-radius: var(--hpv3-radius-md);
+	padding: 32px 24px;
+	text-align: center;
+	transition: all 0.25s ease;
+	display: block;
+	color: inherit;
+}
+.hpv3 .hpv3-outil-card:hover {
+	transform: translateY(-3px);
+	box-shadow: var(--hpv3-shadow-md);
+	border-color: var(--hpv3-ocre);
+	color: inherit;
+}
+.hpv3 .hpv3-outil-icon {
+	width: 48px;
+	height: 48px;
+	margin: 0 auto 18px;
+	color: var(--hpv3-figue);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.hpv3 .hpv3-outil-icon svg {
+	width: 100%;
+	height: 100%;
+}
+.hpv3 .hpv3-outil-card h3 {
+	font-size: 19px;
+	margin-bottom: 10px;
+	font-weight: 600;
+}
+.hpv3 .hpv3-outil-card p {
+	color: var(--hpv3-text-muted);
+	font-size: 14px;
+	margin-bottom: 16px;
+}
+.hpv3 .hpv3-outil-link {
+	font-size: 13px;
+	font-weight: 500;
+	color: var(--hpv3-ocre-dark);
+	letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   BLOC 7 — VISION
+   ============================================================ */
+.hpv3 .hpv3-vision {
+	background: var(--hpv3-figue-dark);
+	color: #EEE3D2;
+	padding: 80px 0;
+}
+.hpv3 .hpv3-vision h2 {
+	color: #F4ECDF;
+	text-align: center;
+	font-size: clamp(28px, 3.5vw, 38px);
+	margin-bottom: 12px;
+	font-weight: 500;
+}
+.hpv3 .hpv3-vision .hpv3-subtitle {
+	color: var(--hpv3-beige);
+	font-family: var(--hpv3-font-serif);
+	font-style: italic;
+	font-size: 19px;
+}
+.hpv3 .hpv3-vision-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 28px;
+	margin-top: 12px;
+}
+.hpv3 .hpv3-vision-card {
+	background: rgba(215, 191, 166, 0.08);
+	border: 1px solid rgba(215, 191, 166, 0.2);
+	padding: 32px;
+	border-radius: var(--hpv3-radius-md);
+}
+.hpv3 .hpv3-vision-card h3 {
+	color: var(--hpv3-beige);
+	font-size: 22px;
+	margin-bottom: 14px;
+	font-weight: 600;
+}
+.hpv3 .hpv3-vision-card p {
+	color: #DDCDB8;
+	font-size: 15px;
+	line-height: 1.65;
+}
+.hpv3 .hpv3-vision-card em {
+	color: var(--hpv3-beige-light);
+	font-style: italic;
+}
+
+/* ============================================================
+   RESPONSIVE — breakpoints descendants
+   ============================================================ */
+@media (max-width: 960px) {
+	.hpv3 .hpv3-une-grid,
+	.hpv3 .hpv3-articles-grid,
+	.hpv3 .hpv3-signes-grid,
+	.hpv3 .hpv3-outils-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.hpv3 .hpv3-vision-grid {
+		grid-template-columns: 1fr;
+	}
+	.hpv3 .hpv3-section {
+		padding: 64px 0;
+	}
+	.hpv3 .hpv3-dict {
+		padding: 36px 0;
+	}
+	.hpv3 .hpv3-dict-band {
+		padding: 20px 26px;
+		gap: 18px;
+	}
+	.hpv3 .hpv3-concept-card {
+		padding: 32px 28px;
+	}
+}
+
+@media (max-width: 640px) {
+	.hpv3 .hpv3-section {
+		padding: 56px 0;
+	}
+	.hpv3 .hpv3-une-grid,
+	.hpv3 .hpv3-articles-grid,
+	.hpv3 .hpv3-signes-grid,
+	.hpv3 .hpv3-outils-grid {
+		grid-template-columns: 1fr;
+	}
+	.hpv3 .hpv3-chips {
+		gap: 8px;
+	}
+	.hpv3 .hpv3-chip {
+		padding: 7px 14px;
+		font-size: 13px;
+	}
+	.hpv3 .hpv3-concept-card {
+		padding: 24px;
+	}
+	.hpv3 .hpv3-concept-title {
+		font-size: 28px;
+	}
+	.hpv3 .hpv3-concept-hebrew {
+		font-size: 26px;
+	}
+	.hpv3 .hpv3-dict {
+		padding: 30px 0;
+	}
+	.hpv3 .hpv3-dict-band {
+		padding: 18px 20px;
+		gap: 14px;
+		align-items: flex-start;
+	}
+	.hpv3 .hpv3-dict-band-icon {
+		width: 40px;
+		height: 40px;
+	}
+	.hpv3 .hpv3-dict-band-icon svg {
+		width: 20px;
+		height: 20px;
+	}
+	.hpv3 .hpv3-dict-band-title {
+		font-size: 16px;
+	}
+	.hpv3 .hpv3-dict-band-stats {
+		font-size: 12.5px;
+		line-height: 1.55;
+	}
+	.hpv3 .hpv3-dict-band-sep {
+		margin: 0 4px;
+	}
+	.hpv3 .hpv3-dict-band-arrow {
+		display: none;
+	}
+	.hpv3 .hpv3-vision-card {
+		padding: 24px;
+	}
+}
+
+/* ============================================================
+   Respect reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+	.hpv3 * {
+		transition: none !important;
+		animation: none !important;
+	}
+	.hpv3 .hpv3-une-card:hover,
+	.hpv3 .hpv3-article-card:hover,
+	.hpv3 .hpv3-signe-card:hover,
+	.hpv3 .hpv3-outil-card:hover,
+	.hpv3 .hpv3-btn:hover {
+		transform: none;
+	}
+}

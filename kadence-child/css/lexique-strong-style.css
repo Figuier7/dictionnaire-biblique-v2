@@ -1,0 +1,1220 @@
+/* =========================================================
+   lexique-strong-style.css — Lexique hébreu biblique
+   Utilise les variables de style-globals.css
+   ========================================================= */
+
+/* ── Container ── */
+#lexique-strong-app {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--s-6) var(--s-4);
+  font-family: inherit;
+}
+
+/* ── Loading / Error ── */
+.lex-loading, .lex-error {
+  text-align: center;
+  padding: var(--s-7) var(--s-4);
+  color: var(--gris-chaud);
+  font-size: 1.05rem;
+}
+.lex-error { color: #a94442; }
+
+/* ── Stats ── */
+.lex-stats {
+  display: flex;
+  justify-content: center;
+  gap: var(--s-6);
+  padding: var(--s-5) 0;
+  margin-bottom: var(--s-5);
+  border-bottom: 1px solid var(--beige-doux);
+}
+.lex-stat {
+  font-size: 0.95rem;
+  color: var(--gris-chaud);
+}
+.lex-stat strong {
+  color: var(--brun-dore);
+  font-size: 1.15rem;
+}
+
+/* ── Search ── */
+.lex-search-wrap {
+  max-width: 640px;
+  margin: 0 auto var(--s-6);
+}
+.lex-search {
+  width: 100%;
+  padding: 12px 18px;
+  border: 1.5px solid var(--beige-doux);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  background: var(--blanc);
+  color: var(--gris-livre);
+  transition: border-color var(--t) var(--e);
+  box-sizing: border-box;
+}
+.lex-search:focus {
+  outline: none;
+  border-color: var(--brun-dore);
+  box-shadow: 0 0 0 3px rgba(178,140,100,0.12);
+}
+
+/* ── Results count ── */
+.lex-count {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--gris-chaud);
+  margin-bottom: var(--s-4);
+}
+.lex-no-result {
+  text-align: center;
+  padding: var(--s-7) var(--s-4);
+  color: var(--gris-chaud);
+  font-style: italic;
+}
+
+/* ── Entries grid ── */
+.lex-entries {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--s-4);
+}
+
+/* ── Card ── */
+.lex-card {
+  background: var(--blanc);
+  border: 1.5px solid var(--beige-doux);
+  border-radius: var(--radius-md);
+  padding: var(--s-5);
+  transition: all var(--t) var(--e);
+  scroll-margin-top: 80px;
+}
+.lex-card:hover {
+  border-color: var(--brun-dore);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Card head */
+.lex-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--s-3);
+}
+.lex-strong {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--brun-dore);
+  background: var(--fond-creme);
+  padding: 2px 10px;
+  border-radius: var(--radius-sm);
+}
+.lex-hebrew {
+  font-size: 1.6rem;
+  font-family: 'SBL Hebrew', 'Ezra SIL', 'David', serif;
+  color: var(--gris-livre);
+  line-height: 1.2;
+}
+
+/* Transliteration */
+.lex-translit {
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--gris-chaud);
+  margin-bottom: var(--s-2);
+}
+
+/* Definition */
+.lex-def {
+  font-size: 0.92rem;
+  color: var(--gris-livre);
+  line-height: 1.55;
+  margin-bottom: var(--s-3);
+}
+
+/* Definition complete BDB (champ `df`) — page lexique dediee */
+.lex-def-full {
+  font-size: 0.88rem;
+  color: var(--gris-livre);
+  line-height: 1.6;
+  margin-bottom: var(--s-3);
+  padding: var(--s-2) var(--s-3);
+  background: rgba(234, 219, 200, 0.22);
+  border-left: 3px solid #B28C64;
+  border-radius: 6px;
+}
+
+.lex-def-full-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.8em;
+  margin-bottom: 0.6em;
+  padding-bottom: 0.35em;
+  border-bottom: 1px dashed rgba(178, 140, 100, 0.35);
+  flex-wrap: wrap;
+}
+.lex-def-full-label {
+  font-weight: 600;
+  font-size: 0.78rem;
+  color: #B28C64;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* Bouton l\u00e9gende */
+.lex-bdb-legend-toggle {
+  appearance: none;
+  background: #fdfaf4;
+  border: 1px solid rgba(178, 140, 100, 0.4);
+  color: #8a6a4a;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 3px 10px 4px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.lex-bdb-legend-toggle:hover,
+.lex-bdb-legend-toggle[aria-expanded="true"] {
+  background: #f0e6d4;
+  color: #6b4c3b;
+  border-color: #B28C64;
+}
+
+/* Panneau l\u00e9gende */
+.lex-bdb-legend {
+  background: #fdfaf4;
+  border: 1px solid rgba(178, 140, 100, 0.25);
+  border-radius: 8px;
+  padding: 0.9em 1.1em;
+  margin-bottom: 0.9em;
+  font-size: 0.85em;
+}
+.lex-bdb-legend[hidden] {
+  display: none;
+}
+.lex-legend-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.2em;
+}
+.lex-legend-col h4 {
+  font-size: 0.78rem;
+  color: #B28C64;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 0.4em;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid rgba(178, 140, 100, 0.2);
+}
+.lex-legend-col dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(50px, auto) 1fr;
+  gap: 0.15em 0.6em;
+}
+.lex-legend-item {
+  display: contents;
+}
+.lex-legend-item dt {
+  font-weight: 600;
+  color: #6b4c3b;
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-style: italic;
+  font-size: 0.95em;
+}
+.lex-legend-item dd {
+  margin: 0;
+  color: var(--gris-livre, #4a4038);
+  font-size: 0.9em;
+  line-height: 1.35;
+}
+
+/* Abbr\u00e9viations inline avec tooltip */
+.lex-def-full .lex-abbrev,
+.lex-abbrev {
+  text-decoration: none;
+  border-bottom: 1px dotted rgba(107, 143, 94, 0.55);
+  cursor: help;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.lex-def-full .lex-abbrev:hover,
+.lex-abbrev:hover {
+  border-bottom-color: #6b8f5e;
+  background: rgba(107, 143, 94, 0.08);
+}
+
+/* Structure BDB : intro + sections par stem */
+.lex-bdb-intro {
+  margin-bottom: 0.8em;
+  color: var(--gris-livre);
+}
+.lex-bdb-flow {
+  /* fallback quand pas de stem detecte */
+  color: var(--gris-livre);
+}
+.lex-bdb-section {
+  margin-top: 0.7em;
+  padding-top: 0.5em;
+  border-top: 1px solid rgba(178, 140, 100, 0.18);
+  line-height: 1.6;
+}
+.lex-bdb-section:first-of-type {
+  margin-top: 0.4em;
+  padding-top: 0;
+  border-top: none;
+}
+.lex-bdb-stem-label {
+  display: inline-block;
+  font-weight: 700;
+  color: #8a6a4a;
+  font-size: 0.95em;
+  margin-right: 0.4em;
+  padding: 1px 7px 2px;
+  background: rgba(178, 140, 100, 0.12);
+  border-radius: 4px;
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-style: italic;
+}
+
+/* Sous-sections grammaticales (Pf., Impf., Pt., Imv., Inf., cstr., abs., fig.) */
+.lex-bdb-gram-intro {
+  display: block;
+  margin-bottom: 0.3em;
+}
+.lex-bdb-subsection {
+  margin-top: 0.4em;
+  padding-left: 0.7em;
+  border-left: 2px solid rgba(107, 143, 94, 0.25);
+}
+.lex-bdb-gram {
+  display: inline-block;
+  font-weight: 600;
+  color: #6b8f5e;
+  font-size: 0.88em;
+  margin-right: 0.35em;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* Attenuation visuelle des mots hebreu inline dans BDB pour faciliter la lecture FR */
+.lex-def-full .fb-inline-he {
+  opacity: 0.72;
+  font-size: 0.92em;
+  transition: opacity 0.15s ease;
+}
+.lex-def-full .fb-inline-he:hover {
+  opacity: 1;
+}
+
+/* Audio pronunciation button (page lexique) */
+.lex-audio-btn {
+  display: inline-block;
+  appearance: none;
+  background: none;
+  border: 1px solid rgba(178, 140, 100, 0.25);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 13px;
+  line-height: 24px;
+  text-align: center;
+  cursor: pointer;
+  color: #B28C64;
+  vertical-align: middle;
+  margin-left: 4px;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+.lex-audio-btn:hover {
+  background: rgba(178, 140, 100, 0.12);
+  border-color: #B28C64;
+}
+
+/* Inline Hebrew (isolation bidi dans texte FR mixte) */
+.fb-inline-he {
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Lexique hebreu biblique — architecture 7 tiers (page dediee)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* POS badge + prononciation (T1-T2) */
+.lex-pos {
+  display: inline-block;
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-style: italic;
+  color: var(--gris-chaud, #83776c);
+  border-bottom: 1px dotted var(--gris-chaud, #83776c);
+  cursor: help;
+  margin-left: 0.5em;
+}
+.lex-pron {
+  font-family: "Inter", sans-serif;
+  font-size: 0.78rem;
+  color: var(--gris-chaud, #83776c);
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+}
+
+/* T5 : Sens et emplois -- groupes par stem */
+.lex-senses-block {
+  margin: var(--s-3) 0;
+  padding-top: var(--s-2);
+  border-top: 1px dashed rgba(178, 140, 100, 0.22);
+}
+.lex-senses-title {
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #B28C64;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.6rem;
+}
+.lex-stem-group {
+  margin-bottom: 0.8rem;
+  padding: 0.5rem 0.8rem 0.5rem 1rem;
+  border-left: 2px solid #C6A77D;
+  background: rgba(250, 246, 242, 0.5);
+  border-radius: 4px;
+}
+.lex-stem-label {
+  display: inline-block;
+  font-family: "Inter", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #8C6849;
+  background: rgba(198, 167, 125, 0.15);
+  padding: 0.15rem 0.55rem;
+  border-radius: 4px;
+  margin-bottom: 0.4rem;
+  cursor: help;
+  letter-spacing: 0.02em;
+}
+.lex-sense-list,
+.lex-sense-sublist {
+  list-style: none;
+  padding: 0;
+  margin: 0.25rem 0 0;
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--gris-livre, #5F5C57);
+}
+.lex-sense-list > li,
+.lex-sense-sublist > li {
+  padding: 0.15rem 0 0.15rem 1.4rem;
+  position: relative;
+}
+.lex-sense-list > li[data-n]::before,
+.lex-sense-sublist > li[data-n]::before {
+  content: attr(data-n);
+  position: absolute;
+  left: 0;
+  color: #B28C64;
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  font-style: italic;
+  top: 0.2rem;
+}
+.lex-sense-sublist {
+  margin-top: 0.2rem;
+  margin-left: 0.5rem;
+  font-size: 0.86rem;
+}
+
+/* T6 : Passages bibliques */
+.lex-refs {
+  margin-top: var(--s-3);
+  padding: 0.7rem 0.9rem;
+  background: rgba(234, 219, 200, 0.15);
+  border: 1px dashed rgba(178, 140, 100, 0.35);
+  border-radius: 6px;
+}
+.lex-refs-label {
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #B28C64;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+}
+.lex-refs-list {
+  font-family: "EB Garamond", serif;
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+.lex-ref-link {
+  color: #4E3628;
+  text-decoration: none;
+  border-bottom: 1px dotted #B28C64;
+  padding: 0 1px;
+  transition: all 0.15s;
+}
+.lex-ref-link:hover {
+  background: #EADBC8;
+  border-bottom-style: solid;
+}
+
+/* T7 : Etymologie + TWOT */
+.lex-etym {
+  margin-top: var(--s-2);
+  padding-top: 0.7rem;
+  border-top: 1px dashed rgba(178, 140, 100, 0.22);
+  font-family: "EB Garamond", serif;
+  font-style: italic;
+  font-size: 0.88rem;
+  color: var(--gris-chaud, #83776c);
+  line-height: 1.5;
+}
+.lex-etym-label {
+  font-style: normal;
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #B28C64;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 0.4em;
+}
+.lex-strong-link {
+  color: #B28C64;
+  text-decoration: none;
+  font-style: normal;
+  font-weight: 500;
+  border-bottom: 1px dotted #B28C64;
+}
+.lex-strong-link:hover { border-bottom-style: solid; }
+.lex-twot {
+  display: inline-block;
+  margin-left: 0.5em;
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  font-style: normal;
+  color: var(--gris-chaud, #83776c);
+  background: rgba(178, 140, 100, 0.08);
+  padding: 0.12rem 0.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(178, 140, 100, 0.2);
+}
+
+/* Dictionary links */
+.lex-dict-links {
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--beige-doux);
+}
+.lex-dict-label {
+  font-size: 0.8rem;
+  color: var(--gris-chaud);
+  font-weight: 600;
+}
+.lex-dict-link {
+  font-size: 0.88rem;
+  color: var(--brun-dore);
+  text-decoration: none;
+  transition: color var(--t) var(--e);
+}
+.lex-dict-link:hover {
+  color: var(--brun-dore-hover);
+  text-decoration: underline;
+}
+
+/* ── Root family ── */
+.lex-root {
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--beige-doux);
+}
+.lex-root-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--s-2);
+}
+.lex-root-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--gris-chaud);
+}
+.lex-root-hebrew {
+  font-family: 'SBL Hebrew', 'Ezra SIL', 'David', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--brun-dore);
+}
+.lex-root-count {
+  font-size: 0.72rem;
+  color: var(--gris-chaud);
+  margin-left: auto;
+}
+.lex-root-family {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.lex-root-sib {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--fond-creme);
+  border: 1px solid var(--beige-doux);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--t) var(--e), border-color var(--t) var(--e);
+}
+.lex-root-sib:hover {
+  background: rgba(178, 140, 100, 0.14);
+  border-color: var(--brun-dore);
+}
+.lex-root-sib__h {
+  font-family: 'SBL Hebrew', 'Ezra SIL', 'David', serif;
+  font-size: 0.9rem;
+  color: var(--gris-livre);
+}
+.lex-root-sib__id {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--brun-dore);
+}
+.lex-root-sib__g {
+  font-size: 0.65rem;
+  font-style: italic;
+  color: var(--gris-chaud);
+}
+.lex-root-more {
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: 1px dashed var(--beige-doux);
+  color: var(--brun-dore);
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--t) var(--e);
+}
+.lex-root-more:hover {
+  background: var(--fond-creme);
+}
+.lex-root-extra {
+  display: contents;
+}
+
+/* Highlight animation for scroll-to-card */
+.lex-card--highlight {
+  animation: lex-card-glow 1.5s ease;
+}
+@keyframes lex-card-glow {
+  0%   { box-shadow: 0 0 0 3px rgba(178, 140, 100, 0.5); }
+  100% { box-shadow: 0 0 0 0 rgba(178, 140, 100, 0); }
+}
+
+/* ── Pagination ── */
+.lex-pagination {
+  margin-top: var(--s-6);
+  text-align: center;
+}
+.lex-pag-info {
+  font-size: 0.88rem;
+  color: var(--gris-chaud);
+  margin-bottom: var(--s-3);
+}
+.lex-pag-btns {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.lex-pag-btn {
+  padding: 6px 14px;
+  border: 1.5px solid var(--beige-doux);
+  border-radius: var(--radius-sm);
+  background: var(--blanc);
+  color: var(--gris-livre);
+  cursor: pointer;
+  font-size: 0.88rem;
+  transition: all var(--t) var(--e);
+}
+.lex-pag-btn:hover {
+  border-color: var(--brun-dore);
+  color: var(--brun-dore);
+}
+.lex-pag-btn.active {
+  background: var(--brun-dore);
+  color: var(--blanc);
+  border-color: var(--brun-dore);
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .lex-stats {
+    flex-direction: column;
+    align-items: center;
+    gap: var(--s-2);
+  }
+  .lex-entries {
+    grid-template-columns: 1fr;
+  }
+  .lex-hebrew {
+    font-size: 1.3rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   TABS
+   ══════════════════════════════════════════════════════════ */
+
+.lex-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid rgba(178, 140, 100, 0.2);
+  margin-bottom: var(--s-4, 20px);
+}
+
+.lex-tab {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #8a7a6a;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.lex-tab:hover {
+  color: #5a4e45;
+}
+
+.lex-tab.active {
+  color: #B28C64;
+  border-bottom-color: #B28C64;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ARBRE VIEW
+   ══════════════════════════════════════════════════════════ */
+
+.arbre-stats {
+  text-align: center;
+  color: #8a7a6a;
+  font-size: 0.9rem;
+  margin-bottom: var(--s-3, 16px);
+}
+
+.arbre-search-wrap {
+  max-width: 540px;
+  margin: 0 auto var(--s-4, 20px);
+}
+
+.arbre-search {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  border: 1.5px solid #d9cfc2;
+  border-radius: 10px;
+  outline: none;
+  box-sizing: border-box;
+  background: #fdfbf8;
+  color: #3a2e25;
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  transition: border-color 0.15s ease;
+}
+
+.arbre-search:focus {
+  border-color: #B28C64;
+}
+
+/* Root pills */
+.arbre-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: var(--s-4, 20px);
+}
+
+.arbre-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #d9cfc2;
+  background: #fdfbf8;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+}
+
+.arbre-pill:hover {
+  border-color: #B28C64;
+  background: rgba(178, 140, 100, 0.06);
+}
+
+.arbre-pill.active {
+  border: 2px solid #B28C64;
+  background: rgba(178, 140, 100, 0.12);
+}
+
+.arbre-pill__hebrew {
+  font-family: 'SBL Hebrew', 'Ezra SIL', 'Frank Ruehl CLM', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #B28C64;
+}
+
+.arbre-pill__hint {
+  font-size: 0.72rem;
+  color: #8a7a6a;
+}
+
+/* Empty state */
+.arbre-empty {
+  text-align: center;
+  padding: 40px 16px;
+  color: #8a7a6a;
+}
+
+.arbre-empty__hebrew {
+  font-family: 'SBL Hebrew', 'Ezra SIL', serif;
+  font-size: 2.4rem;
+  color: rgba(178, 140, 100, 0.25);
+  margin-bottom: 8px;
+}
+
+.arbre-empty p {
+  font-size: 0.95rem;
+}
+
+/* Root center */
+.arbre-root-center {
+  text-align: center;
+  margin-bottom: var(--s-4, 20px);
+}
+
+.arbre-root-center__box {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 36px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(178, 140, 100, 0.08), rgba(178, 140, 100, 0.18));
+  border: 2px solid #B28C64;
+}
+
+.arbre-root-center__hebrew {
+  font-family: 'SBL Hebrew', 'Ezra SIL', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #B28C64;
+  line-height: 1;
+}
+
+.arbre-root-center__translit {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: #8a7a6a;
+  margin-top: 4px;
+}
+
+.arbre-root-center__gloss {
+  font-size: 0.85rem;
+  color: #5a4e45;
+  margin-top: 2px;
+}
+
+.arbre-root-center__stats {
+  font-size: 0.8rem;
+  color: #8a7a6a;
+  margin-top: 6px;
+}
+
+/* Branches */
+.arbre-branch {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1.5px solid;
+  margin-bottom: 12px;
+}
+
+.arbre-branch__head {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arbre-branch__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.arbre-branch__label {
+  font-weight: 700;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.arbre-branch__count {
+  font-size: 0.72rem;
+  color: #999;
+  margin-left: auto;
+}
+
+/* Members */
+.arbre-branch__members {
+  padding: 4px 12px 8px;
+}
+
+.arbre-member__btn {
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: transparent;
+  transition: background 0.15s ease;
+  font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+}
+
+.arbre-member__btn:hover {
+  background: rgba(178, 140, 100, 0.08);
+}
+
+.arbre-member.is-expanded .arbre-member__btn {
+  background: rgba(178, 140, 100, 0.1);
+}
+
+.arbre-member__hebrew {
+  font-family: 'SBL Hebrew', 'Ezra SIL', serif;
+  font-size: 1.2rem;
+  color: #3a2e25;
+  min-width: 70px;
+  text-align: right;
+}
+
+.arbre-member__translit {
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-style: italic;
+  font-size: 0.8rem;
+  color: #8a7a6a;
+  min-width: 0;
+  flex-shrink: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arbre-member__gloss {
+  font-size: 0.88rem;
+  color: #5a4e45;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Occurrence bar */
+.arbre-occ-bar {
+  width: 110px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.arbre-occ-bar__track {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(178, 140, 100, 0.1);
+  overflow: hidden;
+}
+
+.arbre-occ-bar__fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.arbre-occ-bar__num {
+  font-size: 0.65rem;
+  color: #999;
+  min-width: 30px;
+  text-align: right;
+}
+
+.arbre-member__arrow {
+  font-size: 0.7rem;
+  color: #B28C64;
+  transition: transform 0.2s ease;
+}
+
+.arbre-member.is-expanded .arbre-member__arrow {
+  transform: rotate(90deg);
+}
+
+/* Expanded detail */
+.arbre-member__detail {
+  margin: 0 12px 6px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid rgba(178, 140, 100, 0.15);
+  font-size: 0.85rem;
+  animation: arbreSlideDown 0.2s ease;
+}
+
+@keyframes arbreSlideDown {
+  from { opacity: 0; max-height: 0; }
+  to   { opacity: 1; max-height: 200px; }
+}
+
+.arbre-member__meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.arbre-member__strong {
+  font-weight: 700;
+}
+
+.arbre-member__pos,
+.arbre-member__occ {
+  color: #8a7a6a;
+}
+
+.arbre-member__actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.arbre-link-browse,
+.arbre-link-dict {
+  font-size: 0.78rem;
+  text-decoration: none;
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid;
+  transition: background 0.15s ease;
+}
+
+.arbre-link-browse {
+  color: #B28C64;
+  border-color: rgba(178, 140, 100, 0.3);
+  background: rgba(178, 140, 100, 0.06);
+}
+
+.arbre-link-browse:hover {
+  background: rgba(178, 140, 100, 0.14);
+}
+
+.arbre-link-dict {
+  color: #6b8f5e;
+  border-color: rgba(107, 143, 94, 0.3);
+  background: rgba(107, 143, 94, 0.06);
+}
+
+.arbre-link-dict:hover {
+  background: rgba(107, 143, 94, 0.14);
+}
+
+/* Legend */
+.arbre-legend {
+  margin-top: 24px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #fdfbf8;
+  border: 1px solid #e8e0d6;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  justify-content: center;
+}
+
+.arbre-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: #8a7a6a;
+}
+
+.arbre-legend__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.arbre-legend__bar {
+  width: 24px;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, #B28C64, rgba(178, 140, 100, 0.2));
+}
+
+/* Browse: root arbre link */
+.lex-root-arbre-link {
+  font-size: 0.72rem;
+  color: #B28C64;
+  text-decoration: none;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.lex-root-arbre-link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive arbre */
+@media (max-width: 700px) {
+  /* Tabs: force visible on mobile, segmented-control style */
+  .lex-tabs {
+    display: flex !important;
+    visibility: visible !important;
+    flex-wrap: nowrap;
+    gap: 6px;
+    padding: 6px;
+    margin-bottom: 16px;
+    background: rgba(178, 140, 100, 0.08);
+    border: 1px solid rgba(178, 140, 100, 0.25);
+    border-radius: 10px;
+    border-bottom: 1px solid rgba(178, 140, 100, 0.25);
+  }
+  .lex-tab {
+    display: block !important;
+    visibility: visible !important;
+    flex: 1 1 0;
+    min-width: 0;
+    text-align: center;
+    padding: 10px 8px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    margin-bottom: 0;
+    background: transparent;
+    color: #6b5d52;
+  }
+  .lex-tab.active {
+    background: #fff;
+    color: #B28C64;
+    border-color: rgba(178, 140, 100, 0.35);
+    border-bottom-color: rgba(178, 140, 100, 0.35);
+    box-shadow: 0 1px 3px rgba(178, 140, 100, 0.15);
+  }
+  /* Arbre member row: 2-line layout on mobile to prevent gloss truncation */
+  .arbre-member__btn {
+    flex-wrap: wrap;
+    gap: 6px 8px;
+    padding: 10px 12px;
+  }
+  .arbre-member__hebrew {
+    min-width: 60px;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+  }
+  .arbre-member__translit {
+    flex: 0 1 auto;
+    white-space: nowrap;
+  }
+  /* Gloss: force onto its own full-width line so it never gets truncated */
+  .arbre-member__gloss {
+    flex: 1 0 100%;
+    order: 3;
+    white-space: normal;
+    text-overflow: clip;
+    overflow: visible;
+    line-height: 1.35;
+    color: #5a4e45;
+    padding-right: 4px;
+  }
+  /* Occurrence bar: after gloss on line 2, or wrap to line 3 if needed */
+  .arbre-occ-bar {
+    width: 100%;
+    order: 4;
+    margin-top: 2px;
+  }
+  .arbre-occ-bar__track {
+    max-width: 160px;
+  }
+  .arbre-member__arrow {
+    order: 2;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .arbre-root-center__hebrew {
+    font-size: 1.8rem;
+  }
+  .arbre-root-center__box {
+    padding: 14px 24px;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Sources attribution — bas de page lexique hébreu biblique
+   ═══════════════════════════════════════════════════════════════ */
+
+.fig-lexique-sources {
+  max-width: var(--container, 1180px);
+  margin: 3rem auto 2rem;
+  padding: 1.2rem 1.5rem;
+  border-top: 1px solid rgba(178, 140, 100, 0.18);
+  font-family: "EB Garamond", Georgia, serif;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: #83776C;
+  font-style: italic;
+  text-align: center;
+}
+
+.fig-lexique-sources strong {
+  font-style: normal;
+  font-weight: 600;
+  color: #B28C64;
+  letter-spacing: 0.02em;
+  margin-right: 0.3em;
+}
+
+.fig-lexique-sources a {
+  color: #B28C64;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.fig-lexique-sources a:hover {
+  color: #8C6849;
+}

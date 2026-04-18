@@ -1,0 +1,669 @@
+/* ============================================================
+   À L'OMBRE DU FIGUIER — ARTICLES HUB
+   Styles du shortcode [articles_hub] — page /articles/
+   Préfixe .ahub- pour éviter toute collision.
+   Palette BYM — figue, beige, ocre, cohérente avec homepage v3.
+   ============================================================ */
+
+.ahub,
+.ahub * {
+	box-sizing: border-box;
+}
+
+.ahub {
+	--ahub-figue: #6B4C3B;
+	--ahub-figue-dark: #4E3628;
+	--ahub-beige: #D7BFA6;
+	--ahub-beige-light: #EBD9C3;
+	--ahub-ocre: #C6A77D;
+	--ahub-ocre-dark: #A88457;
+
+	--ahub-bg: #FBF7F1;
+	--ahub-bg-alt: #F4ECDF;
+	--ahub-bg-card: #FFFFFF;
+	--ahub-text: #2B1F18;
+	--ahub-text-muted: #6E5D52;
+	--ahub-rule: #E6D9C7;
+
+	--ahub-shadow-sm: 0 1px 3px rgba(107, 76, 59, 0.06), 0 1px 2px rgba(107, 76, 59, 0.04);
+	--ahub-shadow-md: 0 4px 14px rgba(107, 76, 59, 0.08), 0 2px 6px rgba(107, 76, 59, 0.05);
+
+	--ahub-radius-sm: 6px;
+	--ahub-radius-md: 10px;
+
+	--ahub-font-serif: 'Cormorant Garamond', 'EB Garamond', 'Georgia', serif;
+	--ahub-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+	font-family: var(--ahub-font-sans);
+	color: var(--ahub-text);
+	line-height: 1.55;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 24px 20px 48px;
+	overflow-x: hidden;
+}
+
+.ahub h1,
+.ahub h2,
+.ahub h3,
+.ahub h4 {
+	font-family: var(--ahub-font-serif);
+	font-weight: 600;
+	color: var(--ahub-figue-dark);
+	margin: 0;
+	line-height: 1.25;
+}
+
+.ahub a {
+	color: var(--ahub-figue);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+.ahub a:hover {
+	color: var(--ahub-ocre-dark);
+}
+
+/* ============================================================
+   LAYOUT — grille 2 colonnes (sidebar gauche fixe + main)
+   ============================================================ */
+.ahub .ahub-layout {
+	display: grid;
+	grid-template-columns: 260px 1fr;
+	gap: 32px;
+	align-items: start;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.ahub .ahub-sidebar {
+	position: sticky;
+	top: 80px;
+	max-height: calc(100vh - 100px);
+	overflow-y: auto;
+	padding-right: 6px;
+}
+
+.ahub .ahub-sidebar::-webkit-scrollbar {
+	width: 6px;
+}
+.ahub .ahub-sidebar::-webkit-scrollbar-thumb {
+	background: var(--ahub-beige);
+	border-radius: 999px;
+}
+
+.ahub .ahub-sidebar-card {
+	background: var(--ahub-bg-card);
+	border: 1px solid var(--ahub-rule);
+	border-radius: var(--ahub-radius-md);
+	padding: 16px 18px;
+	margin-bottom: 14px;
+	box-shadow: var(--ahub-shadow-sm);
+	max-width: 100%;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+
+.ahub .ahub-sidebar-title {
+	font-size: 14px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 1.5px;
+	color: var(--ahub-ocre-dark);
+	margin: 0 0 12px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid var(--ahub-rule);
+}
+
+/* Liste de filtres (catégories, séries, dossiers) */
+/* !important contre les overrides Kadence parent qui posent padding-inline-start */
+.ahub .ahub-filter-list {
+	list-style: none !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	max-width: 100%;
+}
+
+.ahub .ahub-filter-list li {
+	margin: 0 !important;
+	padding: 0 !important;
+	max-width: 100%;
+	list-style: none !important;
+}
+
+.ahub .ahub-filter-list li::before {
+	content: none !important;
+}
+
+.ahub .ahub-filter-link {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 7px 10px;
+	border-radius: var(--ahub-radius-sm);
+	color: var(--ahub-text);
+	font-size: 14px;
+	line-height: 1.35;
+	transition: all 0.2s ease;
+	max-width: 100%;
+	box-sizing: border-box;
+	width: 100%;
+	text-decoration: none;
+}
+
+.ahub .ahub-filter-link:hover {
+	background: var(--ahub-bg-alt);
+	color: var(--ahub-figue-dark);
+}
+
+.ahub .ahub-filter-link--active {
+	background: var(--ahub-figue);
+	color: #fff;
+	font-weight: 600;
+}
+
+.ahub .ahub-filter-link--active:hover {
+	background: var(--ahub-figue-dark);
+	color: #fff;
+}
+
+.ahub .ahub-filter-name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-right: 8px;
+}
+
+.ahub .ahub-filter-count {
+	flex-shrink: 0;
+	font-size: 11px;
+	font-weight: 600;
+	padding: 2px 7px;
+	background: var(--ahub-bg-alt);
+	color: var(--ahub-ocre-dark);
+	border-radius: 999px;
+	min-width: 22px;
+	text-align: center;
+}
+
+.ahub .ahub-filter-link--active .ahub-filter-count {
+	background: rgba(255, 255, 255, 0.22);
+	color: #fff;
+}
+
+/* Tags : pills inline */
+.ahub .ahub-filter-list--tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.ahub .ahub-filter-list--tags li {
+	margin: 0;
+}
+
+.ahub .ahub-filter-tag {
+	display: inline-block;
+	padding: 5px 11px;
+	background: var(--ahub-bg-alt);
+	color: var(--ahub-text);
+	font-size: 12px;
+	border-radius: 999px;
+	border: 1px solid transparent;
+	transition: all 0.2s ease;
+}
+
+.ahub .ahub-filter-tag:hover {
+	background: var(--ahub-beige-light);
+	color: var(--ahub-figue-dark);
+}
+
+.ahub .ahub-filter-tag--active {
+	background: var(--ahub-ocre);
+	color: #fff;
+	border-color: var(--ahub-ocre-dark);
+}
+
+.ahub .ahub-filter-tag--active:hover {
+	background: var(--ahub-ocre-dark);
+	color: #fff;
+}
+
+/* ============================================================
+   MAIN — grille + headers + load more
+   ============================================================ */
+.ahub .ahub-main {
+	min-width: 0; /* empêche un overflow horizontal qui casserait la grid */
+}
+
+/* Chips filtres actifs en haut de la grille */
+.ahub .ahub-active-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	align-items: center;
+	margin-bottom: 16px;
+	padding: 12px 14px;
+	background: var(--ahub-bg-alt);
+	border-radius: var(--ahub-radius-md);
+	border: 1px solid var(--ahub-rule);
+}
+
+.ahub .ahub-active-filters-label {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ahub-ocre-dark);
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	margin-right: 4px;
+}
+
+.ahub .ahub-active-chip {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 5px 10px 5px 12px;
+	background: #fff;
+	color: var(--ahub-figue-dark);
+	font-size: 13px;
+	border-radius: 999px;
+	border: 1px solid var(--ahub-rule);
+	transition: all 0.2s ease;
+}
+
+.ahub .ahub-active-chip:hover {
+	background: var(--ahub-figue);
+	color: #fff;
+	border-color: var(--ahub-figue);
+}
+
+.ahub .ahub-active-chip-x {
+	display: inline-block;
+	font-size: 16px;
+	line-height: 1;
+	padding-left: 2px;
+	opacity: 0.6;
+}
+
+.ahub .ahub-active-chip:hover .ahub-active-chip-x {
+	opacity: 1;
+}
+
+.ahub .ahub-clear-all {
+	margin-left: auto;
+	font-size: 13px;
+	color: var(--ahub-ocre-dark);
+	text-decoration: underline;
+}
+
+.ahub .ahub-clear-all:hover {
+	color: var(--ahub-figue-dark);
+}
+
+/* Compteur de résultats */
+.ahub .ahub-results-count {
+	font-size: 13px;
+	color: var(--ahub-text-muted);
+	margin-bottom: 14px;
+	padding-left: 2px;
+}
+
+/* Grille d'articles */
+.ahub .ahub-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 22px;
+}
+
+.ahub .ahub-card {
+	background: var(--ahub-bg-card);
+	border: 1px solid var(--ahub-rule);
+	border-radius: var(--ahub-radius-md);
+	overflow: hidden;
+	transition: all 0.25s ease;
+	display: flex;
+	flex-direction: column;
+}
+
+.ahub .ahub-card:hover {
+	transform: translateY(-3px);
+	box-shadow: var(--ahub-shadow-md);
+	border-color: var(--ahub-beige);
+}
+
+.ahub .ahub-card-link {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	color: inherit;
+}
+
+.ahub .ahub-card-link:hover {
+	color: inherit;
+}
+
+.ahub .ahub-card-thumb {
+	height: 180px;
+	background: var(--ahub-beige-light);
+	background-size: cover;
+	background-position: center;
+	position: relative;
+	display: block;
+	overflow: hidden;
+}
+
+.ahub .ahub-card-thumb img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	display: block;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-radius: 0;
+	z-index: 1;
+	transition: transform 0.35s ease;
+}
+
+.ahub .ahub-card:hover .ahub-card-thumb img {
+	transform: scale(1.04);
+}
+
+.ahub .ahub-card-thumb::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(180deg, rgba(43, 31, 24, 0) 55%, rgba(43, 31, 24, 0.42) 100%);
+	pointer-events: none;
+	z-index: 2;
+}
+
+.ahub .ahub-card-noimg .ahub-card-thumb {
+	background: linear-gradient(135deg, var(--ahub-beige-light) 0%, var(--ahub-beige) 100%);
+}
+
+.ahub .ahub-card-cat {
+	position: absolute;
+	left: 12px;
+	bottom: 12px;
+	z-index: 3;
+	display: inline-block;
+	padding: 4px 10px;
+	background: rgba(255, 255, 255, 0.96);
+	color: var(--ahub-figue-dark);
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 1.1px;
+	text-transform: uppercase;
+	border-radius: var(--ahub-radius-sm);
+	box-shadow: 0 1px 3px rgba(43, 31, 24, 0.18);
+}
+
+.ahub .ahub-card-body {
+	padding: 18px;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+}
+
+.ahub .ahub-card-title {
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 1.32;
+	margin: 0 0 8px;
+}
+
+.ahub .ahub-card-excerpt {
+	color: var(--ahub-text-muted);
+	font-size: 14px;
+	line-height: 1.5;
+	flex: 1;
+	margin: 0 0 12px;
+}
+
+.ahub .ahub-card-meta {
+	font-size: 12px;
+	color: var(--ahub-ocre-dark);
+	font-weight: 500;
+	padding-top: 10px;
+	border-top: 1px solid var(--ahub-rule);
+}
+
+/* Load more */
+.ahub .ahub-load-more {
+	display: flex;
+	justify-content: center;
+	margin-top: 34px;
+}
+
+.ahub .ahub-load-more-btn {
+	display: inline-block;
+	padding: 12px 32px;
+	background: var(--ahub-figue);
+	color: #fff;
+	font-size: 14px;
+	font-weight: 600;
+	font-family: var(--ahub-font-sans);
+	border: 1px solid var(--ahub-figue);
+	border-radius: 30px;
+	cursor: pointer;
+	transition: all 0.25s ease;
+	box-shadow: var(--ahub-shadow-sm);
+	text-decoration: none;
+}
+
+.ahub .ahub-load-more-btn:hover {
+	background: var(--ahub-figue-dark);
+	border-color: var(--ahub-figue-dark);
+	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: var(--ahub-shadow-md);
+}
+
+.ahub .ahub-load-more-btn:disabled,
+.ahub .ahub-load-more-btn[disabled] {
+	opacity: 0.5;
+	cursor: not-allowed;
+	transform: none;
+}
+
+.ahub .ahub-load-more-btn.is-loading {
+	opacity: 0.7;
+	cursor: progress;
+}
+
+/* Empty state */
+.ahub .ahub-empty {
+	text-align: center;
+	padding: 48px 20px;
+	background: var(--ahub-bg-alt);
+	border-radius: var(--ahub-radius-md);
+	color: var(--ahub-text-muted);
+}
+
+.ahub .ahub-empty p {
+	margin: 0 0 12px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* Tablette : sidebar passe en haut, grille 2 colonnes */
+@media (max-width: 960px) {
+	.ahub {
+		padding: 20px 16px 40px;
+	}
+	.ahub .ahub-layout {
+		grid-template-columns: 1fr;
+		gap: 22px;
+	}
+	.ahub .ahub-sidebar {
+		position: static;
+		max-height: none;
+		overflow: visible;
+		padding-right: 0;
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 14px;
+	}
+	.ahub .ahub-sidebar-card {
+		margin-bottom: 0;
+	}
+}
+
+/* Mobile : 1 colonne partout + sidebar accordéons */
+@media (max-width: 640px) {
+	.ahub {
+		padding: 16px 14px 32px;
+	}
+	.ahub .ahub-layout {
+		grid-template-columns: 1fr !important;
+		gap: 18px;
+	}
+	.ahub .ahub-sidebar {
+		display: block !important;
+		grid-template-columns: none !important;
+		gap: 0;
+	}
+	.ahub .ahub-sidebar-card {
+		padding: 14px 16px !important;
+		margin-bottom: 10px !important;
+	}
+	.ahub .ahub-sidebar-title {
+		cursor: pointer;
+		user-select: none;
+		margin: 0 !important;
+		padding: 0 !important;
+		border-bottom: 0 !important;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+	}
+	.ahub .ahub-sidebar-title::after {
+		content: '+';
+		flex-shrink: 0;
+		font-size: 20px;
+		line-height: 1;
+		font-weight: 400;
+		color: var(--ahub-ocre-dark);
+		transition: transform 0.2s ease;
+		margin-left: 12px;
+	}
+	.ahub .ahub-sidebar-card.is-open .ahub-sidebar-title::after {
+		content: '−';
+	}
+	.ahub .ahub-sidebar-card .ahub-filter-list {
+		max-height: 0;
+		overflow: hidden;
+		transition: max-height 0.3s ease, margin-top 0.3s ease, padding-top 0.3s ease;
+		margin-top: 0;
+		padding-top: 0;
+		border-top: 0;
+	}
+	.ahub .ahub-sidebar-card.is-open .ahub-filter-list {
+		max-height: 720px;
+		margin-top: 12px;
+		padding-top: 12px;
+		border-top: 1px solid var(--ahub-rule);
+	}
+
+	.ahub .ahub-filter-link {
+		padding: 9px 12px;
+		font-size: 14.5px;
+	}
+
+	.ahub .ahub-grid {
+		grid-template-columns: 1fr;
+		gap: 18px;
+	}
+	.ahub .ahub-card-thumb {
+		height: 160px;
+	}
+	.ahub .ahub-card-body {
+		padding: 16px;
+	}
+	.ahub .ahub-card-title {
+		font-size: 17px;
+	}
+
+	.ahub .ahub-active-filters {
+		padding: 10px 12px;
+	}
+	.ahub .ahub-active-filters-label {
+		width: 100%;
+		margin: 0 0 2px;
+	}
+	.ahub .ahub-clear-all {
+		margin-left: 0;
+	}
+
+	.ahub .ahub-load-more-btn {
+		width: 100%;
+		max-width: 260px;
+		padding: 11px 18px;
+		font-size: 13.5px;
+	}
+}
+
+/* ============================================================
+   FIX MOBILE OVERFLOW v2 (2026-04-11)
+   Raison : un wrapper Kadence parent (.content-wrap / .entry-content-wrap
+   / .content-bg) dépasse la largeur du viewport sur mobile. L'overflow-x: hidden
+   sur .ahub ne suffit pas car il est posé trop bas dans l'arbre.
+   Stratégie 3 couches : clip au niveau body scopé à page-id-10, défense
+   min-width:0 sur grid items, overflow-wrap sur textes longs.
+   ============================================================ */
+@media (max-width: 640px) {
+	/* Couche 1 : clip à tous les niveaux, scopé à la page Articles */
+	body.page-id-10 {
+		overflow-x: hidden !important;
+	}
+	body.page-id-10 #wrapper,
+	body.page-id-10 #inner-wrap,
+	body.page-id-10 #primary,
+	body.page-id-10 .content-container,
+	body.page-id-10 .site-container,
+	body.page-id-10 #main,
+	body.page-id-10 .content-wrap,
+	body.page-id-10 .entry,
+	body.page-id-10 .entry-content-wrap,
+	body.page-id-10 .entry-content {
+		max-width: 100% !important;
+		overflow-x: hidden !important;
+	}
+
+	/* Couche 2 : défense min-width:0 sur grid children
+	   (par défaut min-width:auto empêche les grid items de rétrécir en dessous
+	   de leur contenu, ce qui peut faire déborder la colonne) */
+	.ahub .ahub-sidebar,
+	.ahub .ahub-main,
+	.ahub .ahub-sidebar-card,
+	.ahub .ahub-grid,
+	.ahub .ahub-card {
+		min-width: 0;
+	}
+
+	/* Couche 3 : casse les mots longs dans les textes de cartes */
+	.ahub .ahub-card-title,
+	.ahub .ahub-card-excerpt,
+	.ahub .ahub-active-chip,
+	.ahub .ahub-sidebar-title {
+		word-wrap: break-word;
+		overflow-wrap: anywhere;
+	}
+
+	/* Sécurité : les images des cartes ne peuvent jamais sortir de leur cell */
+	.ahub .ahub-card-thumb,
+	.ahub .ahub-card-thumb img {
+		max-width: 100%;
+	}
+}
+
+/* Fin des styles — Chantier Articles Hub */
