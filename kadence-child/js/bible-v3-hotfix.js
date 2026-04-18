@@ -171,11 +171,18 @@
     if (_hebrewMap && conceptId) {
       var hebrewEntries = _hebrewMap[conceptId];
       if (hebrewEntries && Array.isArray(hebrewEntries) && _lexiconIndex) {
+        var missing = [];
         for (var i = 0; i < hebrewEntries.length && results.length < 8; i++) {
           var strongId = hebrewEntries[i].s || '';
           var entry = _lexiconIndex.get(strongId.toUpperCase());
           if (entry) results.push(entry);
+          else missing.push(strongId);
         }
+        if (missing.length > 0) {
+          console.warn('[hotfix-hebrew] findStrongForConcept: ' + missing.length + '/' + hebrewEntries.length + ' Strong not in lexicon for', conceptId, ':', missing.join(', '));
+        }
+      } else if (hebrewEntries && Array.isArray(hebrewEntries) && !_lexiconIndex) {
+        console.warn('[hotfix-hebrew] findStrongForConcept: _lexiconIndex empty while _hebrewMap has', hebrewEntries.length, 'entries for', conceptId);
       }
     }
     // 2. Fallback: concept-strong-map.json (transliteration-based)
@@ -950,15 +957,28 @@
 
   function hotfixHebrewSidebar() {
     var conceptBody = document.querySelector(CONCEPT_BODY_SEL);
-    if (!conceptBody) return;
+    if (!conceptBody) {
+      console.warn('[hotfix-hebrew] conceptBody not found (selector=' + CONCEPT_BODY_SEL + ')');
+      return;
+    }
     // Skip if already injected (by V3 patch or previous hotfix run)
-    if (conceptBody.getAttribute('data-hebrew-injected')) return;
+    var injected = conceptBody.getAttribute('data-hebrew-injected');
+    if (injected) {
+      console.info('[hotfix-hebrew] already injected by', injected, '— skipping');
+      return;
+    }
 
     // Check if V3 patch already found Strong numbers (sidebar present)
-    if (conceptBody.querySelector('.fb-hebrew-sidebar')) return;
+    if (conceptBody.querySelector('.fb-hebrew-sidebar')) {
+      console.info('[hotfix-hebrew] sidebar already present — skipping');
+      return;
+    }
 
     var titleEl = document.querySelector(CONCEPT_HERO_SEL + ' .fb-concept-title');
-    if (!titleEl) return;
+    if (!titleEl) {
+      console.warn('[hotfix-hebrew] titleEl not found');
+      return;
+    }
 
     var label = titleEl.textContent.trim();
     var conceptId = getConceptIdFromUrl();
@@ -977,9 +997,19 @@
         console.warn('[hotfix-hebrew] No matches for', conceptId, '(label:', label, ') — hebrewMap entries:', (_hebrewMap && _hebrewMap[conceptId]) ? _hebrewMap[conceptId].length : 0);
         return;
       }
+      console.info('[hotfix-hebrew] rendering', matches.length, 'cards for', conceptId);
       var cards = matches.map(function (entry) {
-        return renderHebrewCard(entry, conc[entry.s] || [], roots[entry.s] || null);
-      });
+        try {
+          return renderHebrewCard(entry, conc[entry.s] || [], roots[entry.s] || null);
+        } catch (e) {
+          console.warn('[hotfix-hebrew] renderHebrewCard threw for', entry && entry.s, ':', e);
+          return '';
+        }
+      }).filter(function (c) { return c; });
+      if (cards.length === 0) {
+        console.warn('[hotfix-hebrew] all cards rendered empty for', conceptId);
+        return;
+      }
       insertHebrewSidebar(conceptBody, cards);
     }).catch(function (err) {
       console.warn('[hotfix-hebrew] Promise error for', conceptId, ':', err);
