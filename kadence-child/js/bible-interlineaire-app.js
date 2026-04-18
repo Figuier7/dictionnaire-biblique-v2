@@ -1133,33 +1133,47 @@
   }
 
   // ── Backdrop mobile (tap pour fermer la sidebar) ──
+  // Le backdrop ET la sidebar doivent \u00eatre enfants directs de <body> pour
+  // partager le m\u00eame stacking context (sinon les overlays Kadence/plugins
+  // d'ancetres peuvent pi\u00e9ger les z-index).
   function ensureSidebarBackdrop() {
     var bd = document.getElementById('bi-sidebar-backdrop');
-    if (bd) return bd;
-    bd = document.createElement('div');
-    bd.id = 'bi-sidebar-backdrop';
-    bd.className = 'bi-sidebar-backdrop';
-    bd.setAttribute('aria-hidden', 'true');
-    bd.addEventListener('click', function () { closeSidebar(); });
-    // Intercept touch explicitly for iOS to avoid ghost clicks
-    bd.addEventListener('touchend', function (e) {
-      e.preventDefault();
-      closeSidebar();
-    }, { passive: false });
+    if (bd && bd.parentNode === document.body) return bd;
+    if (!bd) {
+      bd = document.createElement('div');
+      bd.id = 'bi-sidebar-backdrop';
+      bd.className = 'bi-sidebar-backdrop';
+      bd.setAttribute('aria-hidden', 'true');
+      bd.addEventListener('click', function () { closeSidebar(); });
+      bd.addEventListener('touchend', function (e) {
+        e.preventDefault();
+        closeSidebar();
+      }, { passive: false });
+    }
     document.body.appendChild(bd);
     return bd;
+  }
+
+  // D\u00e9place la sidebar directement sur <body> pour \u00e9viter les stacking
+  // contexts d'ancetres (theme Kadence, plugins avec transform/opacity/etc.)
+  function promoteSidebarToBody(sidebar) {
+    if (sidebar && sidebar.parentNode !== document.body) {
+      document.body.appendChild(sidebar);
+    }
   }
 
   // ── Sidebar : fiche lexicale complete du mot clique ──
   function openWordSidebar(word) {
     var sidebar = document.getElementById('bi-sidebar');
     if (!sidebar) return;
+    // Promote au body : garantit z-index au-dessus de tout wrapper th\u00e8me
+    promoteSidebarToBody(sidebar);
     // Reset scroll \u00e0 chaque ouverture
     sidebar.scrollTop = 0;
     sidebar.innerHTML = '';
     sidebar.classList.add('bi-sidebar--open');
     document.body.classList.add('bi-sidebar-open');
-    // Active le backdrop (cr\u00e9e-le au besoin)
+    // Active le backdrop (cr\u00e9e-le + attach au body)
     var bd = ensureSidebarBackdrop();
     bd.classList.add('bi-sidebar-backdrop--visible');
 
