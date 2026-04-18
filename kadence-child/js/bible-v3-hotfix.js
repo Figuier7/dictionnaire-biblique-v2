@@ -259,7 +259,10 @@
     Zech:'Zacharie',Mal:'Malachie'
   };
 
-  function oshbRefToBadge(ref, shortLabel) {
+  // strongId (optionnel) permet de surligner le mot dans la vue interlineaire
+  // de la bulle verset. bk = cle OSHB (Gen, Exod, Ruth, ...) utilisee pour
+  // retrouver le fichier interlineaire cote bible-v3-patch.
+  function oshbRefToBadge(ref, shortLabel, strongId) {
     var parts = ref.split('.');
     if (parts.length < 3) return '';
     var bk = parts[0], ch = parts[1], vs = parts[2];
@@ -273,6 +276,8 @@
       + ' data-code="' + escapeHtml(code) + '"'
       + ' data-chapter="' + ch + '"'
       + ' data-verse="' + vs + '"'
+      + ' data-bk="' + escapeHtml(bk) + '"'
+      + (strongId ? ' data-strong="' + escapeHtml(strongId) + '"' : '')
       + '>' + escapeHtml(label) + '</span>';
   }
 
@@ -316,7 +321,7 @@
       html += '<div class="fb-conc-panel" data-conc-panel="' + g + '" hidden>';
       html += '<div class="fb-conc-panel__refs">';
       for (var r = 0; r < grp.refs.length; r++) {
-        html += oshbRefToBadge(grp.refs[r], true);
+        html += oshbRefToBadge(grp.refs[r], true, strongId);
       }
       html += '</div></div>';
     }

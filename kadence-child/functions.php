@@ -773,6 +773,7 @@ function figuier_bible_interlineaire_enqueue() {
 		'bymReaderBase'    => 'https://www.bibledeyehoshouahamashiah.org/lire.html',
 		'mobileBreakpoint' => 900,
 		'hebrewLexiconUrl' => content_url( 'uploads/dictionnaires/hebrew/hebrew-lexicon-fr-compact.json' ) . '?v=' . ( file_exists( WP_CONTENT_DIR . '/uploads/dictionnaires/hebrew/hebrew-lexicon-fr-compact.json' ) ? filemtime( WP_CONTENT_DIR . '/uploads/dictionnaires/hebrew/hebrew-lexicon-fr-compact.json' ) : '1' ),
+		'interlinearBaseUrl' => content_url( 'uploads/dictionnaires/interlinear/' ),
 	));
 
 	// App interlinéaire
@@ -903,6 +904,7 @@ function figuier_bible_v2_enqueue_assets() {
 			'bymSourceBase'    => 'https://gitlab.com/anjc/bjc-source/-/raw/master',
 			'bymProxyUrl'      => admin_url( 'admin-ajax.php' ),
 			'bymReaderBase'    => 'https://www.bibledeyehoshouahamashiah.org/lire.html',
+			'interlinearBaseUrl' => content_url( 'uploads/dictionnaires/interlinear/' ),
 			'heroImageUrl' => 'https://alombredufiguier.org/wp-content/uploads/2026/03/Etude-matinale-sous-un-figuier.png',
 			'hashPrefix'  => 'concept',
 			'seoBaseUrl'  => home_url( '/dictionnaire-biblique/' ),

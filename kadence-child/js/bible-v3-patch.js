@@ -765,6 +765,71 @@
     });
   }
 
+  // ── Interlineaire hebreu (pour la bulle verset sur fiches concept) ──
+  // Mapping OSHB bk -> fichier JSON (ordre Tanakh occidental 01-39)
+  var OSHB_INTERLINEAR_FILES = {
+    Gen:'01-Gen',Exod:'02-Exod',Lev:'03-Lev',Num:'04-Num',Deut:'05-Deut',
+    Josh:'06-Josh',Judg:'07-Judg',Ruth:'08-Ruth','1Sam':'09-1Sam','2Sam':'10-2Sam',
+    '1Kgs':'11-1Kgs','2Kgs':'12-2Kgs','1Chr':'13-1Chr','2Chr':'14-2Chr',
+    Ezra:'15-Ezra',Neh:'16-Neh',Esth:'17-Esth',Job:'18-Job',Ps:'19-Ps',
+    Prov:'20-Prov',Eccl:'21-Eccl',Song:'22-Song',Isa:'23-Isa',Jer:'24-Jer',
+    Lam:'25-Lam',Ezek:'26-Ezek',Dan:'27-Dan',Hos:'28-Hos',Joel:'29-Joel',
+    Amos:'30-Amos',Obad:'31-Obad',Jonah:'32-Jonah',Mic:'33-Mic',Nah:'34-Nah',
+    Hab:'35-Hab',Zeph:'36-Zeph',Hag:'37-Hag',Zech:'38-Zech',Mal:'39-Mal'
+  };
+  var _interlinBookCache = {};
+  var _interlinBookLoading = {};
+
+  function fetchInterlinearBook(bk) {
+    if (!bk) return Promise.resolve(null);
+    if (_interlinBookCache[bk]) return Promise.resolve(_interlinBookCache[bk]);
+    if (_interlinBookLoading[bk]) return _interlinBookLoading[bk];
+    var baseUrl = config.interlinearBaseUrl || '';
+    var fileBase = OSHB_INTERLINEAR_FILES[bk];
+    if (!baseUrl || !fileBase) return Promise.resolve(null);
+    var url = baseUrl + fileBase + '.json';
+    _interlinBookLoading[bk] = fetch(url).then(function (r) {
+      if (!r.ok) throw new Error(r.status);
+      return r.json();
+    }).then(function (data) {
+      _interlinBookCache[bk] = data;
+      delete _interlinBookLoading[bk];
+      return data;
+    }).catch(function () {
+      _interlinBookCache[bk] = null;
+      delete _interlinBookLoading[bk];
+      return null;
+    });
+    return _interlinBookLoading[bk];
+  }
+
+  // Recupere les mots d'un verset depuis le JSON livre interlin
+  function getInterlinearVerse(bookData, chapter, verse) {
+    if (!bookData || !bookData.chapters) return null;
+    var ch = bookData.chapters[String(chapter)];
+    if (!ch) return null;
+    return ch[String(verse)] || null;
+  }
+
+  // Rend un verset interlineaire en HTML (hebreu RTL par mot, translit + gloss dessous)
+  // Le mot avec strongMatch est surligne.
+  function renderInterlinearVerse(words, strongMatch) {
+    if (!words || !Array.isArray(words) || words.length === 0) return '';
+    var html = '<div class="fb-verse-bubble__interlin" dir="rtl">';
+    for (var i = 0; i < words.length; i++) {
+      var w = words[i];
+      var isMatch = strongMatch && w.s && w.s === strongMatch;
+      html += '<span class="fb-verse-bubble__iw' + (isMatch ? ' fb-verse-bubble__iw--match' : '') + '"'
+        + (w.s ? ' data-strong="' + escapeHtml(w.s) + '"' : '') + '>'
+        + '<span class="fb-verse-bubble__iw-he">' + escapeHtml(w.t || '') + '</span>'
+        + (w.x ? '<span class="fb-verse-bubble__iw-xlit">' + escapeHtml(w.x) + '</span>' : '')
+        + (w.g ? '<span class="fb-verse-bubble__iw-gloss">' + escapeHtml(w.g) + '</span>' : '')
+        + '</span>';
+    }
+    html += '</div>';
+    return html;
+  }
+
   function showVerseBubble(ref, anchorRect) {
     closeVerseBubble();
     var isMobile = window.innerWidth < (config.mobileBreakpoint || 900);
@@ -779,13 +844,29 @@
       ? BYM_READER_BASE + '?w1=bible&t1=local%3ABYM&v1=' + urlCode + ref.chapter + '_' + ref.verse
       : '';
 
+    // Si on a un bk OSHB et une config interlin, on affichera la section hebreu
+    var hasInterlin = !!(ref.bk && config.interlinearBaseUrl && OSHB_INTERLINEAR_FILES[ref.bk]);
+
     bubble.innerHTML =
       '<div class="fb-verse-bubble__header">' +
         '<span class="fb-verse-bubble__ref">' + escapeHtml(ref.text) + '</span>' +
         '<button class="fb-verse-bubble__close" type="button" aria-label="Fermer">&times;</button>' +
       '</div>' +
       '<div class="fb-verse-bubble__body">' +
-        '<div class="fb-verse-bubble__loading">Chargement\u2026</div>' +
+        (hasInterlin
+          ? '<div class="fb-verse-bubble__section fb-verse-bubble__section--interlin">' +
+              '<div class="fb-verse-bubble__section-title">Texte h\u00e9breu</div>' +
+              '<div class="fb-verse-bubble__interlin-slot">' +
+                '<div class="fb-verse-bubble__loading">Chargement h\u00e9breu\u2026</div>' +
+              '</div>' +
+            '</div>'
+          : '') +
+        '<div class="fb-verse-bubble__section fb-verse-bubble__section--bym">' +
+          (hasInterlin ? '<div class="fb-verse-bubble__section-title">Traduction BYM</div>' : '') +
+          '<div class="fb-verse-bubble__bym-slot">' +
+            '<div class="fb-verse-bubble__loading">Chargement\u2026</div>' +
+          '</div>' +
+        '</div>' +
       '</div>' +
       (readerHref
         ? '<div class="fb-verse-bubble__footer">' +
@@ -816,7 +897,15 @@
     }
     document.body.appendChild(bubble);
 
-    // Fetch verses
+    // Selector des slots : si section interlin absente, on retombe sur __body directement
+    function getBymSlot() {
+      return bubble.querySelector('.fb-verse-bubble__bym-slot') || bubble.querySelector('.fb-verse-bubble__body');
+    }
+    function getInterlinSlot() {
+      return bubble.querySelector('.fb-verse-bubble__interlin-slot');
+    }
+
+    // Fetch BYM verses
     fetchBook(ref.file).then(function (verses) {
       var html = '';
       var vStart = ref.verse;
@@ -831,12 +920,29 @@
           escapeHtml(text) + '</div>';
       }
       if (!html) html = '<p class="fb-verse-bubble__empty">Verset non disponible dans la source BYM</p>';
-      var body = bubble.querySelector('.fb-verse-bubble__body');
-      if (body) body.innerHTML = html;
+      var slot = getBymSlot();
+      if (slot) slot.innerHTML = html;
     }).catch(function () {
-      var body = bubble.querySelector('.fb-verse-bubble__body');
-      if (body) body.innerHTML = '<p class="fb-verse-bubble__empty">Source indisponible</p>';
+      var slot = getBymSlot();
+      if (slot) slot.innerHTML = '<p class="fb-verse-bubble__empty">Source indisponible</p>';
     });
+
+    // Fetch interlineaire hebreu (section optionnelle, uniquement si bk dispo + fichier mappe)
+    if (hasInterlin) {
+      fetchInterlinearBook(ref.bk).then(function (bookData) {
+        var slot = getInterlinSlot();
+        if (!slot) return;
+        var words = getInterlinearVerse(bookData, ref.chapter, ref.verse);
+        if (!words) {
+          slot.innerHTML = '<p class="fb-verse-bubble__empty">Verset non disponible en interlin\u00e9aire</p>';
+          return;
+        }
+        slot.innerHTML = renderInterlinearVerse(words, ref.strong || null);
+      }).catch(function () {
+        var slot = getInterlinSlot();
+        if (slot) slot.innerHTML = '<p class="fb-verse-bubble__empty">Source interlin\u00e9aire indisponible</p>';
+      });
+    }
 
     bubble.querySelector('.fb-verse-bubble__close').addEventListener('click', closeVerseBubble);
   }
@@ -901,6 +1007,8 @@
           chapter: parseInt(badge.getAttribute('data-chapter'), 10),
           verse: parseInt(badge.getAttribute('data-verse'), 10),
           verseEnd: badge.getAttribute('data-verse-end') ? parseInt(badge.getAttribute('data-verse-end'), 10) : null,
+          bk: badge.getAttribute('data-bk') || null,
+          strong: badge.getAttribute('data-strong') || null,
           text: badge.textContent
         }, badge.getBoundingClientRect());
         return;
