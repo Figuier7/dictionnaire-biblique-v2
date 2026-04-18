@@ -574,6 +574,129 @@
       return '<a class="fb-hebrew-card__strong-link" href="#H' + num + '" data-strong="H' + num + '">' + num + '</a>';
     });
   }
+  // ── BDB abbreviations legend ──────────────────────────────────────
+  // Dictionnaire d'abbréviations BDB (grammaticales + livres bibliques + versions).
+  // Utilisé pour rendre la légende ⓘ sous la définition complète BDB.
+  var BDB_ABBREV_GRAM = {
+    'Pf.': 'Parfait (action achevée)',
+    'Impf.': 'Imparfait (action inachevée / future)',
+    'Imv.': 'Impératif',
+    'Inf.': 'Infinitif',
+    'Inf. abs.': 'Infinitif absolu',
+    'Inf. cstr.': 'Infinitif construit',
+    'Pt.': 'Participe',
+    'Pt. act.': 'Participe actif',
+    'Pt. pass.': 'Participe passif',
+    'cstr.': 'État construit',
+    'abs.': 'État absolu',
+    'fig.': 'Sens figuré',
+    'sq.': 'suivi de',
+    'supr.': "plus haut dans l'entrée",
+    'infr.': "plus bas dans l'entrée",
+    'v.': 'voir',
+    'cf.': 'comparer avec',
+    'pl.': 'pluriel',
+    'sg.': 'singulier',
+    'm.': 'masculin',
+    'f.': 'féminin',
+    'c.': 'commun',
+    'id.': 'même signification',
+    'sim.': 'similaire',
+    'esp.': 'spécialement',
+    'prob.': 'probablement',
+    'rd.': 'lire',
+    'vb.': 'verbe',
+    'adj.': 'adjectif',
+    'adv.': 'adverbe',
+    'subst.': 'substantif',
+    'n.m.': 'nom masculin',
+    'n.f.': 'nom féminin',
+    'etc.': 'et autres',
+    'intrans.': 'intransitif',
+    'trans.': 'transitif',
+    'acc.': 'accusatif (objet direct)',
+    'du.': 'duel (deux)',
+    'coll.': 'collectif',
+    'denom.': 'dénominatif',
+    'part.': 'particule',
+    'prop.': 'proprement',
+    'gen.': 'généralement',
+    'specif.': 'spécifiquement',
+    'rel.': 'relatif',
+    'abst.': 'abstrait',
+    'coh.': 'cohortatif',
+    'juss.': 'jussif',
+    'JE': 'Source Jéhoviste-Élohiste (critique documentaire)',
+    'JED': 'Sources J, E et D combinées'
+  };
+  var BDB_ABBREV_BOOKS = {
+    'Gn':'Genèse', 'Ex':'Exode', 'Lv':'Lévitique', 'Nb':'Nombres', 'Dt':'Deutéronome',
+    'Jos':'Josué', 'Jg':'Juges', 'Rt':'Ruth',
+    '1 S':'1 Samuel', '2 S':'2 Samuel', '1 R':'1 Rois', '2 R':'2 Rois',
+    '1 Ch':'1 Chroniques', '2 Ch':'2 Chroniques',
+    'Esd':'Esdras', 'Né':'Néhémie', 'Est':'Esther',
+    'Jb':'Job', 'Ps':'Psaumes', 'Pr':'Proverbes', 'Ec':'Ecclésiaste', 'Ct':'Cantique',
+    'És':'Ésaïe', 'Jr':'Jérémie', 'Lm':'Lamentations', 'Éz':'Ézéchiel', 'Dn':'Daniel',
+    'Os':'Osée', 'Jl':'Joël', 'Am':'Amos', 'Ab':'Abdias', 'Jon':'Jonas',
+    'Mi':'Michée', 'Na':'Nahum', 'Ha':'Habaquq', 'So':'Sophonie',
+    'Ag':'Aggée', 'Za':'Zacharie', 'Ml':'Malachie',
+    'Je':'Jérémie (ancien BDB)',
+    'ψ':'Psaumes (symbole grec psi)'
+  };
+  var BDB_ABBREV_LANG = {
+    'As.': 'Assyrien',
+    'Aram.': 'Araméen',
+    'Syr.': 'Syriaque',
+    'Ar.': 'Arabe',
+    'Eth.': 'Éthiopien',
+    'Sab.': 'Sabéen',
+    'LXX': 'Septante (traduction grecque du Tanakh)',
+    'Vulg.': 'Vulgate (traduction latine)',
+    'Tg.': 'Targoum (paraphrase araméenne)',
+    'MT': 'Texte Massorétique',
+    '𝔊': 'Septante (symbole critique)',
+    'Q': 'Qeré (lecture marginale)',
+    'Kt': 'Ketiv (lecture du texte)'
+  };
+
+  function renderBdbLegend() {
+    function dlItems(dict) {
+      var keys = Object.keys(dict).sort();
+      return keys.map(function (k) {
+        return '<div class="fb-legend-item"><dt>' + escapeHtml(k) + '</dt><dd>' + escapeHtml(dict[k]) + '</dd></div>';
+      }).join('');
+    }
+    return '<div class="fb-bdb-legend" hidden>' +
+      '<div class="fb-legend-cols">' +
+        '<section class="fb-legend-col"><h4>Grammaticales</h4><dl>' + dlItems(BDB_ABBREV_GRAM) + '</dl></section>' +
+        '<section class="fb-legend-col"><h4>Livres bibliques</h4><dl>' + dlItems(BDB_ABBREV_BOOKS) + '</dl></section>' +
+        '<section class="fb-legend-col"><h4>Versions &amp; langues</h4><dl>' + dlItems(BDB_ABBREV_LANG) + '</dl></section>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function wireBdbLegendToggles(wrapper) {
+    (wrapper || document).querySelectorAll('.fb-bdb-legend-toggle').forEach(function (btn) {
+      if (btn._wired) return;
+      btn._wired = true;
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var card = btn.closest('.fb-hebrew-card');
+        if (!card) return;
+        var panel = card.querySelector('.fb-bdb-legend');
+        if (!panel) return;
+        var isHidden = panel.hasAttribute('hidden');
+        if (isHidden) {
+          panel.removeAttribute('hidden');
+          btn.setAttribute('aria-expanded', 'true');
+        } else {
+          panel.setAttribute('hidden', '');
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+  }
+
   function stemTooltip(stem) {
     var tips = {
       'Qal':   'Qal : forme verbale simple, active, basique',
@@ -683,12 +806,16 @@
         + '</button>';
     }
 
-    // T4 : Bouton expand vers df (BDB complete), fallback d long
+    // T4 : Bouton expand vers df (BDB complete), fallback d long + légende abbreviations
     var expandHtml = (function () {
       var shortD = entry.d || '';
       var fullD = (entry.df && entry.df !== shortD) ? entry.df : (shortD.length > 120 ? shortD : '');
       if (!fullD) return '';
-      return '<div class="fb-hebrew-card__def fb-hebrew-card__def--full" hidden>' + escapeHtmlHe(fullD) + '</div>' +
+      return '<div class="fb-hebrew-card__def fb-hebrew-card__def--full" hidden>' +
+          escapeHtmlHe(fullD) +
+          '<button class="fb-bdb-legend-toggle" type="button" aria-expanded="false" title="Voir la l\u00e9gende des abr\u00e9viations">\u24D8 L\u00e9gende</button>' +
+          renderBdbLegend() +
+        '</div>' +
         '<button class="fb-hebrew-card__expand" type="button">D\u00e9finition compl\u00e8te BDB \u2192</button>';
     })();
 
@@ -749,6 +876,8 @@
         }
       });
     });
+    // Wire BDB legend toggles
+    wireBdbLegendToggles(wrapper);
 
     // Wire concordance book accordion
     wrapper.querySelectorAll('.fb-conc-book-pill').forEach(function (pill) {
@@ -1122,6 +1251,7 @@
     renderSensesT5: renderSensesT5,
     renderBdbRefsT6: renderBdbRefsT6,
     renderEtymT7: renderEtymT7,
+    wireBdbLegendToggles: wireBdbLegendToggles,
   };
 
 })();

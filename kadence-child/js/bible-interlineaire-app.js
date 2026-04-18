@@ -1298,6 +1298,10 @@
         expandBtn.textContent = fullDef.hidden ? 'D\u00e9finition compl\u00e8te BDB \u2192' : 'Masquer la d\u00e9finition compl\u00e8te';
       });
     }
+    // Wire BDB legend toggle (exporte\u0301 par bible-v3-hotfix.js)
+    if (window.FIGUIER_HEBREW_CARD && typeof window.FIGUIER_HEBREW_CARD.wireBdbLegendToggles === 'function') {
+      window.FIGUIER_HEBREW_CARD.wireBdbLegendToggles(cardWrapper);
+    }
     // NOTE: le bouton audio .fb-hebrew-card__audio est gere par le handler
     // document-level de bible-v3-hotfix.js (evite double-speak / cancel race)
   }
