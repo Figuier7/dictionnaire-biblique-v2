@@ -43,7 +43,9 @@ import os
 import re
 import sys
 import time
+import threading
 import xml.etree.ElementTree as ET
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 from openai import OpenAI
@@ -60,6 +62,8 @@ MODEL = 'gpt-4o-mini'
 CHUNK_SIZE = 15  # smaller chunks to avoid truncation on long verb entries
 MAX_RETRIES = 3
 RETRY_BACKOFF = 2.0
+CONCURRENCY = 10  # concurrent API workers
+CHECKPOINT_EVERY = 50  # save log every N chunks completed
 
 SYSTEM_PROMPT = """Tu traduis en français des entrées BDB (Brown-Driver-Briggs) de l'hébreu biblique.
 
@@ -327,19 +331,59 @@ def main():
             if len(item['en']) > 800: print('...')
         return
 
-    # apply
+    # apply (parallel)
     client = OpenAI()
+
+    # Resume from checkpoint if log file has translations
     translations = {}
+    if LOG_PATH.exists():
+        try:
+            with open(LOG_PATH, 'r', encoding='utf-8') as f:
+                translations = json.load(f)
+            # filter out non-eligible entries
+            wanted = set(t['s'] for t in to_translate)
+            translations = {k: v for k, v in translations.items() if k in wanted}
+            print(f'[D] Resuming with {len(translations)} existing translations')
+        except Exception:
+            pass
+
+    # skip already-done entries
+    to_translate = [t for t in to_translate if t['s'] not in translations]
+    print(f'[D] Remaining to translate: {len(to_translate)}')
+
     chunks = [to_translate[i:i+CHUNK_SIZE] for i in range(0, len(to_translate), CHUNK_SIZE)]
-    print(f'[D] {len(chunks)} chunks of up to {CHUNK_SIZE} entries...')
+    print(f'[D] {len(chunks)} chunks of up to {CHUNK_SIZE} entries — {CONCURRENCY} concurrent workers...')
     t0 = time.time()
-    for i, chunk in enumerate(chunks, 1):
+    lock = threading.Lock()
+    completed = [0]
+
+    def worker(chunk_idx, chunk):
         tr = translate_chunk(client, chunk)
-        translations.update(tr)
-        if i % 5 == 0 or i == len(chunks):
-            print(f'  chunk {i}/{len(chunks)} — cumulative {len(translations)}')
+        with lock:
+            translations.update(tr)
+            completed[0] += 1
+            done = completed[0]
+            if done % 5 == 0 or done == len(chunks):
+                elapsed = time.time() - t0
+                rate = done / max(elapsed, 1) * 60
+                eta_min = (len(chunks) - done) / max(rate / 60, 0.01)
+                print(f'  [{done}/{len(chunks)}] cumulative={len(translations)} elapsed={elapsed:.0f}s rate={rate:.1f}chunks/min eta={eta_min:.0f}s')
+            if done % CHECKPOINT_EVERY == 0:
+                # save checkpoint
+                LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+                with open(LOG_PATH, 'w', encoding='utf-8') as f:
+                    json.dump(translations, f, ensure_ascii=False, indent=2)
+        return tr
+
+    with ThreadPoolExecutor(max_workers=CONCURRENCY) as ex:
+        futures = [ex.submit(worker, i, c) for i, c in enumerate(chunks)]
+        for fut in as_completed(futures):
+            try:
+                fut.result()
+            except Exception as e:
+                print(f'  CHUNK FAILED: {type(e).__name__}: {e}')
     elapsed = time.time() - t0
-    print(f'[D] Done in {elapsed:.1f}s, {len(translations)} translations.')
+    print(f'[D] Done in {elapsed:.1f}s, {len(translations)} total translations.')
 
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
     with open(LOG_PATH, 'w', encoding='utf-8') as f:
