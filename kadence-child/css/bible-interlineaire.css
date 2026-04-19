@@ -793,6 +793,115 @@
   text-decoration: underline;
 }
 
+/* ── Bloc Dictionnaire biblique (Strong → fiches thématiques) ── */
+.bi-sidebar__concepts {
+  margin: 14px 0 12px;
+  padding: 14px 14px 12px;
+  background: #fff;
+  border: 1px solid var(--bi-border);
+  border-left: 3px solid var(--bi-primary);
+  border-radius: var(--bi-radius-sm);
+  box-shadow: 0 1px 2px rgba(138, 106, 74, 0.04);
+}
+.bi-sidebar__concepts-title {
+  margin: 0 0 6px;
+  font-family: 'EB Garamond', 'Georgia', serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--bi-primary-dk);
+  letter-spacing: 0.01em;
+}
+.bi-sidebar__concepts-lead {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  line-height: 1.45;
+  color: var(--bi-text-soft);
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--bi-border);
+}
+.bi-sidebar__concepts-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.bi-sidebar__concept-item {
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+}
+.bi-sidebar__concept-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px 5px 12px;
+  background: var(--bi-bg-alt);
+  border: 1px solid var(--bi-border);
+  border-radius: 14px;
+  color: var(--bi-primary-dk);
+  text-decoration: none;
+  font-size: 13px;
+  line-height: 1.2;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+.bi-sidebar__concept-link:hover,
+.bi-sidebar__concept-link:focus {
+  background: #fff;
+  border-color: var(--bi-primary);
+  color: var(--bi-primary);
+  text-decoration: none;
+  outline: none;
+}
+.bi-sidebar__concept-link:hover .bi-sidebar__concept-arrow,
+.bi-sidebar__concept-link:focus .bi-sidebar__concept-arrow {
+  transform: translateX(2px);
+  color: var(--bi-primary);
+}
+.bi-sidebar__concept-label {
+  font-weight: 500;
+}
+.bi-sidebar__concept-cat {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 9px;
+  background: #fff;
+  color: var(--bi-text-soft);
+  border: 1px solid var(--bi-border);
+  text-transform: uppercase;
+}
+.bi-sidebar__concept-arrow {
+  font-size: 14px;
+  line-height: 1;
+  color: var(--bi-text-soft);
+  margin-left: 2px;
+  transition: transform 0.15s ease, color 0.15s ease;
+  font-weight: 500;
+}
+/* Accents subtils par catégorie (cohérent avec CATEGORY_MAP front-end) */
+.bi-sidebar__concept-cat[data-cat="etre_spirituel"] { color: #8a6a4a; border-color: #d4b896; background: #faf3e8; }
+.bi-sidebar__concept-cat[data-cat="personne"]       { color: #6b8f5e; border-color: #c6d9ba; background: #f2f7ec; }
+.bi-sidebar__concept-cat[data-cat="lieu"],
+.bi-sidebar__concept-cat[data-cat="lieu_sacre"]     { color: #7a5e90; border-color: #cfbcdb; background: #f4eff7; }
+.bi-sidebar__concept-cat[data-cat="peuple"],
+.bi-sidebar__concept-cat[data-cat="tribu"]          { color: #8a5050; border-color: #d9b8b8; background: #f7edec; }
+.bi-sidebar__concept-cat[data-cat="doctrine"]       { color: #5c6b8f; border-color: #bac4d9; background: #edf0f7; }
+.bi-sidebar__concept-cat[data-cat="rite"],
+.bi-sidebar__concept-cat[data-cat="pratique"],
+.bi-sidebar__concept-cat[data-cat="fonction"]       { color: #8a7048; border-color: #d9c8a8; background: #f7f1e6; }
+
+.bi-sidebar__concepts-more {
+  margin: 10px 0 0;
+  font-size: 12px;
+  color: var(--bi-text-soft);
+  font-style: italic;
+  text-align: right;
+}
+
 /* Fallback card (sans hotfix) */
 .bi-sidebar__card--fallback {
   padding: 12px;
@@ -828,6 +937,23 @@
 /* ================================================================
    MOBILE - Sidebar overlay
    ================================================================ */
+/* Backdrop cliquable (vrai div, injecte\u0301 par le JS) */
+.bi-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.36);
+  z-index: 99998;
+  opacity: 0;
+  transition: opacity 0.22s ease;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.bi-sidebar-backdrop--visible {
+  display: block;
+  opacity: 1;
+}
+
 @media (max-width: 1100px) {
   .bi-sidebar {
     position: fixed;
@@ -836,28 +962,41 @@
     bottom: 0;
     left: auto;
     width: min(420px, 100%);
-    max-height: 100vh;
+    height: 100vh;          /* fallback */
+    height: 100dvh;         /* dynamic viewport height iOS (URL bar safe) */
     max-width: 100%;
-    z-index: 1000;
+    z-index: 99999;         /* au-dessus de tout overlay Kadence/plugins */
     border-radius: 0;
     box-shadow: -8px 0 24px rgba(0,0,0,0.18);
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(.4,0,.2,1);
-    padding: 48px 16px 24px;
+    padding: 52px 16px 40px;
+    /* Scroll dans la sidebar */
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    /* Garantit que les touches/clics atteignent la sidebar */
+    pointer-events: auto;
   }
   .bi-sidebar--open {
     transform: translateX(0);
   }
-  body.bi-sidebar-open::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.32);
-    z-index: 999;
-    pointer-events: auto;
+  /* Bouton close : ancr\u00e9 en haut-\u00e0-droite de la sidebar (scrollable container) */
+  .bi-sidebar__close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    font-size: 22px;
+    z-index: 10;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
   }
   body.bi-sidebar-open {
     overflow: hidden;
+    overscroll-behavior: contain;
   }
 }
 

@@ -26,6 +26,8 @@
   var posDescUrl = CFG.posDescUrl || '';
   var concordanceUrl = CFG.concordanceUrl || '';
   var rootFamiliesUrl = CFG.rootFamiliesUrl || '';
+  var strongConceptsUrl = CFG.strongConceptsUrl || '';
+  var conceptBaseUrl = CFG.conceptBaseUrl || '/dictionnaire-biblique/';
   var bymProxyUrl = CFG.bymProxyUrl || '';
   var bymReaderBase = CFG.bymReaderBase || 'https://www.bibledeyehoshouahamashiah.org/lire.html';
 
@@ -119,10 +121,26 @@
     focusVerse: null,    // verse to scroll to
   };
   var _lexicon = null;           // full Strong lexicon array
-  var _lexiconIndex = {};        // Strong (H####) -> entry
+  var _lexiconIndex = {};        // Strong (H####[A-Z]?) -> entry
   var _posDesc = {};             // POS code -> FR description
+
+  // Resolve lexicon entry for a word : prefer augmented (s + sa), fallback to base s.
+  // sa = suffix augment capitalized ('A', 'B', ...) provided by morphhb lemma.
+  function strongKeyForWord(w) {
+    if (!w || !w.s) return '';
+    if (w.sa) {
+      var composite = w.s + w.sa;
+      if (_lexiconIndex[composite]) return composite;
+    }
+    return w.s;
+  }
+  function lexEntryForWord(w) {
+    var key = strongKeyForWord(w);
+    return key ? _lexiconIndex[key] : null;
+  }
   var _concordance = {};         // Strong -> [refs OSIS]
   var _rootFamilies = {};        // Strong -> { r, f[] }
+  var _strongConcepts = {};      // Strong -> [ {slug,l,c,u}, ... ]
   var _bymCache = {};            // 'NN-File' -> parsed { chap: { verse: 'text' } }
   var _bymLoading = {};          // 'NN-File' -> Promise
 
@@ -541,6 +559,13 @@
       .then(function (d) { _rootFamilies = d || {}; return _rootFamilies; })
       .catch(function () { return {}; });
   }
+  function loadStrongConcepts() {
+    if (Object.keys(_strongConcepts).length) return Promise.resolve(_strongConcepts);
+    if (!strongConceptsUrl) return Promise.resolve({});
+    return fetch(strongConceptsUrl).then(function (r) { return r.json(); })
+      .then(function (d) { _strongConcepts = d || {}; return _strongConcepts; })
+      .catch(function () { return {}; });
+  }
 
   // ── Chargement d'un livre interlineaire (cache une fois charge) ──
   var _bookCache = {};
@@ -804,7 +829,8 @@
       loadPosDesc(),
       loadConcordance(),
       loadRootFamilies(),
-      loadBymBook(b.bymFile)
+      loadBymBook(b.bymFile),
+      loadStrongConcepts()
     ]).then(function (results) {
       var bookData = results[0];
       state.bookData = bookData;
@@ -978,9 +1004,13 @@
     if (globalXlit) wrapper.appendChild(el('div', { class: 'bi-word__xlit', text: globalXlit }));
     else wrapper.appendChild(el('div', { class: 'bi-word__xlit bi-word__xlit--empty' }));
 
-    // Ligne 3 : Strong
-    if (w.s) wrapper.appendChild(el('div', { class: 'bi-word__strong', text: w.s }));
-    else wrapper.appendChild(el('div', { class: 'bi-word__strong bi-word__strong--empty' }));
+    // Ligne 3 : Strong — affiche clé augmentée (H1254A) si disponible sinon base (H1254)
+    if (w.s) {
+      var strongLabel = w.s + (w.sa || '');
+      wrapper.appendChild(el('div', { class: 'bi-word__strong', text: strongLabel }));
+    } else {
+      wrapper.appendChild(el('div', { class: 'bi-word__strong bi-word__strong--empty' }));
+    }
 
     // Ligne 4 : Morphologie (court)
     var morphShort = decodeMorphShort(w.m);
@@ -994,9 +1024,11 @@
     // Ligne 5 : Gloss FR
     // Le champ `g` du mot prime (peut etre un override editorial local, ex: elohim minuscule
     // pour contexte faux-dieux). Fallback sur `ig` du lexique si pas de gloss local.
+    // Lookup lexique : prioritaire sur clé augmentée (s+sa) si présente, sinon base s.
     var gloss = w.g || '';
-    if (!gloss && w.s && _lexiconIndex[w.s] && _lexiconIndex[w.s].ig) {
-      gloss = _lexiconIndex[w.s].ig;
+    if (!gloss) {
+      var _lexEntryGloss = lexEntryForWord(w);
+      if (_lexEntryGloss && _lexEntryGloss.ig) gloss = _lexEntryGloss.ig;
     }
     wrapper.appendChild(el('div', { class: 'bi-word__gloss', text: gloss }));
 
@@ -1121,20 +1153,80 @@
     }
   }
 
+  // ── Backdrop mobile (tap pour fermer la sidebar) ──
+  // Le backdrop ET la sidebar doivent \u00eatre enfants directs de <body> pour
+  // partager le m\u00eame stacking context (sinon les overlays Kadence/plugins
+  // d'ancetres peuvent pi\u00e9ger les z-index).
+  function ensureSidebarBackdrop() {
+    var bd = document.getElementById('bi-sidebar-backdrop');
+    if (bd && bd.parentNode === document.body) return bd;
+    if (!bd) {
+      bd = document.createElement('div');
+      bd.id = 'bi-sidebar-backdrop';
+      bd.className = 'bi-sidebar-backdrop';
+      bd.setAttribute('aria-hidden', 'true');
+      bd.addEventListener('click', function () { closeSidebar(); });
+      bd.addEventListener('touchend', function (e) {
+        e.preventDefault();
+        closeSidebar();
+      }, { passive: false });
+    }
+    document.body.appendChild(bd);
+    return bd;
+  }
+
+  // Déplace la sidebar directement sur <body> pour échapper aux stacking
+  // contexts d'ancetres (theme Kadence, plugins avec transform/opacity/etc.)
+  // Uniquement pour mobile : sur desktop, la sidebar reste position:sticky dans la
+  // colonne grid (sinon elle se détache et n'est plus visible).
+  function promoteSidebarToBody(sidebar) {
+    if (!sidebar) return;
+    var isMobile = window.matchMedia && window.matchMedia('(max-width: 1100px)').matches;
+    if (!isMobile) return;
+    if (sidebar.parentNode !== document.body) {
+      document.body.appendChild(sidebar);
+    }
+  }
+  // Remet la sidebar dans son wrapper grid sur desktop si elle avait été
+  // promue au body (ex : resize mobile → desktop, ou reset à l'ouverture desktop).
+  function restoreSidebarToGrid(sidebar) {
+    if (!sidebar) return;
+    if (sidebar.parentNode === document.body) {
+      var wrapper = document.querySelector('.bi-reader');
+      if (wrapper) wrapper.appendChild(sidebar);
+    }
+  }
+
   // ── Sidebar : fiche lexicale complete du mot clique ──
   function openWordSidebar(word) {
     var sidebar = document.getElementById('bi-sidebar');
     if (!sidebar) return;
+    // Responsive : sur desktop la sidebar reste dans la grid (sticky), sur mobile
+    // elle est promue au body pour échapper aux stacking contexts du thème.
+    var isMobile = window.matchMedia && window.matchMedia('(max-width: 1100px)').matches;
+    if (isMobile) {
+      promoteSidebarToBody(sidebar);
+    } else {
+      restoreSidebarToGrid(sidebar);
+    }
+    // Reset scroll à chaque ouverture
+    sidebar.scrollTop = 0;
     sidebar.innerHTML = '';
     sidebar.classList.add('bi-sidebar--open');
-    document.body.classList.add('bi-sidebar-open');
+    // Backdrop et body lock : mobile uniquement (sur desktop la sidebar cohabite
+    // avec le contenu principal, pas d'overlay obscurcissant).
+    if (isMobile) {
+      document.body.classList.add('bi-sidebar-open');
+      var bd = ensureSidebarBackdrop();
+      bd.classList.add('bi-sidebar-backdrop--visible');
+    }
 
     var closeBtn = el('button', {
       class: 'bi-sidebar__close',
       type: 'button',
-      'aria-label': 'Fermer',
-      title: 'Fermer la fiche',
-      on: { click: function () { closeSidebar(); } }
+      'aria-label': 'Fermer la fiche',
+      title: 'Fermer',
+      on: { click: function (e) { e.stopPropagation(); closeSidebar(); } }
     }, [document.createTextNode('\u00d7')]);
     sidebar.appendChild(closeBtn);
 
@@ -1143,23 +1235,29 @@
       return;
     }
 
-    var entry = _lexiconIndex[word.s];
+    // Résolution clé Strong : augmentée si dispo, sinon base
+    var strongKey = strongKeyForWord(word);
+    var entry = _lexiconIndex[strongKey];
     if (!entry) {
-      sidebar.appendChild(el('div', { class: 'bi-sidebar__placeholder', html: '<strong>Strong ' + escapeHtml(word.s) + '</strong><br><span>Entr\u00e9e lexicale non trouv\u00e9e.</span>' }));
+      sidebar.appendChild(el('div', { class: 'bi-sidebar__placeholder', html: '<strong>Strong ' + escapeHtml(strongKey) + '</strong><br><span>Entr\u00e9e lexicale non trouv\u00e9e.</span>' }));
       return;
     }
 
     // Mini header : mot tel qu'affiche dans le texte
+    // Affichage Strong : clé augmentée si disponible (H1254A) sinon base (H1254)
     var head = el('div', { class: 'bi-sidebar__head' }, [
       el('div', { class: 'bi-sidebar__head-hebrew', dir: 'rtl', text: word.t || entry.h || '' }),
       el('div', { class: 'bi-sidebar__head-refs', html:
         (word.x ? '<span class="bi-sidebar__head-xlit">' + escapeHtml(word.x) + '</span>' : '') +
-        '<span class="bi-sidebar__head-strong">' + escapeHtml(word.s) + '</span>'
+        '<span class="bi-sidebar__head-strong">' + escapeHtml(strongKey) + '</span>'
       })
     ]);
     sidebar.appendChild(head);
 
     // Delegate to renderHebrewCard export (bible-v3-hotfix.js)
+    // Concordance et root families : on utilise TOUJOURS la base word.s (les fichiers
+    // sources strong-concordance-oshb.json et strong-root-families.json sont keyés
+    // par base uniquement — pas par augmentation).
     if (window.FIGUIER_HEBREW_CARD && typeof window.FIGUIER_HEBREW_CARD.render === 'function') {
       var concRefs = _concordance[word.s] || [];
       var rootData = _rootFamilies[word.s] || null;
@@ -1173,9 +1271,14 @@
       sidebar.appendChild(renderFallbackCard(entry, word));
     }
 
-    // Link to full dictionary fiche
+    // Concepts li\u00e9s (Strong \u2192 fiches th\u00e9matiques)
+    var conceptBlock = renderConceptsBlock(word.s);
+    if (conceptBlock) sidebar.appendChild(conceptBlock);
+
+    // Link to full dictionary fiche — utilise clé augmentée quand dispo (strongKey défini plus haut)
+    // Format hash '#H1254A' — supporté par lexique-strong-app.js handleHash()
     var slugsFooter = el('div', { class: 'bi-sidebar__footer', html:
-      '<a href="/lexique-hebreu-biblique/?strong=' + escapeHtml(word.s) + '" target="_blank" rel="noopener">Ouvrir la fiche compl\u00e8te dans le lexique h\u00e9breu \u2197</a>'
+      '<a href="/lexique-hebreu-biblique/#' + escapeHtml(strongKey) + '" target="_blank" rel="noopener">Ouvrir la fiche compl\u00e8te dans le lexique h\u00e9breu \u2197</a>'
     });
     sidebar.appendChild(slugsFooter);
 
@@ -1195,6 +1298,10 @@
         expandBtn.textContent = fullDef.hidden ? 'D\u00e9finition compl\u00e8te BDB \u2192' : 'Masquer la d\u00e9finition compl\u00e8te';
       });
     }
+    // Wire BDB legend toggle (exporte\u0301 par bible-v3-hotfix.js)
+    if (window.FIGUIER_HEBREW_CARD && typeof window.FIGUIER_HEBREW_CARD.wireBdbLegendToggles === 'function') {
+      window.FIGUIER_HEBREW_CARD.wireBdbLegendToggles(cardWrapper);
+    }
     // NOTE: le bouton audio .fb-hebrew-card__audio est gere par le handler
     // document-level de bible-v3-hotfix.js (evite double-speak / cancel race)
   }
@@ -1208,11 +1315,110 @@
     ]);
   }
 
+  // ── Bloc Concepts li\u00e9s (Strong \u2192 fiches th\u00e9matiques) ──
+  // Mapping catégorie \u2192 libell\u00e9 court FR (aligne\u0301 avec CATEGORY_MAP front-end)
+  var CONCEPT_CAT_LABELS = {
+    'etre_spirituel':    'Dieu',
+    'personne':          'Personne',
+    'lieu':              'Lieu',
+    'lieu_sacre':        'Lieu sacr\u00e9',
+    'peuple':            'Peuple',
+    'tribu':             'Tribu',
+    'objet':             'Objet',
+    'animal':            'Animal',
+    'plante':            'Plante',
+    'aliment':           'Aliment',
+    'vetement':          'V\u00eatement',
+    'instrument':        'Instrument',
+    'mesure':            'Mesure',
+    'monnaie':           'Monnaie',
+    'doctrine':          'Doctrine',
+    'rite':              'Rite',
+    'pratique':          'Pratique',
+    'fonction':          'Fonction',
+    'nature':            'Nature',
+    'evenement':         '\u00c9v\u00e9nement',
+    'matiere':           'Mati\u00e8re',
+    'non_classifie':    ''
+  };
+
+  function renderConceptsBlock(strong) {
+    if (!strong) return null;
+    var list = _strongConcepts[strong];
+    if (!list || !list.length) return null;
+
+    // Limite d'affichage pour \u00e9viter la surcharge (sidebar scrollable si >12)
+    var MAX_VISIBLE = 12;
+    var visible = list.slice(0, MAX_VISIBLE);
+    var remaining = list.length - visible.length;
+    var plural = list.length > 1;
+
+    var block = el('section', {
+      class: 'bi-sidebar__concepts',
+      'aria-label': 'Fiches du dictionnaire biblique li\u00e9es \u00e0 ce mot'
+    });
+
+    // Titre : section du dictionnaire biblique
+    block.appendChild(el('h4', {
+      class: 'bi-sidebar__concepts-title',
+      text: 'Dans le dictionnaire biblique'
+    }));
+
+    // Lead explicatif : ce que sont ces liens
+    block.appendChild(el('p', {
+      class: 'bi-sidebar__concepts-lead',
+      text: plural
+        ? 'Fiches th\u00e9matiques o\u00f9 ce mot h\u00e9breu est \u00e9tudi\u00e9 \u2014 cliquez pour les ouvrir :'
+        : 'Fiche th\u00e9matique o\u00f9 ce mot h\u00e9breu est \u00e9tudi\u00e9 \u2014 cliquez pour l\u2019ouvrir :'
+    }));
+
+    var ul = el('ul', { class: 'bi-sidebar__concepts-list' });
+    visible.forEach(function (c) {
+      var li = el('li', { class: 'bi-sidebar__concept-item' });
+      var catLabel = CONCEPT_CAT_LABELS[c.c] || '';
+      var href = conceptBaseUrl + encodeURIComponent(c.u || c.slug) + '/';
+      var a = el('a', {
+        class: 'bi-sidebar__concept-link',
+        href: href,
+        target: '_blank',
+        rel: 'noopener',
+        title: 'Ouvrir la fiche \u00ab ' + (c.l || c.slug) + ' \u00bb dans le dictionnaire biblique'
+      });
+      a.appendChild(el('span', { class: 'bi-sidebar__concept-label', text: c.l || c.slug }));
+      if (catLabel) {
+        a.appendChild(el('span', {
+          class: 'bi-sidebar__concept-cat',
+          'data-cat': c.c,
+          text: catLabel
+        }));
+      }
+      a.appendChild(el('span', {
+        class: 'bi-sidebar__concept-arrow',
+        'aria-hidden': 'true',
+        text: '\u2192'
+      }));
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    block.appendChild(ul);
+
+    if (remaining > 0) {
+      block.appendChild(el('p', {
+        class: 'bi-sidebar__concepts-more',
+        text: '+ ' + remaining + ' autre' + (remaining > 1 ? 's' : '') + ' fiche' + (remaining > 1 ? 's' : '')
+      }));
+    }
+
+    return block;
+  }
+
   function closeSidebar() {
     var sidebar = document.getElementById('bi-sidebar');
     if (!sidebar) return;
     sidebar.classList.remove('bi-sidebar--open');
     document.body.classList.remove('bi-sidebar-open');
+    var bd = document.getElementById('bi-sidebar-backdrop');
+    if (bd) bd.classList.remove('bi-sidebar-backdrop--visible');
     sidebar.innerHTML = '<div class="bi-sidebar__placeholder"><strong>Fiche lexicale</strong><br><span>Cliquez sur un mot h\u00e9breu pour afficher sa fiche compl\u00e8te.</span></div>';
   }
 

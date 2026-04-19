@@ -205,11 +205,19 @@
       filteredEntries = allEntries;
     } else {
       var q = normalize(query);
-      var isStrong = /^h?\d+$/i.test(q);
-      if (isStrong) {
-        var num = q.replace(/^h/i, '');
+      // Recherche Strong : accepte nombre seul (1254 → toutes variantes) ou augmenté (1254a → exact)
+      var mStrong = q.match(/^h?(\d+)([a-z])?$/i);
+      if (mStrong) {
+        var num = mStrong[1];
+        var augLetter = (mStrong[2] || '').toUpperCase();
         filteredEntries = allEntries.filter(function (e) {
-          return e.s && e.s.replace(/^H/i, '') === num;
+          if (!e.s) return false;
+          var key = e.s.replace(/^H/i, '');
+          var m2 = key.match(/^(\d+)([A-Z])?$/);
+          if (!m2) return false;
+          if (m2[1] !== num) return false;
+          // Si augment spécifié dans la requête, match strict ; sinon, accepte tout
+          return !augLetter || (m2[2] || '') === augLetter;
         });
       } else {
         filteredEntries = allEntries.filter(function (e) {
@@ -290,7 +298,7 @@
       if (browseEl) browseEl.hidden = true;
       if (arbreEl) arbreEl.hidden = false;
       renderArbre();
-    } else if (/^H\d+$/i.test(hash)) {
+    } else if (/^H\d+[A-Z]?$/i.test(hash)) {
       currentView = 'browse';
       var searchInput = document.querySelector('#lex-browse .lex-search');
       if (searchInput) searchInput.value = hash;

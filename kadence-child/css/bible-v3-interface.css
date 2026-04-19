@@ -2305,6 +2305,76 @@
   margin-top: 6px;
   padding-top: 8px;
   border-top: 1px solid rgba(178, 140, 100, 0.12);
+  /* Préserve sauts de ligne + espaces d'indentation des sous-sens (a./b./c.) */
+  white-space: pre-wrap;
+}
+
+/* ── BDB legend (tooltip expandable) ───────────────────────────── */
+.fb-bdb-legend-toggle {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 3px 10px;
+  font-family: var(--fb-font-sans, Inter, system-ui, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--fb-accent, #9a6b3a);
+  background: transparent;
+  border: 1px solid rgba(178, 140, 100, 0.35);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.fb-bdb-legend-toggle:hover {
+  background: rgba(178, 140, 100, 0.08);
+  border-color: var(--fb-accent, #9a6b3a);
+}
+.fb-bdb-legend-toggle[aria-expanded="true"] {
+  background: rgba(178, 140, 100, 0.12);
+  border-color: var(--fb-accent, #9a6b3a);
+}
+.fb-bdb-legend {
+  margin-top: 10px;
+  padding: 12px 14px;
+  background: rgba(253, 248, 240, 0.6);
+  border: 1px solid rgba(178, 140, 100, 0.2);
+  border-radius: 6px;
+  /* Neutralise le white-space pre-wrap hérité du parent pour layout grid normal */
+  white-space: normal;
+}
+.fb-legend-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+.fb-legend-col h4 {
+  margin: 0 0 6px 0;
+  font-family: var(--fb-font-sans, Inter, system-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fb-accent, #9a6b3a);
+}
+.fb-legend-col dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  font-size: 0.78rem;
+}
+.fb-legend-item {
+  display: contents;
+}
+.fb-legend-item dt {
+  font-family: var(--fb-font-mono, ui-monospace, "SF Mono", monospace);
+  font-weight: 600;
+  color: var(--fb-text, #3c2f2f);
+  white-space: nowrap;
+}
+.fb-legend-item dd {
+  margin: 0;
+  color: var(--fb-text-soft, #6b5a50);
+  font-family: var(--fb-font-serif, "EB Garamond", serif);
 }
 
 .fb-hebrew-card__expand {
@@ -2793,6 +2863,83 @@
 
 .fb-verse-bubble__footer a:hover {
   text-decoration: underline;
+}
+
+/* ── Sections dans la bulle (interlineaire + BYM) ───────── */
+.fb-verse-bubble__section + .fb-verse-bubble__section {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(178, 140, 100, 0.22);
+}
+
+.fb-verse-bubble__section-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fb-accent, #B28C64);
+  font-weight: 700;
+  margin-bottom: 6px;
+  opacity: 0.85;
+}
+
+/* Verset interlineaire : mots alignes en flex RTL, chacun avec 3 lignes */
+.fb-verse-bubble__interlin {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  direction: rtl;
+  justify-content: flex-start;
+  padding: 4px 0 2px;
+}
+
+.fb-verse-bubble__iw {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: 3px 5px 4px;
+  border-radius: 5px;
+  min-width: 36px;
+  transition: background-color 0.15s ease;
+  direction: ltr; /* inversion pour translit/gloss lisibles LTR */
+}
+
+.fb-verse-bubble__iw-he {
+  font-family: "Noto Serif Hebrew", "SBL Hebrew", "Times New Roman", serif;
+  font-size: 1.15rem;
+  line-height: 1.1;
+  color: var(--fb-text, #3a2e25);
+  direction: rtl;
+  unicode-bidi: isolate;
+}
+
+.fb-verse-bubble__iw-xlit {
+  font-size: 0.65rem;
+  font-style: italic;
+  color: #8a7a6a;
+  line-height: 1.1;
+}
+
+.fb-verse-bubble__iw-gloss {
+  font-size: 0.7rem;
+  color: #6b6058;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.fb-verse-bubble__iw--match {
+  background: rgba(178, 140, 100, 0.18);
+  box-shadow: inset 0 0 0 1px rgba(178, 140, 100, 0.4);
+}
+
+.fb-verse-bubble__iw--match .fb-verse-bubble__iw-he,
+.fb-verse-bubble__iw--match .fb-verse-bubble__iw-gloss {
+  color: var(--fb-text, #3a2e25);
+  font-weight: 600;
+}
+
+.fb-verse-bubble__iw--match .fb-verse-bubble__iw-xlit {
+  color: #5a4838;
 }
 
 /* Overlay for mobile sheet */
